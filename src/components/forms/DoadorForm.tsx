@@ -172,7 +172,7 @@ export default function DoadorForm({
 
   return (
     <View style={estilos.form}>
-      <Text style={{ fontSize: 18, fontWeight: "bold", color: cores.texto }}>
+      <Text style={estilos.sectionTitle}>
         Dados pessoais
       </Text>
 
@@ -212,7 +212,7 @@ export default function DoadorForm({
         error={erros.telefone}
       />
 
-      <Text style={{ fontSize: 18, fontWeight: "bold", color: cores.texto }}>
+      <Text style={estilos.sectionTitle}>
         Tipo de doador
       </Text>
 
@@ -259,7 +259,7 @@ export default function DoadorForm({
         />
       )}
 
-      <Text style={{ fontSize: 18, fontWeight: "bold", color: cores.texto }}>
+      <Text style={estilos.sectionTitle}>
         Endereço
       </Text>
 
@@ -273,7 +273,7 @@ export default function DoadorForm({
       />
 
       {buscandoCep && (
-        <Text style={{ color: cores.cinza }}>Buscando endereço...</Text>
+        <Text style={{ color: cores.textSecondary }}>Buscando endereço...</Text>
       )}
 
       <Input
@@ -324,7 +324,7 @@ export default function DoadorForm({
         error={erros.estado}
       />
 
-      <Text style={{ fontSize: 18, fontWeight: "bold", color: cores.texto }}>
+      <Text style={estilos.sectionTitle}>
         Segurança
       </Text>
 

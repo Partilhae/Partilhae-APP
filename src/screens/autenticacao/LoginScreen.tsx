@@ -1,69 +1,74 @@
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 import LoginForm from "../../components/forms/LoginForm";
-import Botao from "../../components/Botao";
-import estilos, { cores } from "../../estilos/estilo";
-import { LoginFormData } from "../../types/Auth";
-import { AuthStackParamList } from "../../types/Navigation";
+import estilos from "../../estilos/estilo";
+import { LoginRequest } from "../../types/Auth";
+import { RootStackParamList } from "../../types/Navigation";
+import { useState } from "react";
+import { logarUsuario } from "../../services/Auth";
 
 export default function LoginScreen() {
-  const navigation = useNavigation<NavigationProp<AuthStackParamList>>();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [loading, setLoading] = useState(false);
 
-  function handleLogin(dados: LoginFormData) {
-    Alert.alert(
-      "Login",
-      "A autenticação será habilitada quando integrarmos a API Java.",
-    );
+  async function handleLogin(dados: LoginRequest) {
+    try {
+      setLoading(true);
+
+      const resultado = await logarUsuario(dados.email, dados.senha);
+
+      if (!resultado) {
+        Alert.alert("Login inválido", "E-mail ou senha incorretos");
+        return;
+      }
+
+      if (resultado.role === "DOADOR") {
+        navigation.navigate("Doador");
+      } else {
+        navigation.navigate("Beneficiario");
+      }
+    } catch (error) {
+      console.log("Erro na tela de login:", error);
+
+      Alert.alert("Erro", "Não foi possível realizar o login.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
-    <ScrollView
-      style={estilos.container}
-      contentContainerStyle={[estilos.conteudo, { justifyContent: "center" }]}
-      keyboardShouldPersistTaps="handled"
-    >
-      <View style={{ gap: 12, marginBottom: 32 }}>
-        <Text style={estilos.titulo}>Partilhaê</Text>
+    <View style={estilos.safe}>
+      <ScrollView
+        contentContainerStyle={estilos.scrollCentered}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={estilos.logoContainer}>
+          <Image
+            source={require("../../../assets/LogoPartilhae.png")}
+            style={estilos.logoImage}
+            resizeMode="contain"
+          />
+          <Text style={estilos.subtitle}>Que bom ter você por aqui!</Text>
+        </View>
 
-        <Text style={estilos.subtitulo}>Compartilhar transforma vidas.</Text>
+        <LoginForm onSubmit={handleLogin} loading={loading} />
 
-        <Text
-          style={{
-            textAlign: "center",
-            color: cores.cinza,
-            marginTop: 12,
-          }}
-        >
-          Entre na sua conta para continuar.
-        </Text>
-      </View>
-
-      <LoginForm onSubmit={handleLogin} loading={false} />
-
-      <View style={{ marginTop: 32, gap: 12 }}>
-        <Text
-          style={{
-            textAlign: "center",
-            color: cores.texto,
-            fontWeight: "600",
-          }}
-        >
-          Ainda não tem uma conta?
-        </Text>
-
-        <Botao
-          label="Quero doar"
-          variant="outline"
-          onPress={() => navigation.navigate("CadastroDoador")}
-        />
-
-        <Botao
-          label="Preciso de ajuda"
-          variant="outline"
-          onPress={() => navigation.navigate("CadastroBeneficiario")}
-        />
-      </View>
-    </ScrollView>
+        <View style={estilos.footer}>
+          <Text style={[estilos.subtitle, estilos.textCenter]}>
+            Ainda não possui uma conta?
+          </Text>
+          <Pressable
+            onPress={() => navigation.navigate("CadastroBeneficiario")}
+          >
+            <Text style={estilos.footerLink}>Cadastrar como beneficiário</Text>
+          </Pressable>
+          <Pressable onPress={() => navigation.navigate("CadastroDoador")}>
+            <Text style={estilos.footerLink}>Cadastrar como doador</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </View>
   );
 }

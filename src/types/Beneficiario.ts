@@ -88,3 +88,25 @@ export type BeneficiarioResponse = {
 
   statusConta: "ativa" | "bloqueada";
 };
+
+export type PerfilBeneficiarioFormData = {
+  nomeUsuario: string;
+  email: string;
+  telefone: string;
+
+  cep: string;
+  endereco: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+
+  tipoBeneficiario: BeneficiarioTipo;
+  nomeOrganizacao: string;
+  raioBuscaKm: 5 | 10 | 20;
+
+  quantidadePessoasFamilia: string;
+  possuiCriancas: boolean | null;
+  restricaoAlimentar: string;
+  observacao: string;
+};

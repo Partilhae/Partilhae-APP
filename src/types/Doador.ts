@@ -82,3 +82,22 @@ export type DoadorResponse = {
 
   statusConta: "ativa" | "bloqueada";
 };
+
+
+export type PerfilDoadorFormData = {
+  nomeUsuario: string;
+  email: string;
+  telefone: string;
+
+  cep: string;
+  endereco: string;
+  numero: string;
+  bairro: string;
+  cidade: string;
+  estado: string;
+
+  tipoDoador: DoadorTipo;
+  nomeEstabelecimento: string;
+  disponibilidade: string;
+  observacao: string;
+};

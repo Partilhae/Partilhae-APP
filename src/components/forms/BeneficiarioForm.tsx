@@ -185,15 +185,7 @@ export default function BeneficiarioForm({
 
   return (
     <View style={estilos.form}>
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          color: cores.texto,
-        }}
-      >
-        Dados pessoais
-      </Text>
+      <Text style={estilos.sectionTitle}>Dados pessoais</Text>
 
       <Input
         label="Nome completo"
@@ -231,15 +223,7 @@ export default function BeneficiarioForm({
         error={erros.telefone}
       />
 
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          color: cores.texto,
-        }}
-      >
-        Tipo de beneficiário
-      </Text>
+      <Text style={estilos.sectionTitle}>Tipo de beneficiário</Text>
 
       <View style={estilos.toggle}>
         <Pressable
@@ -290,15 +274,7 @@ export default function BeneficiarioForm({
         />
       )}
 
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          color: cores.texto,
-        }}
-      >
-        Endereço
-      </Text>
+      <Text style={estilos.sectionTitle}>Endereço</Text>
 
       <Input
         label="CEP"
@@ -310,7 +286,7 @@ export default function BeneficiarioForm({
       />
 
       {buscandoCep && (
-        <Text style={{ color: cores.cinza }}>Buscando endereço...</Text>
+        <Text style={{ color: cores.textSecondary }}>Buscando endereço...</Text>
       )}
 
       <Input
@@ -361,17 +337,9 @@ export default function BeneficiarioForm({
         error={erros.estado}
       />
 
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          color: cores.texto,
-        }}
-      >
-        Preferências de busca
-      </Text>
+      <Text style={estilos.sectionTitle}>Preferências de busca</Text>
 
-      <Text style={{ color: cores.texto }}>
+      <Text style={estilos.inputLabel}>
         Distância máxima para encontrar solicitações
       </Text>
 
@@ -398,15 +366,7 @@ export default function BeneficiarioForm({
         ))}
       </View>
 
-      <Text
-        style={{
-          fontSize: 18,
-          fontWeight: "bold",
-          color: cores.texto,
-        }}
-      >
-        Segurança
-      </Text>
+      <Text style={estilos.sectionTitle}>Segurança</Text>
 
       <Input
         label="Senha"
@@ -417,7 +377,11 @@ export default function BeneficiarioForm({
         error={erros.senha}
       />
 
-      <Botao label="Criar conta" onPress={handleSubmit} loading={loading || buscandoCep} />
+      <Botao
+        label="Criar conta"
+        onPress={handleSubmit}
+        loading={loading || buscandoCep}
+      />
     </View>
   );
 }

@@ -22,23 +22,20 @@ const Botao: React.FC<BotaoProps> = ({
   return (
     <Pressable
       style={({ pressed }) => [
-        styles.botao,
-        !isPrimary && {
-          backgroundColor: "transparent",
-          borderWidth: 1,
-          borderColor: cores.primaria,
-        },
+        isPrimary ? styles.primaryBtn : styles.outlineBtn,
         style,
-        pressed && !loading && { opacity: 0.85 },
+        pressed && { opacity: 0.85 },
       ]}
       onPress={onPress}
       disabled={loading}
     >
       {loading ? (
-        <ActivityIndicator color={isPrimary ? cores.branco : cores.primaria} />
+        <ActivityIndicator color={isPrimary ? cores.white : cores.primary} />
       ) : (
         <Text
-          style={[styles.botaoTexto, !isPrimary && { color: cores.primaria }]}
+          style={
+            isPrimary ? styles.primaryBtnText : styles.outlineBtnText
+          }
         >
           {label}
         </Text>
