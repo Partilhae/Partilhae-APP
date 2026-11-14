@@ -30,4 +30,6 @@ export type BeneficiarioTabParamlist = {
 export type BeneficiarioStackParamlist= {
   BeneficiarioTabs: NavigatorScreenParams<BeneficiarioTabParamlist> | undefined;
   EditarPerfilBeneficiario: undefined;
+  NovaSolicitacaoBeneficiario: undefined;
+  DetalhesSolicitacaoBeneficiario: undefined;
 };

@@ -649,140 +649,387 @@ const estilos = StyleSheet.create({
     fontWeight: "700",
   },
 
-cadastroForm: {
-  gap: 22,
-},
+  cadastroForm: {
+    gap: 22,
+  },
 
-cadastroSecao: {
-  gap: 4,
-},
+  cadastroSecao: {
+    gap: 4,
+  },
 
-cadastroSecaoTitulo: {
-  fontSize: 18,
-  fontWeight: "700",
-  color: cores.primary,
-  marginBottom: 12,
-  paddingBottom: 9,
-  borderBottomWidth: 1,
-  borderBottomColor: cores.border,
-},
+  cadastroSecaoTitulo: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: cores.primary,
+    marginBottom: 12,
+    paddingBottom: 9,
+    borderBottomWidth: 1,
+    borderBottomColor: cores.border,
+  },
 
-cadastroCampoTitulo: {
-  fontSize: 14,
-  fontWeight: "600",
-  color: cores.text,
-  marginTop: 8,
-  marginBottom: 8,
-},
+  cadastroCampoTitulo: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: cores.text,
+    marginTop: 8,
+    marginBottom: 8,
+  },
 
-cadastroLinha: {
-  flexDirection: "row",
-  gap: 12,
-  alignItems: "flex-start",
-},
+  cadastroLinha: {
+    flexDirection: "row",
+    gap: 12,
+    alignItems: "flex-start",
+  },
 
-cadastroCampoMenor: {
-  flex: 1,
-  minWidth: 0,
-},
+  cadastroCampoMenor: {
+    flex: 1,
+    minWidth: 0,
+  },
 
-cadastroCampoMaior: {
-  flex: 2,
-  minWidth: 0,
-},
+  cadastroCampoMaior: {
+    flex: 2,
+    minWidth: 0,
+  },
 
-cadastroOpcoes: {
-  flexDirection: "row",
-  gap: 8,
-  marginBottom: 8,
-},
+  cadastroOpcoes: {
+    flexDirection: "row",
+    gap: 8,
+    marginBottom: 8,
+  },
 
-cadastroOpcao: {
-  flex: 1,
-  minWidth: 0,
-  backgroundColor: cores.white,
-  borderWidth: 1,
-  borderColor: cores.border,
-  borderRadius: 14,
-  minHeight: 44,
-  paddingHorizontal: 8,
-  paddingVertical: 10,
-  alignItems: "center",
-  justifyContent: "center",
-},
+  cadastroOpcao: {
+    flex: 1,
+    minWidth: 0,
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.border,
+    borderRadius: 14,
+    minHeight: 44,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
 
-cadastroOpcaoAtiva: {
-  backgroundColor: cores.yellowSoft,
-  borderColor: cores.yellow,
-},
+  cadastroOpcaoAtiva: {
+    backgroundColor: cores.yellowSoft,
+    borderColor: cores.yellow,
+  },
 
-cadastroOpcaoTexto: {
-  fontSize: 13,
-  fontWeight: "600",
-  color: cores.textSecondary,
-  textAlign: "center",
-},
+  cadastroOpcaoTexto: {
+    fontSize: 13,
+    fontWeight: "600",
+    color: cores.textSecondary,
+    textAlign: "center",
+  },
 
-cadastroOpcaoTextoAtivo: {
-  color: cores.primary,
-  fontWeight: "700",
-},
+  cadastroOpcaoTextoAtivo: {
+    color: cores.primary,
+    fontWeight: "700",
+  },
 
-cadastroAjuda: {
-  fontSize: 12,
-  lineHeight: 18,
-  color: cores.textSecondary,
-  marginBottom: 10,
-},
+  cadastroAjuda: {
+    fontSize: 12,
+    lineHeight: 18,
+    color: cores.textSecondary,
+    marginBottom: 10,
+  },
 
-cadastroScroll: {
-  paddingHorizontal: 22,
-  paddingTop: 28,
-  paddingBottom: 55,
-},
+  cadastroScroll: {
+    paddingHorizontal: 22,
+    paddingTop: 28,
+    paddingBottom: 55,
+  },
 
-cadastroHeader: {
-  marginBottom: 26,
-},
+  cadastroHeader: {
+    marginBottom: 26,
+  },
 
-cadastroTitulo: {
-  fontSize: 28,
-  fontWeight: "800",
-  color: cores.text,
-  marginBottom: 8,
-},
+  cadastroTitulo: {
+    fontSize: 28,
+    fontWeight: "800",
+    color: cores.text,
+    marginBottom: 8,
+  },
 
-cadastroSubtitulo: {
-  fontSize: 14,
-  lineHeight: 21,
-  color: cores.textSecondary,
-},
+  cadastroSubtitulo: {
+    fontSize: 14,
+    lineHeight: 21,
+    color: cores.textSecondary,
+  },
 
-cadastroFooter: {
-  alignItems: "center",
-  gap: 8,
-  marginTop: 28,
-},
-cadastroOpcoesDoador: {
-  flexDirection: "row",
-  flexWrap: "wrap",
-  gap: 8,
-  marginBottom: 8,
-},
+  cadastroFooter: {
+    alignItems: "center",
+    gap: 8,
+    marginTop: 28,
+  },
+  cadastroOpcoesDoador: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: 8,
+    marginBottom: 8,
+  },
 
-cadastroOpcaoDoador: {
-  width: "48%",
-  flexGrow: 1,
-  backgroundColor: cores.white,
-  borderWidth: 1,
-  borderColor: cores.border,
-  borderRadius: 14,
-  minHeight: 44,
-  paddingHorizontal: 8,
-  paddingVertical: 10,
-  alignItems: "center",
-  justifyContent: "center",
-},
+  cadastroOpcaoDoador: {
+    width: "48%",
+    flexGrow: 1,
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.border,
+    borderRadius: 14,
+    minHeight: 44,
+    paddingHorizontal: 8,
+    paddingVertical: 10,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  solicitacaoAdicionar: {
+    borderWidth: 1,
+    borderColor: cores.primary,
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: "center",
+    marginTop: 8,
+  },
+
+  solicitacaoAdicionarTexto: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: cores.primary,
+  },
+
+  solicitacaoLista: {
+    marginTop: 16,
+    gap: 10,
+  },
+
+  solicitacaoItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.border,
+    borderRadius: 14,
+    padding: 14,
+    gap: 12,
+  },
+
+  solicitacaoItemNome: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: cores.text,
+  },
+
+  solicitacaoItemQuantidade: {
+    fontSize: 13,
+    color: cores.textSecondary,
+    marginTop: 4,
+  },
+
+  solicitacaoRemover: {
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    borderRadius: 10,
+    backgroundColor: cores.dangerSoft,
+  },
+
+  solicitacaoRemoverTexto: {
+    fontSize: 12,
+    fontWeight: "600",
+    color: cores.danger,
+  },
+
+  solicitacoesScroll: {
+    paddingHorizontal: 22,
+    paddingTop: 28,
+    paddingBottom: 50,
+    flexGrow: 1,
+  },
+
+  solicitacoesHeader: {
+    marginBottom: 24,
+  },
+
+  solicitacoesNovoBotao: {
+    backgroundColor: cores.primary,
+    borderRadius: 16,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 20,
+  },
+
+  solicitacoesNovoTexto: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: cores.white,
+  },
+
+  solicitacaoCard: {
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.border,
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 14,
+  },
+
+  solicitacaoCardTopo: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "space-between",
+    gap: 10,
+    marginBottom: 10,
+  },
+
+  solicitacaoCardTitulo: {
+    flex: 1,
+    fontSize: 16,
+    fontWeight: "700",
+    color: cores.text,
+  },
+
+  solicitacaoCardDescricao: {
+    fontSize: 13,
+    lineHeight: 20,
+    color: cores.textSecondary,
+    marginBottom: 12,
+  },
+
+  solicitacaoCardInfo: {
+    fontSize: 12,
+    color: cores.textSecondary,
+    marginBottom: 5,
+  },
+
+  solicitacaoCardData: {
+    fontSize: 12,
+    color: cores.muted,
+    marginTop: 10,
+  },
+
+  solicitacaoStatus: {
+    backgroundColor: cores.yellowSoft,
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 6,
+  },
+
+  solicitacaoStatusTexto: {
+    fontSize: 11,
+    fontWeight: "700",
+    color: cores.warning,
+  },
+
+  solicitacoesVazio: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingVertical: 55,
+  },
+
+  solicitacoesVazioTitulo: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: cores.text,
+    textAlign: "center",
+    marginBottom: 10,
+  },
+
+  solicitacoesVazioTexto: {
+    fontSize: 14,
+    lineHeight: 21,
+    color: cores.textSecondary,
+    textAlign: "center",
+  },
+
+  solicitacaoCarregando: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: cores.background,
+    gap: 12,
+  },
+
+  solicitacaoVoltar: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: cores.primary,
+    marginBottom: 24,
+  },
+
+  solicitacaoDetalhesCard: {
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.border,
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 24,
+  },
+
+  solicitacaoDetalhesTitulo: {
+    fontSize: 21,
+    fontWeight: "700",
+    color: cores.text,
+    marginBottom: 12,
+  },
+
+  solicitacaoDetalhesStatus: {
+    alignSelf: "flex-start",
+    backgroundColor: cores.yellowSoft,
+    borderRadius: 20,
+    paddingHorizontal: 12,
+    paddingVertical: 7,
+    marginBottom: 22,
+  },
+
+  solicitacaoDetalhesLabel: {
+    fontSize: 13,
+    fontWeight: "700",
+    color: cores.text,
+    marginBottom: 6,
+    marginTop: 12,
+  },
+
+  solicitacaoDetalhesDescricao: {
+    fontSize: 14,
+    lineHeight: 22,
+    color: cores.textSecondary,
+  },
+
+  solicitacaoDetalhesValor: {
+    fontSize: 14,
+    color: cores.textSecondary,
+    marginBottom: 8,
+  },
+
+  solicitacaoDetalhesDivisor: {
+    height: 1,
+    backgroundColor: cores.border,
+    marginVertical: 16,
+  },
+
+  solicitacaoDetalhesSecao: {
+    marginBottom: 24,
+    gap: 10,
+  },
+
+  solicitacaoCancelarBotao: {
+    borderWidth: 1,
+    borderColor: cores.danger,
+    backgroundColor: cores.dangerSoft,
+    borderRadius: 14,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 10,
+  },
+
+  solicitacaoCancelarTexto: {
+    fontSize: 14,
+    fontWeight: "700",
+    color: cores.danger,
+  },
 });
 
 export default estilos;
