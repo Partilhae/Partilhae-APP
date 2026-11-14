@@ -1,31 +1,34 @@
 import { StyleSheet } from "react-native";
 
 export const cores = {
-  background: "#FFF9ED",
+  background: "#FCF9F5",
   white: "#FFFFFF",
 
-  primary: "#75452B",
-  primaryMedium: "#A96D45",
-  primarySoft: "#F6E7D7",
+  primary: "#A94F65",
+  primaryMedium: "#C65765",
+  primarySoft: "#F6E5E3",
 
-  yellow: "#F5BC42",
-  yellowMedium: "#FFD36B",
-  yellowSoft: "#FFE7A8",
+  yellow: "#F1C86D",
+  yellowMedium: "#F5D994",
+  yellowSoft: "#FFF3D8",
 
-  text: "#38291F",
-  textSecondary: "#806A5B",
-  muted: "#A18F80",
-  placeholder: "#B5A395",
+  text: "#493D3D",
+  textSecondary: "#806B70",
+  muted: "#A18F92",
+  placeholder: "#B5A3A6",
 
-  border: "#EDE0D0",
-  borderStrong: "#D8BEA5",
+  border: "#E8DDDA",
+  borderStrong: "#D9BEC2",
 
   success: "#39845B",
   successSoft: "#E4F5E8",
+
   info: "#4388A5",
   infoSoft: "#E6F4FA",
-  warning: "#B87520",
+
+  warning: "#A87526",
   warningSoft: "#FFF0C9",
+
   danger: "#C94B43",
   dangerSoft: "#FCE9E6",
 } as const;
@@ -552,6 +555,234 @@ const estilos = StyleSheet.create({
     fontSize: 12,
     fontWeight: "600",
   },
+
+  loginScroll: {
+    flexGrow: 1,
+    justifyContent: "center",
+    paddingHorizontal: 24,
+    paddingTop: 28,
+    paddingBottom: 40,
+  },
+
+  loginHeader: {
+    alignItems: "center",
+    marginBottom: 30,
+  },
+
+  loginLogo: {
+    width: 210,
+    height: 150,
+    marginBottom: 4,
+  },
+
+  loginTitle: {
+    fontSize: 24,
+    fontWeight: "800",
+    color: cores.text,
+    textAlign: "center",
+    marginBottom: 8,
+  },
+
+  loginSubtitle: {
+    fontSize: 14,
+    lineHeight: 21,
+    color: cores.textSecondary,
+    textAlign: "center",
+    maxWidth: 300,
+  },
+
+  loginTipoLabel: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: cores.text,
+    marginBottom: 10,
+  },
+
+  loginToggle: {
+    flexDirection: "row",
+    backgroundColor: cores.primarySoft,
+    borderRadius: 16,
+    padding: 5,
+    marginBottom: 18,
+    gap: 5,
+  },
+
+  loginToggleBtn: {
+    flex: 1,
+    paddingVertical: 13,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+  },
+
+  loginToggleActive: {
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.borderStrong,
+  },
+
+  loginToggleText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: cores.textSecondary,
+  },
+
+  loginToggleTextActive: {
+    color: cores.primary,
+    fontWeight: "700",
+  },
+
+  loginFooter: {
+    alignItems: "center",
+    marginTop: 26,
+    gap: 7,
+  },
+
+  loginFooterText: {
+    fontSize: 14,
+    color: cores.textSecondary,
+  },
+
+  loginFooterLink: {
+    fontSize: 14,
+    color: cores.primary,
+    fontWeight: "700",
+  },
+
+cadastroForm: {
+  gap: 22,
+},
+
+cadastroSecao: {
+  gap: 4,
+},
+
+cadastroSecaoTitulo: {
+  fontSize: 18,
+  fontWeight: "700",
+  color: cores.primary,
+  marginBottom: 12,
+  paddingBottom: 9,
+  borderBottomWidth: 1,
+  borderBottomColor: cores.border,
+},
+
+cadastroCampoTitulo: {
+  fontSize: 14,
+  fontWeight: "600",
+  color: cores.text,
+  marginTop: 8,
+  marginBottom: 8,
+},
+
+cadastroLinha: {
+  flexDirection: "row",
+  gap: 12,
+  alignItems: "flex-start",
+},
+
+cadastroCampoMenor: {
+  flex: 1,
+  minWidth: 0,
+},
+
+cadastroCampoMaior: {
+  flex: 2,
+  minWidth: 0,
+},
+
+cadastroOpcoes: {
+  flexDirection: "row",
+  gap: 8,
+  marginBottom: 8,
+},
+
+cadastroOpcao: {
+  flex: 1,
+  minWidth: 0,
+  backgroundColor: cores.white,
+  borderWidth: 1,
+  borderColor: cores.border,
+  borderRadius: 14,
+  minHeight: 44,
+  paddingHorizontal: 8,
+  paddingVertical: 10,
+  alignItems: "center",
+  justifyContent: "center",
+},
+
+cadastroOpcaoAtiva: {
+  backgroundColor: cores.yellowSoft,
+  borderColor: cores.yellow,
+},
+
+cadastroOpcaoTexto: {
+  fontSize: 13,
+  fontWeight: "600",
+  color: cores.textSecondary,
+  textAlign: "center",
+},
+
+cadastroOpcaoTextoAtivo: {
+  color: cores.primary,
+  fontWeight: "700",
+},
+
+cadastroAjuda: {
+  fontSize: 12,
+  lineHeight: 18,
+  color: cores.textSecondary,
+  marginBottom: 10,
+},
+
+cadastroScroll: {
+  paddingHorizontal: 22,
+  paddingTop: 28,
+  paddingBottom: 55,
+},
+
+cadastroHeader: {
+  marginBottom: 26,
+},
+
+cadastroTitulo: {
+  fontSize: 28,
+  fontWeight: "800",
+  color: cores.text,
+  marginBottom: 8,
+},
+
+cadastroSubtitulo: {
+  fontSize: 14,
+  lineHeight: 21,
+  color: cores.textSecondary,
+},
+
+cadastroFooter: {
+  alignItems: "center",
+  gap: 8,
+  marginTop: 28,
+},
+cadastroOpcoesDoador: {
+  flexDirection: "row",
+  flexWrap: "wrap",
+  gap: 8,
+  marginBottom: 8,
+},
+
+cadastroOpcaoDoador: {
+  width: "48%",
+  flexGrow: 1,
+  backgroundColor: cores.white,
+  borderWidth: 1,
+  borderColor: cores.border,
+  borderRadius: 14,
+  minHeight: 44,
+  paddingHorizontal: 8,
+  paddingVertical: 10,
+  alignItems: "center",
+  justifyContent: "center",
+},
 });
 
 export default estilos;

@@ -183,9 +183,14 @@ export default function BeneficiarioForm({
     });
   }
 
-  return (
-    <View style={estilos.form}>
-      <Text style={estilos.sectionTitle}>Dados pessoais</Text>
+  
+return (
+  <View style={estilos.cadastroForm}>
+    {/* DADOS PESSOAIS */}
+    <View style={estilos.cadastroSecao}>
+      <Text style={estilos.cadastroSecaoTitulo}>
+        Dados pessoais
+      </Text>
 
       <Input
         label="Nome completo"
@@ -223,22 +228,24 @@ export default function BeneficiarioForm({
         error={erros.telefone}
       />
 
-      <Text style={estilos.sectionTitle}>Tipo de beneficiário</Text>
+      <Text style={estilos.cadastroCampoTitulo}>
+        Tipo de beneficiário
+      </Text>
 
-      <View style={estilos.toggle}>
+      <View style={estilos.cadastroOpcoes}>
         <Pressable
-          style={({ pressed }) => [
-            estilos.toggleBtn,
-            form.tipoBeneficiario === "pessoaFisica" && estilos.toggleActive,
-            pressed && { opacity: 0.8 },
+          style={[
+            estilos.cadastroOpcao,
+            form.tipoBeneficiario === "pessoaFisica" &&
+              estilos.cadastroOpcaoAtiva,
           ]}
           onPress={() => selecionarTipo("pessoaFisica")}
         >
           <Text
             style={[
-              estilos.toggleText,
+              estilos.cadastroOpcaoTexto,
               form.tipoBeneficiario === "pessoaFisica" &&
-                estilos.toggleTextActive,
+                estilos.cadastroOpcaoTextoAtivo,
             ]}
           >
             Pessoa física
@@ -246,17 +253,18 @@ export default function BeneficiarioForm({
         </Pressable>
 
         <Pressable
-          style={({ pressed }) => [
-            estilos.toggleBtn,
-            form.tipoBeneficiario === "ONG" && estilos.toggleActive,
-            pressed && { opacity: 0.8 },
+          style={[
+            estilos.cadastroOpcao,
+            form.tipoBeneficiario === "ONG" &&
+              estilos.cadastroOpcaoAtiva,
           ]}
           onPress={() => selecionarTipo("ONG")}
         >
           <Text
             style={[
-              estilos.toggleText,
-              form.tipoBeneficiario === "ONG" && estilos.toggleTextActive,
+              estilos.cadastroOpcaoTexto,
+              form.tipoBeneficiario === "ONG" &&
+                estilos.cadastroOpcaoTextoAtivo,
             ]}
           >
             ONG
@@ -269,12 +277,19 @@ export default function BeneficiarioForm({
           label="Nome da ONG"
           placeholder="Nome da organização"
           value={form.nomeOrganizacao || ""}
-          onChangeText={(value) => setField("nomeOrganizacao", value)}
+          onChangeText={(value) =>
+            setField("nomeOrganizacao", value)
+          }
           error={erros.nomeOrganizacao}
         />
       )}
+    </View>
 
-      <Text style={estilos.sectionTitle}>Endereço</Text>
+    {/* ENDEREÇO */}
+    <View style={estilos.cadastroSecao}>
+      <Text style={estilos.cadastroSecaoTitulo}>
+        Endereço
+      </Text>
 
       <Input
         label="CEP"
@@ -286,31 +301,45 @@ export default function BeneficiarioForm({
       />
 
       {buscandoCep && (
-        <Text style={{ color: cores.textSecondary }}>Buscando endereço...</Text>
+        <Text style={estilos.cadastroAjuda}>
+          Buscando endereço...
+        </Text>
       )}
 
       <Input
         label="Rua"
         placeholder="Rua ou avenida"
         value={form.logradouro}
-        onChangeText={(value) => setField("logradouro", value)}
+        onChangeText={(value) =>
+          setField("logradouro", value)
+        }
         error={erros.logradouro}
       />
 
-      <Input
-        label="Número"
-        placeholder="Número"
-        value={form.numero}
-        onChangeText={(value) => setField("numero", value)}
-        error={erros.numero}
-      />
+      <View style={estilos.cadastroLinha}>
+        <View style={estilos.cadastroCampoMenor}>
+          <Input
+            label="Número"
+            placeholder="Número"
+            value={form.numero}
+            onChangeText={(value) =>
+              setField("numero", value)
+            }
+            error={erros.numero}
+          />
+        </View>
 
-      <Input
-        label="Complemento"
-        placeholder="Opcional"
-        value={form.complemento}
-        onChangeText={(value) => setField("complemento", value)}
-      />
+        <View style={estilos.cadastroCampoMaior}>
+          <Input
+            label="Complemento"
+            placeholder="Opcional"
+            value={form.complemento}
+            onChangeText={(value) =>
+              setField("complemento", value)
+            }
+          />
+        </View>
+      </View>
 
       <Input
         label="Bairro"
@@ -320,44 +349,61 @@ export default function BeneficiarioForm({
         error={erros.bairro}
       />
 
-      <Input
-        label="Cidade"
-        placeholder="Cidade"
-        value={form.cidade}
-        onChangeText={(value) => setField("cidade", value)}
-        error={erros.cidade}
-      />
+      <View style={estilos.cadastroLinha}>
+        <View style={estilos.cadastroCampoMaior}>
+          <Input
+            label="Cidade"
+            placeholder="Cidade"
+            value={form.cidade}
+            onChangeText={(value) =>
+              setField("cidade", value)
+            }
+            error={erros.cidade}
+          />
+        </View>
 
-      <Input
-        label="Estado"
-        placeholder="UF"
-        value={form.estado}
-        onChangeText={(value) => setField("estado", value)}
-        autoCapitalize="characters"
-        error={erros.estado}
-      />
+        <View style={estilos.cadastroCampoMenor}>
+          <Input
+            label="Estado"
+            placeholder="UF"
+            value={form.estado}
+            onChangeText={(value) =>
+              setField("estado", value)
+            }
+            autoCapitalize="characters"
+            error={erros.estado}
+          />
+        </View>
+      </View>
+    </View>
 
-      <Text style={estilos.sectionTitle}>Preferências de busca</Text>
-
-      <Text style={estilos.inputLabel}>
-        Distância máxima para encontrar solicitações
+    {/* PREFERÊNCIAS */}
+    <View style={estilos.cadastroSecao}>
+      <Text style={estilos.cadastroSecaoTitulo}>
+        Preferências de busca
       </Text>
 
-      <View style={estilos.toggle}>
+      <Text style={estilos.cadastroAjuda}>
+        Escolha a distância máxima para encontrar solicitações
+        próximas de você.
+      </Text>
+
+      <View style={estilos.cadastroOpcoes}>
         {([5, 10, 20] as const).map((raio) => (
           <Pressable
             key={raio}
-            style={({ pressed }) => [
-              estilos.toggleBtn,
-              form.raioBuscaKm === raio && estilos.toggleActive,
-              pressed && { opacity: 0.8 },
+            style={[
+              estilos.cadastroOpcao,
+              form.raioBuscaKm === raio &&
+                estilos.cadastroOpcaoAtiva,
             ]}
             onPress={() => selecionarRaio(raio)}
           >
             <Text
               style={[
-                estilos.toggleText,
-                form.raioBuscaKm === raio && estilos.toggleTextActive,
+                estilos.cadastroOpcaoTexto,
+                form.raioBuscaKm === raio &&
+                  estilos.cadastroOpcaoTextoAtivo,
               ]}
             >
               {raio} km
@@ -365,8 +411,13 @@ export default function BeneficiarioForm({
           </Pressable>
         ))}
       </View>
+    </View>
 
-      <Text style={estilos.sectionTitle}>Segurança</Text>
+    {/* SEGURANÇA */}
+    <View style={estilos.cadastroSecao}>
+      <Text style={estilos.cadastroSecaoTitulo}>
+        Segurança
+      </Text>
 
       <Input
         label="Senha"
@@ -377,11 +428,17 @@ export default function BeneficiarioForm({
         error={erros.senha}
       />
 
-      <Botao
-        label="Criar conta"
-        onPress={handleSubmit}
-        loading={loading || buscandoCep}
-      />
+      <Text style={estilos.cadastroAjuda}>
+        Sua senha deve ter pelo menos 6 caracteres.
+      </Text>
     </View>
-  );
+
+    <Botao
+      label="Criar conta"
+      onPress={handleSubmit}
+      loading={loading || buscandoCep}
+    />
+  </View>
+);
+
 }

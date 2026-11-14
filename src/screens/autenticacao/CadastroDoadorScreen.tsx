@@ -1,6 +1,6 @@
 import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import DoadorForm from "../../components/forms/DoadorForm";
-import estilos, { cores } from "../../estilos/estilo";
+import estilos from "../../estilos/estilo";
 import { CadastroDoador } from "../../types/Doador";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/Navigation";
@@ -39,26 +39,31 @@ export default function CadastroDoadorScreen() {
   return (
     <View style={estilos.safe}>
       <ScrollView
-        contentContainerStyle={estilos.scroll}
+        contentContainerStyle={estilos.cadastroScroll}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={estilos.headerCenter}>
-          <Text style={[estilos.title, estilos.textCenter]}>
-            Seja um doador
-          </Text>
-          <Text style={[estilos.subtitle, estilos.textCenter]}>
+        <View style={estilos.cadastroHeader}>
+          <Text style={estilos.cadastroTitulo}>Seja um doador</Text>
+
+          <Text style={estilos.cadastroSubtitulo}>
             Compartilhe o que puder e faça a diferença na sua comunidade.
           </Text>
         </View>
 
         <DoadorForm onSubmit={handleRegister} loading={loading} />
-        <Pressable
-          style={({ pressed }) => [estilos.footer, pressed && { opacity: 0.7 }]}
-          onPress={() => navigation.navigate("CadastroBeneficiario")}
-        >
-          <Text style={estilos.footerLink}>Precisa de ajuda? Cadastre-se como beneficiário</Text>
-        </Pressable>
+
+        <View style={estilos.cadastroFooter}>
+          <Text style={estilos.loginFooterText}>Precisa de ajuda?</Text>
+
+          <Pressable
+            onPress={() => navigation.navigate("CadastroBeneficiario")}
+          >
+            <Text style={estilos.footerLink}>
+              Cadastre-se como beneficiário
+            </Text>
+          </Pressable>
+        </View>
       </ScrollView>
     </View>
   );

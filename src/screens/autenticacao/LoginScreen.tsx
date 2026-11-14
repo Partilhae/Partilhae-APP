@@ -3,7 +3,7 @@ import { NavigationProp, useNavigation } from "@react-navigation/native";
 
 import LoginForm from "../../components/forms/LoginForm";
 import estilos from "../../estilos/estilo";
-import { LoginRequest } from "../../types/Auth";
+import { LoginRequest, UserTipo } from "../../types/Auth";
 import { RootStackParamList } from "../../types/Navigation";
 import { useState } from "react";
 import { logarUsuario } from "../../services/Auth";
@@ -40,32 +40,40 @@ export default function LoginScreen() {
   return (
     <View style={estilos.safe}>
       <ScrollView
-        contentContainerStyle={estilos.scrollCentered}
+        contentContainerStyle={estilos.loginScroll}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-        <View style={estilos.logoContainer}>
+        <View style={estilos.loginHeader}>
           <Image
             source={require("../../../assets/LogoPartilhae.png")}
-            style={estilos.logoImage}
+            style={estilos.loginLogo}
             resizeMode="contain"
           />
-          <Text style={estilos.subtitle}>Que bom ter você por aqui!</Text>
+          <Text style={estilos.loginTitle}>Que bom ter você por aqui!</Text>
+          <Text style={estilos.loginSubtitle}>
+            Entre na sua conta e continue fazendo parte dessa rede de
+            solidariedade.
+          </Text>
         </View>
 
         <LoginForm onSubmit={handleLogin} loading={loading} />
 
-        <View style={estilos.footer}>
-          <Text style={[estilos.subtitle, estilos.textCenter]}>
+        <View style={estilos.loginFooter}>
+          <Text style={estilos.loginFooterText}>
             Ainda não possui uma conta?
           </Text>
+
           <Pressable
             onPress={() => navigation.navigate("CadastroBeneficiario")}
           >
-            <Text style={estilos.footerLink}>Cadastrar como beneficiário</Text>
+            <Text style={estilos.loginFooterLink}>
+              Criar conta como beneficiário
+            </Text>
           </Pressable>
+
           <Pressable onPress={() => navigation.navigate("CadastroDoador")}>
-            <Text style={estilos.footerLink}>Cadastrar como doador</Text>
+            <Text style={estilos.loginFooterLink}>Criar conta como doador</Text>
           </Pressable>
         </View>
       </ScrollView>

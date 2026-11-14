@@ -171,173 +171,193 @@ export default function DoadorForm({
   }
 
   return (
-    <View style={estilos.form}>
-      <Text style={estilos.sectionTitle}>
-        Dados pessoais
-      </Text>
+    <View style={estilos.cadastroForm}>
+      {/* DADOS PESSOAIS */}
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Dados pessoais</Text>
 
-      <Input
-        label="Nome completo"
-        placeholder="Seu nome completo"
-        value={form.nome}
-        onChangeText={(value) => setField("nome", value)}
-        error={erros.nome}
-      />
+        <Input
+          label="Nome completo"
+          placeholder="Seu nome completo"
+          value={form.nome}
+          onChangeText={(value) => setField("nome", value)}
+          error={erros.nome}
+        />
 
-      <Input
-        label="E-mail"
-        placeholder="seu@email.com"
-        value={form.email}
-        onChangeText={(value) => setField("email", value)}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        error={erros.email}
-      />
+        <Input
+          label="E-mail"
+          placeholder="seu@email.com"
+          value={form.email}
+          onChangeText={(value) => setField("email", value)}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          error={erros.email}
+        />
 
-      <Input
-        label="CPF"
-        placeholder="000.000.000-00"
-        value={form.cpf}
-        onChangeText={(value) => setField("cpf", value)}
-        keyboardType="numeric"
-        error={erros.cpf}
-      />
+        <Input
+          label="CPF"
+          placeholder="000.000.000-00"
+          value={form.cpf}
+          onChangeText={(value) => setField("cpf", value)}
+          keyboardType="numeric"
+          error={erros.cpf}
+        />
 
-      <Input
-        label="Telefone"
-        placeholder="(11) 99999-9999"
-        value={form.telefone}
-        onChangeText={(value) => setField("telefone", value)}
-        keyboardType="phone-pad"
-        error={erros.telefone}
-      />
+        <Input
+          label="Telefone"
+          placeholder="(11) 99999-9999"
+          value={form.telefone}
+          onChangeText={(value) => setField("telefone", value)}
+          keyboardType="phone-pad"
+          error={erros.telefone}
+        />
 
-      <Text style={estilos.sectionTitle}>
-        Tipo de doador
-      </Text>
+        <Text style={estilos.cadastroCampoTitulo}>Tipo de doador</Text>
 
-      <View style={estilos.toggle}>
-        {(
-          [
-            ["pessoaFisica", "Pessoa física"],
-            ["estabelecimento", "Estabelecimento"],
-            ["projetoSocial", "Projeto social"],
-          ] as const
-        ).map(([tipo, label]) => (
-          <Pressable
-            key={tipo}
-            style={({ pressed }) => [
-              estilos.toggleBtn,
-              form.tipoDoador === tipo && estilos.toggleActive,
-              pressed && { opacity: 0.8 },
-            ]}
-            onPress={() => selecionarTipo(tipo)}
-          >
-            <Text
+        <View style={estilos.cadastroOpcoesDoador}>
+          {(
+            [
+              ["pessoaFisica", "Pessoa física"],
+              ["estabelecimento", "Estabelecimento"],
+              ["projetoSocial", "Projeto social"],
+            ] as const
+          ).map(([tipo, label]) => (
+            <Pressable
+              key={tipo}
               style={[
-                estilos.toggleText,
-                form.tipoDoador === tipo && estilos.toggleTextActive,
+                estilos.cadastroOpcaoDoador,
+                form.tipoDoador === tipo && estilos.cadastroOpcaoAtiva,
               ]}
+              onPress={() => selecionarTipo(tipo)}
             >
-              {label}
-            </Text>
-          </Pressable>
-        ))}
+              <Text
+                style={[
+                  estilos.cadastroOpcaoTexto,
+                  form.tipoDoador === tipo && estilos.cadastroOpcaoTextoAtivo,
+                ]}
+              >
+                {label}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+
+        {form.tipoDoador !== "pessoaFisica" && (
+          <Input
+            label={
+              form.tipoDoador === "estabelecimento"
+                ? "Nome do estabelecimento"
+                : "Nome do projeto social"
+            }
+            placeholder="Digite o nome"
+            value={form.nomeEstabelecimento || ""}
+            onChangeText={(value) => setField("nomeEstabelecimento", value)}
+            error={erros.nomeEstabelecimento}
+          />
+        )}
       </View>
 
-      {form.tipoDoador !== "pessoaFisica" && (
+      {/* ENDEREÇO */}
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Endereço</Text>
+
         <Input
-          label={
-            form.tipoDoador === "estabelecimento"
-              ? "Nome do estabelecimento"
-              : "Nome do projeto social"
-          }
-          placeholder="Digite o nome"
-          value={form.nomeEstabelecimento || ""}
-          onChangeText={(value) => setField("nomeEstabelecimento", value)}
-          error={erros.nomeEstabelecimento}
+          label="CEP"
+          placeholder="00000-000"
+          value={form.cep}
+          onChangeText={consultarCep}
+          keyboardType="numeric"
+          error={erros.cep}
         />
-      )}
 
-      <Text style={estilos.sectionTitle}>
-        Endereço
-      </Text>
+        {buscandoCep && (
+          <Text style={estilos.cadastroAjuda}>Buscando endereço...</Text>
+        )}
 
-      <Input
-        label="CEP"
-        placeholder="00000-000"
-        value={form.cep}
-        onChangeText={consultarCep}
-        keyboardType="numeric"
-        error={erros.cep}
+        <Input
+          label="Rua"
+          placeholder="Rua ou avenida"
+          value={form.logradouro}
+          onChangeText={(value) => setField("logradouro", value)}
+          error={erros.logradouro}
+        />
+
+        <View style={estilos.cadastroLinha}>
+          <View style={estilos.cadastroCampoMenor}>
+            <Input
+              label="Número"
+              placeholder="Número"
+              value={form.numero}
+              onChangeText={(value) => setField("numero", value)}
+              error={erros.numero}
+            />
+          </View>
+
+          <View style={estilos.cadastroCampoMaior}>
+            <Input
+              label="Complemento"
+              placeholder="Opcional"
+              value={form.complemento}
+              onChangeText={(value) => setField("complemento", value)}
+            />
+          </View>
+        </View>
+
+        <Input
+          label="Bairro"
+          placeholder="Bairro"
+          value={form.bairro}
+          onChangeText={(value) => setField("bairro", value)}
+          error={erros.bairro}
+        />
+
+        <View style={estilos.cadastroLinha}>
+          <View style={estilos.cadastroCampoMaior}>
+            <Input
+              label="Cidade"
+              placeholder="Cidade"
+              value={form.cidade}
+              onChangeText={(value) => setField("cidade", value)}
+              error={erros.cidade}
+            />
+          </View>
+
+          <View style={estilos.cadastroCampoMenor}>
+            <Input
+              label="Estado"
+              placeholder="UF"
+              value={form.estado}
+              onChangeText={(value) => setField("estado", value)}
+              autoCapitalize="characters"
+              error={erros.estado}
+            />
+          </View>
+        </View>
+      </View>
+
+      {/* SEGURANÇA */}
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Segurança</Text>
+
+        <Input
+          label="Senha"
+          placeholder="Crie uma senha"
+          value={form.senha}
+          onChangeText={(value) => setField("senha", value)}
+          isSenha
+          error={erros.senha}
+        />
+
+        <Text style={estilos.cadastroAjuda}>
+          Sua senha deve ter pelo menos 6 caracteres.
+        </Text>
+      </View>
+
+      <Botao
+        label="Criar conta"
+        onPress={handleSubmit}
+        loading={loading || buscandoCep}
       />
-
-      {buscandoCep && (
-        <Text style={{ color: cores.textSecondary }}>Buscando endereço...</Text>
-      )}
-
-      <Input
-        label="Rua"
-        placeholder="Rua ou avenida"
-        value={form.logradouro}
-        onChangeText={(value) => setField("logradouro", value)}
-        error={erros.logradouro}
-      />
-
-      <Input
-        label="Número"
-        placeholder="Número"
-        value={form.numero}
-        onChangeText={(value) => setField("numero", value)}
-        error={erros.numero}
-      />
-
-      <Input
-        label="Complemento"
-        placeholder="Opcional"
-        value={form.complemento}
-        onChangeText={(value) => setField("complemento", value)}
-      />
-
-      <Input
-        label="Bairro"
-        placeholder="Bairro"
-        value={form.bairro}
-        onChangeText={(value) => setField("bairro", value)}
-        error={erros.bairro}
-      />
-
-      <Input
-        label="Cidade"
-        placeholder="Cidade"
-        value={form.cidade}
-        onChangeText={(value) => setField("cidade", value)}
-        error={erros.cidade}
-      />
-
-      <Input
-        label="Estado"
-        placeholder="UF"
-        value={form.estado}
-        onChangeText={(value) => setField("estado", value)}
-        autoCapitalize="characters"
-        error={erros.estado}
-      />
-
-      <Text style={estilos.sectionTitle}>
-        Segurança
-      </Text>
-
-      <Input
-        label="Senha"
-        placeholder="Crie uma senha"
-        value={form.senha}
-        onChangeText={(value) => setField("senha", value)}
-        isSenha
-        error={erros.senha}
-      />
-
-      <Botao label="Criar conta" onPress={handleSubmit} loading={loading || buscandoCep} />
     </View>
   );
 }

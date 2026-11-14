@@ -2,7 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
 
 const JavaAPI = axios.create({
-  baseURL: "https://javachallenge.onrender.com",
+  baseURL: "Esperando o render do andré",
 });
 
 JavaAPI.interceptors.request.use(async (config) => {

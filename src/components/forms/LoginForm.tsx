@@ -7,11 +7,13 @@ import { LoginErros, LoginFormData, UserTipo } from "../../types/Auth";
 
 type LoginFormProps = {
   onSubmit: (dados: LoginFormData) => void;
+  onTipoChange?: (tipo: UserTipo) => void;
   loading?: boolean;
 };
 
 export default function LoginForm({
   onSubmit,
+  onTipoChange,
   loading = false,
 }: LoginFormProps) {
   const [form, setForm] = useState<LoginFormData>({
@@ -34,6 +36,8 @@ export default function LoginForm({
       ...prev,
       tipo,
     }));
+
+    onTipoChange?.(tipo);
   }
 
   function validar() {
@@ -54,9 +58,7 @@ export default function LoginForm({
   }
 
   function handleSubmit() {
-    if (!validar()) {
-      return;
-    }
+    if (!validar()) return;
 
     onSubmit({
       ...form,
@@ -66,42 +68,28 @@ export default function LoginForm({
 
   return (
     <View style={estilos.form}>
-      <View style={estilos.toggle}>
-        <Pressable
-          style={({ pressed }) => [
-            estilos.toggleBtn,
-            form.tipo === "beneficiario" && estilos.toggleActive,
-            pressed && { opacity: 0.8 },
-          ]}
-          onPress={() => selecionarTipo("beneficiario")}
-        >
-          <Text
-            style={[
-              estilos.toggleText,
-              form.tipo === "beneficiario" && estilos.toggleTextActive,
-            ]}
-          >
-            Beneficiário
-          </Text>
-        </Pressable>
+      <Text style={estilos.loginTipoLabel}>Como você participa?</Text>
 
-        <Pressable
-          style={({ pressed }) => [
-            estilos.toggleBtn,
-            form.tipo === "doador" && estilos.toggleActive,
-            pressed && { opacity: 0.8 },
-          ]}
-          onPress={() => selecionarTipo("doador")}
-        >
-          <Text
+      <View style={estilos.loginToggle}>
+        {(["beneficiario", "doador"] as UserTipo[]).map((tipo) => (
+          <Pressable
+            key={tipo}
             style={[
-              estilos.toggleText,
-              form.tipo === "doador" && estilos.toggleTextActive,
+              estilos.loginToggleBtn,
+              form.tipo === tipo && estilos.loginToggleActive,
             ]}
+            onPress={() => selecionarTipo(tipo)}
           >
-            Doador
-          </Text>
-        </Pressable>
+            <Text
+              style={[
+                estilos.loginToggleText,
+                form.tipo === tipo && estilos.loginToggleTextActive,
+              ]}
+            >
+              {tipo === "beneficiario" ? "Beneficiário" : "Doador"}
+            </Text>
+          </Pressable>
+        ))}
       </View>
 
       <Input
