@@ -6,7 +6,6 @@ import {
   useEffect,
   useState,
 } from "react";
-
 import {
   NovaSolicitacao,
   Solicitacao,
@@ -22,7 +21,9 @@ type SolicitacoesContextType = {
     dados: NovaSolicitacao,
     idReceptor: number,
   ) => Promise<void>;
+  atualizarSolicitacao: (id: string, dados: NovaSolicitacao) => Promise<void>;
   atualizarStatus: (id: string, status: StatusSolicitacao) => Promise<void>;
+  excluirSolicitacao: (id: string) => Promise<void>;
 };
 
 const SolicitacoesContext = createContext<SolicitacoesContextType>(
@@ -73,10 +74,62 @@ export function SolicitacoesProvider({ children }: PropsWithChildren) {
     await salvarSolicitacoes([...solicitacoes, novaSolicitacao]);
   }
 
-  async function atualizarStatus(id: string, status: StatusSolicitacao) {
-    const listaAtualizada = solicitacoes.map((solicitacao) =>
-      solicitacao.id === id ? { ...solicitacao, status } : solicitacao,
+  async function atualizarSolicitacao(id: string, dados: NovaSolicitacao) {
+    const solicitacao = solicitacoes.find((item) => item.id === id);
+
+    if (!solicitacao) {
+      throw new Error("Solicitação não encontrada.");
+    }
+
+    if (solicitacao.status !== "aberta") {
+      throw new Error("Somente solicitações abertas podem ser editadas.");
+    }
+
+    const listaAtualizada = solicitacoes.map((item) =>
+      item.id === id
+        ? {
+            ...item,
+            titulo: dados.titulo,
+            descricao: dados.descricao,
+            tipoAjuda: dados.tipoAjuda,
+            itens: dados.tipoAjuda === "especifico" ? dados.itens : [],
+          }
+        : item,
     );
+
+    await salvarSolicitacoes(listaAtualizada);
+  }
+
+  async function atualizarStatus(id: string, status: StatusSolicitacao) {
+    const solicitacao = solicitacoes.find((item) => item.id === id);
+
+    if (!solicitacao) {
+      throw new Error("Solicitação não encontrada.");
+    }
+
+    if (status === "cancelada" && solicitacao.status !== "aberta") {
+      throw new Error("Somente solicitações abertas podem ser canceladas.");
+    }
+
+    const listaAtualizada = solicitacoes.map((item) =>
+      item.id === id ? { ...item, status } : item,
+    );
+
+    await salvarSolicitacoes(listaAtualizada);
+  }
+
+  async function excluirSolicitacao(id: string) {
+    const solicitacao = solicitacoes.find((item) => item.id === id);
+
+    if (!solicitacao) {
+      throw new Error("Solicitação não encontrada.");
+    }
+
+    if (solicitacao.status !== "aberta" && solicitacao.status !== "cancelada") {
+      throw new Error("Esta solicitação não pode ser excluída.");
+    }
+
+    const listaAtualizada = solicitacoes.filter((item) => item.id !== id);
 
     await salvarSolicitacoes(listaAtualizada);
   }
@@ -87,7 +140,9 @@ export function SolicitacoesProvider({ children }: PropsWithChildren) {
         solicitacoes,
         loading,
         adicionarSolicitacao,
+        atualizarSolicitacao,
         atualizarStatus,
+        excluirSolicitacao,
       }}
     >
       {children}

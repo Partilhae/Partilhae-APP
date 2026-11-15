@@ -6,7 +6,7 @@ import estilos from "../../estilos/estilo";
 import { LoginRequest, UserTipo } from "../../types/Auth";
 import { RootStackParamList } from "../../types/Navigation";
 import { useState } from "react";
-import { logarUsuario } from "../../services/Auth";
+import { logarUsuario } from "../../services/AuthService";
 
 export default function LoginScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

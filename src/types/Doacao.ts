@@ -4,6 +4,11 @@ export type StatusDoacao =
   | "concluida"
   | "cancelada";
 
+export type FiltroDoacao =
+  | "em_andamento"
+  | "concluida"
+  | "cancelada";
+
 export type Doacao = {
   id: string;
   idSolicitacao: string;

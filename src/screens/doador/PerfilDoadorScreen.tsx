@@ -12,7 +12,7 @@ import { useFocusEffect } from "@react-navigation/native";
 
 import styles, { cores } from "../../estilos/estilo";
 import { UsuarioLogado } from "../../types/Auth";
-import { buscarUsuarioLogado, logoutUsuario } from "../../services/Auth";
+import { buscarUsuarioLogado, logoutUsuario } from "../../services/AuthService";
 
 export default function PerfilDoadorScreen() {
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);

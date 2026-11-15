@@ -51,15 +51,13 @@ export default function ExplorarSolicitacoesScreen() {
           {item.descricao}
         </Text>
 
-        <View style={estilos.solicitacaoCardInfo}>
-          <Text style={estilos.solicitacaoCardData}>
+          <Text style={estilos.solicitacaoCardInfo}>
             {item.tipoAjuda === "geral" ? "Ajuda geral" : "Ajuda específica"}
           </Text>
 
           <Text style={estilos.solicitacaoCardData}>
-            {formatarData(item.dataCriacao)}
+            Publicada em {formatarData(item.dataCriacao)}
           </Text>
-        </View>
 
         {item.tipoAjuda === "especifico" && (
           <Text style={estilos.solicitacaoCardData}>

@@ -4,6 +4,7 @@ import estilos, { cores } from "../estilos/estilo";
 import DashboardBeneficiarioScreen from "../screens/beneficiario/DashboardBeneficiarioScreen";
 import { Ionicons } from "@expo/vector-icons";
 import PerfilBeneficiarioScreen from "../screens/beneficiario/PerfilBeneficiarioScreen";
+import MinhasSolicitacoesScreen from "../screens/beneficiario/MinhasSolicitacoesBeneficiarioScreen";
 
 const Tab = createBottomTabNavigator<BeneficiarioTabParamlist>();
 
@@ -25,6 +26,26 @@ export default function BeneficiarioTabs() {
           title: "Início",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="MinhasSolicitacoes"
+        component={MinhasSolicitacoesScreen}
+        options={{
+          title: "Solicitações",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="document-text-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="DoacoesRecebidasBeneficiario"
+        component={DashboardBeneficiarioScreen}
+        options={{
+          title: "Doações",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="heart-outline" color={color} size={size} />
           ),
         }}
       />

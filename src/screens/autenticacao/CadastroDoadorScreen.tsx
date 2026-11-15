@@ -5,7 +5,7 @@ import { CadastroDoador } from "../../types/Doador";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/Navigation";
 import { useState } from "react";
-import { cadastrarDoador } from "../../services/Auth";
+import { cadastrarDoador } from "../../services/DoadorService";
 
 export default function CadastroDoadorScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();

@@ -2,7 +2,7 @@ import { useNavigation } from "@react-navigation/native";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { useState } from "react";
 import { NovaSolicitacao } from "../../types/Solicitacao";
-import { buscarUsuarioLogado } from "../../services/Auth";
+import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Alert, ScrollView, Text, View } from "react-native";
 import estilos from "../../estilos/estilo";
 import SolicitacaoForm from "../../components/forms/SolicitacaoForm";

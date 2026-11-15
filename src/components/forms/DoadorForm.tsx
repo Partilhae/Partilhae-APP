@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
-import estilos, { cores } from "../../estilos/estilo";
+import estilos from "../../estilos/estilo";
 import Input from "../Input";
 import Botao from "../Botao";
 import { CadastroDoador, DoadorErros, DoadorTipo } from "../../types/Doador";
@@ -109,7 +109,7 @@ export default function DoadorForm({
     }
 
     if (!form.logradouro.trim()) {
-      novosErros.logradouro = "Informe a rua.";
+      novosErros.logradouro = "Informe a rua/avenida.";
     }
 
     if (!form.numero.trim()) {

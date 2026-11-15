@@ -67,7 +67,7 @@ export default function PerfilBeneficiarioForm({
 
       setForm((anterior) => ({
         ...anterior,
-        endereco: endereco.logradouro || anterior.endereco,
+        endereco: endereco.logradouro || anterior.logradouro,
         bairro: endereco.bairro || anterior.bairro,
         cidade: endereco.localidade || anterior.cidade,
         estado: endereco.uf || anterior.estado,
@@ -94,7 +94,7 @@ export default function PerfilBeneficiarioForm({
     if (form.cep.replace(/\D/g, "").length !== 8)
       novosErros.cep = "Informe um CEP válido.";
 
-    if (!form.endereco.trim()) novosErros.endereco = "Informe o endereço.";
+    if (!form.logradouro.trim()) novosErros.logradouro = "Informe o endereço.";
 
     if (!form.numero.trim()) novosErros.numero = "Informe o número.";
 
@@ -166,9 +166,9 @@ export default function PerfilBeneficiarioForm({
 
       <Input
         label="Logradouro"
-        value={form.endereco}
-        onChangeText={(v) => atualizar("endereco", v)}
-        error={erros.endereco}
+        value={form.logradouro}
+        onChangeText={(v) => atualizar("logradouro", v)}
+        error={erros.logradouro}
       />
 
       <Input
@@ -238,30 +238,6 @@ export default function PerfilBeneficiarioForm({
           error={erros.nomeOrganizacao}
         />
       )}
-
-      <Text style={styles.inputLabel}>Raio de busca</Text>
-
-      <View style={styles.toggle}>
-        {([5, 10, 20] as const).map((raio) => (
-          <Pressable
-            key={raio}
-            style={[
-              styles.toggleBtn,
-              form.raioBuscaKm === raio && styles.toggleActive,
-            ]}
-            onPress={() => atualizar("raioBuscaKm", raio)}
-          >
-            <Text
-              style={[
-                styles.toggleText,
-                form.raioBuscaKm === raio && styles.toggleTextActive,
-              ]}
-            >
-              {raio} km
-            </Text>
-          </Pressable>
-        ))}
-      </View>
 
       <Input
         label="Quantidade de pessoas na família"

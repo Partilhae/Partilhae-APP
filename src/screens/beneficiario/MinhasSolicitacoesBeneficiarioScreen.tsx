@@ -15,12 +15,13 @@ import {
 
 import estilos, { cores } from "../../estilos/estilo";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
-import { buscarUsuarioLogado } from "../../services/Auth";
+import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Solicitacao, StatusSolicitacao } from "../../types/Solicitacao";
 import { BeneficiarioStackParamlist } from "../../types/Navigation";
 
 export default function MinhasSolicitacoesScreen() {
-  const navigation = useNavigation<NavigationProp<BeneficiarioStackParamlist>>();
+  const navigation =
+    useNavigation<NavigationProp<BeneficiarioStackParamlist>>();
 
   const { solicitacoes, loading } = useSolicitacoes();
 
@@ -94,7 +95,14 @@ export default function MinhasSolicitacoesScreen() {
 
   function renderizarSolicitacao({ item }: { item: Solicitacao }) {
     return (
-      <View style={estilos.solicitacaoCard}>
+      <Pressable
+        style={estilos.solicitacaoCard}
+        onPress={() =>
+          navigation.navigate("DetalhesSolicitacaoBeneficiario", {
+            idSolicitacao: item.id,
+          })
+        }
+      >
         <View style={estilos.solicitacaoCardTopo}>
           <Text style={estilos.solicitacaoCardTitulo}>{item.titulo}</Text>
 
@@ -122,7 +130,7 @@ export default function MinhasSolicitacoesScreen() {
         <Text style={estilos.solicitacaoCardData}>
           Publicada em {formatarData(item.dataCriacao)}
         </Text>
-      </View>
+      </Pressable>
     );
   }
 

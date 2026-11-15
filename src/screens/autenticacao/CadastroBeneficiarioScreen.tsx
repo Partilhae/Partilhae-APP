@@ -3,9 +3,9 @@ import estilos from "../../estilos/estilo";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { RootStackParamList } from "../../types/Navigation";
 import { useState } from "react";
-import { cadastrarBeneficiario } from "../../services/Auth";
 import { CadastroBeneficiario } from "../../types/Beneficiario";
 import BeneficiarioForm from "../../components/forms/BeneficiarioForm";
+import { cadastrarBeneficiario } from "../../services/BeneficiarioService";
 
 export default function CadastroBeneficiarioScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -36,47 +36,34 @@ export default function CadastroBeneficiarioScreen() {
     }
   }
 
-  
-return (
-  <View style={estilos.safe}>
-    <ScrollView
-      contentContainerStyle={estilos.cadastroScroll}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={false}
-    >
-      <View style={estilos.cadastroHeader}>
-        <Text style={estilos.cadastroTitulo}>
-          Receba ajuda
-        </Text>
+  return (
+    <View style={estilos.safe}>
+      <ScrollView
+        contentContainerStyle={estilos.cadastroScroll}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={estilos.cadastroHeader}>
+          <Text style={estilos.cadastroTitulo}>Receba ajuda</Text>
 
-        <Text style={estilos.cadastroSubtitulo}>
-          Faça parte de uma rede de solidariedade.
-          Preencha seus dados para começar.
-        </Text>
-      </View>
-
-      <BeneficiarioForm
-        onSubmit={handleRegister}
-        loading={loading}
-      />
-
-      <View style={estilos.cadastroFooter}>
-        <Text style={estilos.loginFooterText}>
-          Quer compartilhar alimentos?
-        </Text>
-
-        <Pressable
-          onPress={() =>
-            navigation.navigate("CadastroDoador")
-          }
-        >
-          <Text style={estilos.footerLink}>
-            Cadastre-se como doador
+          <Text style={estilos.cadastroSubtitulo}>
+            Faça parte de uma rede de solidariedade. Preencha seus dados para
+            começar.
           </Text>
-        </Pressable>
-      </View>
-    </ScrollView>
-  </View>
-);
+        </View>
 
+        <BeneficiarioForm onSubmit={handleRegister} loading={loading} />
+
+        <View style={estilos.cadastroFooter}>
+          <Text style={estilos.loginFooterText}>
+            Quer compartilhar alimentos?
+          </Text>
+
+          <Pressable onPress={() => navigation.navigate("CadastroDoador")}>
+            <Text style={estilos.footerLink}>Cadastre-se como doador</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
+    </View>
+  );
 }

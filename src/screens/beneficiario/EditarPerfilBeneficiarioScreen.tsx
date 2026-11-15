@@ -5,7 +5,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import PerfilBeneficiarioForm from "../../components/forms/PerfilBeneficiarioForm";
 import styles, { cores } from "../../estilos/estilo";
 import { PerfilBeneficiarioFormData } from "../../types/Beneficiario";
-import { buscarUsuarioLogado } from "../../services/Auth";
+import { buscarUsuarioLogado } from "../../services/AuthService";
 
 const dadosVazios: PerfilBeneficiarioFormData = {
   nomeUsuario: "",

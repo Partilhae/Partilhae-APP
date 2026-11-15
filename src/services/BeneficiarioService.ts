@@ -1,0 +1,93 @@
+import { Alert } from "react-native";
+import {
+  BeneficiarioRequest,
+  BeneficiarioResponse,
+  CadastroBeneficiario,
+} from "../types/Beneficiario";
+import { JavaAPI } from "./API/JavaAPI";
+
+export async function cadastrarBeneficiario(cadastro: CadastroBeneficiario) {
+  try {
+    const { data } = await JavaAPI.post("/beneficiarios", {
+      nomeUsuario: cadastro.nome.trim(),
+      email: cadastro.email.trim().toLowerCase(),
+      cpf: cadastro.cpf,
+      telefone: cadastro.telefone,
+      senha: cadastro.senha,
+
+      cep: cadastro.cep,
+      endereco: cadastro.logradouro,
+      numero: cadastro.numero,
+      complemento: cadastro.complemento,
+      bairro: cadastro.bairro,
+      cidade: cadastro.cidade,
+      estado: cadastro.estado,
+
+      tipoBeneficiario: cadastro.tipoBeneficiario,
+      nomeOrganizacao:
+        cadastro.tipoBeneficiario === "ONG"
+          ? cadastro.nomeOrganizacao?.trim()
+          : null,
+    });
+
+    return data;
+  } catch (error) {
+    console.log("Erro ao cadastrar beneficiário:", error);
+
+    Alert.alert("Erro", "Não foi possível cadastrar beneficiário");
+
+    return null;
+  }
+}
+
+export async function buscarBeneficiario(
+  id: number,
+): Promise<BeneficiarioResponse | null> {
+  try {
+    const { data } = await JavaAPI.get<BeneficiarioResponse>(
+      `/beneficiarios/${id}`,
+    );
+    return data;
+  } catch (error) {
+    console.log("Erro ao buscar beneficiário:", error);
+
+    Alert.alert("Erro", "Não foi possível buscar os dados do beneficiário.");
+
+    return null;
+  }
+}
+
+export async function atualizarBeneficiario(
+  id: number,
+  dados: BeneficiarioRequest,
+): Promise<BeneficiarioResponse | null> {
+  try {
+    const { data } = await JavaAPI.put<BeneficiarioResponse>(
+      `/beneficiarios/${id}`,
+      dados,
+    );
+
+    return data;
+  } catch (error) {
+    console.log("Erro ao atualizar beneficiário:", error);
+
+    Alert.alert("Erro", "Não foi possível atualizar os dados do beneficiário.");
+
+    return null;
+  }
+}
+
+
+export async function deletarBeneficiario(id: number): Promise<boolean> {
+  try {
+    await JavaAPI.delete(`/beneficiarios/${id}`);
+
+    return true;
+  } catch (error) {
+    console.log("Erro ao deletar beneficiário:", error);
+
+    Alert.alert("Erro", "Não foi possível excluir a conta do beneficiário");
+
+    return false;
+  }
+}

@@ -48,8 +48,9 @@ export type DoadorRequest = {
   telefone: string;
 
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento?: string | null;
   bairro: string;
   cidade: string;
   estado: string;
@@ -68,8 +69,9 @@ export type DoadorResponse = {
   telefone: string;
 
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento?: string | null;
   bairro: string;
   cidade: string;
   estado: string;
@@ -90,14 +92,16 @@ export type PerfilDoadorFormData = {
   telefone: string;
 
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento: string;
   bairro: string;
   cidade: string;
   estado: string;
 
   tipoDoador: DoadorTipo;
   nomeEstabelecimento: string;
+
   disponibilidade: string;
   observacao: string;
 };

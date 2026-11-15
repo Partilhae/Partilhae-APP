@@ -12,17 +12,30 @@ import Botao from "../Botao";
 type SolicitacaoFormProps = {
   onSubmit: (dados: NovaSolicitacao) => void;
   loading?: boolean;
+  dadosIniciais?: NovaSolicitacao;
 };
 
 export default function SolicitacaoForm({
   onSubmit,
   loading = false,
+  dadosIniciais,
 }: SolicitacaoFormProps) {
-  const [titulo, setTitulo] = useState("");
-  const [descricao, setDescricao] = useState("");
-  const [tipoAjuda, setTipoAjuda] = useState<TipoAjuda>("geral");
+  const [titulo, setTitulo] = useState(
+    dadosIniciais?.titulo ?? "",
+  );
 
-  const [itens, setItens] = useState<ItemSolicitacao[]>([]);
+  const [descricao, setDescricao] = useState(
+    dadosIniciais?.descricao ?? "",
+  );
+
+  const [tipoAjuda, setTipoAjuda] = useState<TipoAjuda>(
+    dadosIniciais?.tipoAjuda ?? "geral",
+  );
+
+  const [itens, setItens] = useState<ItemSolicitacao[]>(
+    dadosIniciais?.itens ?? [],
+  );
+
   const [nomeItem, setNomeItem] = useState("");
   const [quantidade, setQuantidade] = useState("");
   const [unidade, setUnidade] = useState("");
@@ -31,6 +44,7 @@ export default function SolicitacaoForm({
     titulo: "",
     descricao: "",
   });
+
 
   function selecionarTipo(tipo: TipoAjuda) {
     setTipoAjuda(tipo);
@@ -92,7 +106,7 @@ export default function SolicitacaoForm({
     if (tipoAjuda === "especifico" && itens.length === 0) {
       Alert.alert(
         "Atenção",
-        "Adicione pelo menos um alimento à sua soluicitação.",
+        "Adicione pelo menos um alimento à sua solicitação.",
       );
       return false;
     }
@@ -187,14 +201,14 @@ export default function SolicitacaoForm({
                 onChangeText={setQuantidade}
                 keyboardType="decimal-pad"
               />
-              <View style={estilos.cadastroCampoMaior}>
-                <Input
-                  label="Unidade"
-                  placeholder="Ex.: kg, pacote, litro"
-                  value={unidade}
-                  onChangeText={setUnidade}
-                />
-              </View>
+            </View>
+            <View style={estilos.cadastroCampoMaior}>
+              <Input
+                label="Unidade"
+                placeholder="Ex.: kg, pacote, litro"
+                value={unidade}
+                onChangeText={setUnidade}
+              />
             </View>
             <Pressable
               style={estilos.solicitacaoAdicionar}
@@ -235,7 +249,11 @@ export default function SolicitacaoForm({
       )}
 
       <Botao
-        label="Publicar solicitação"
+        label={
+          dadosIniciais
+          ? "Salvar alterações" 
+          : "Publicar solicitação"
+        }
         onPress={handleSubmit}
         loading={loading}
       />

@@ -7,29 +7,36 @@ import {
   Text,
   View,
 } from "react-native";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+  NavigationProp,
+} from "@react-navigation/native";
 
 import estilos, { cores } from "../../estilos/estilo";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { StatusSolicitacao } from "../../types/Solicitacao";
-import { buscarUsuarioLogado } from "../../services/Auth";
-
-type DetalhesParams = {
-  DetalhesSolicitacao: {
-    idSolicitacao: string;
-  };
-};
+import { buscarUsuarioLogado } from "../../services/AuthService";
+import { BeneficiarioStackParamlist } from "../../types/Navigation";
 
 export default function DetalhesSolicitacaoScreen() {
-  const navigation = useNavigation();
+  const navigation =
+    useNavigation<NavigationProp<BeneficiarioStackParamlist>>();
 
-  const route = useRoute<RouteProp<DetalhesParams, "DetalhesSolicitacao">>();
+  const route =
+    useRoute<
+      RouteProp<BeneficiarioStackParamlist, "DetalhesSolicitacaoBeneficiario">
+    >();
 
   const { idSolicitacao } = route.params;
 
-  const { solicitacoes, loading, atualizarStatus } = useSolicitacoes();
+  const { solicitacoes, loading, atualizarStatus, excluirSolicitacao } =
+    useSolicitacoes();
 
   const [cancelando, setCancelando] = useState(false);
+
+  const [excluindo, setExcluindo] = useState(false);
 
   const solicitacao = solicitacoes.find((item) => item.id === idSolicitacao);
 
@@ -48,6 +55,16 @@ export default function DetalhesSolicitacaoScreen() {
 
   function formatarData(data: string) {
     return new Date(data).toLocaleDateString("pt-BR");
+  }
+
+  function editarSolicitacao() {
+    if (!solicitacao || solicitacao.status !== "aberta") {
+      return;
+    }
+
+    navigation.navigate("EditarSolicitacaoBeneficiario", {
+      idSolicitacao: solicitacao.id,
+    });
   }
 
   async function cancelarSolicitacao() {
@@ -102,6 +119,69 @@ export default function DetalhesSolicitacaoScreen() {
     );
   }
 
+  async function excluirPedido() {
+    if (!solicitacao || excluindo) return;
+
+    try {
+      setExcluindo(true);
+
+      const usuario = await buscarUsuarioLogado();
+
+      if (
+        !usuario?.idReceptor ||
+        usuario.idReceptor !== solicitacao.idReceptor
+      ) {
+        Alert.alert(
+          "Erro",
+          "Você não tem permissão para excluir esta solicitação.",
+        );
+        return;
+      }
+
+      if (solicitacao.status !== "aberta") {
+        Alert.alert(
+          "Atenção",
+          "Somente solicitações abertas podem ser excluídas.",
+        );
+        return;
+      }
+
+      await excluirSolicitacao(solicitacao.id);
+
+      Alert.alert(
+        "Solicitação excluída",
+        "Seu pedido foi excluído com sucesso.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    } catch (error) {
+      console.log("Erro ao excluir solicitação:", error);
+
+      Alert.alert("Erro", "Não foi possível excluir a solicitação.");
+    } finally {
+      setExcluindo(false);
+    }
+  }
+
+  function confirmarExclusao() {
+    Alert.alert(
+      "Excluir solicitação",
+      "Tem certeza de que deseja excluir este pedido? Essa ação não poderá ser desfeita.",
+      [
+        { text: "Voltar", style: "cancel" },
+        {
+          text: "Excluir",
+          style: "destructive",
+          onPress: excluirPedido,
+        },
+      ],
+    );
+  }
+
   if (loading) {
     return (
       <View style={estilos.solicitacaoCarregando}>
@@ -146,7 +226,6 @@ export default function DetalhesSolicitacaoScreen() {
           </Text>
         </View>
 
-        {/* INFORMAÇÕES PRINCIPAIS */}
         <View style={estilos.solicitacaoDetalhesCard}>
           <Text style={estilos.solicitacaoDetalhesTitulo}>
             {solicitacao.titulo}
@@ -183,7 +262,6 @@ export default function DetalhesSolicitacaoScreen() {
           </Text>
         </View>
 
-        {/* ALIMENTOS SOLICITADOS */}
         {solicitacao.tipoAjuda === "especifico" && (
           <View style={estilos.solicitacaoDetalhesSecao}>
             <Text style={estilos.cadastroSecaoTitulo}>
@@ -210,7 +288,6 @@ export default function DetalhesSolicitacaoScreen() {
           </View>
         )}
 
-        {/* CANCELAMENTO */}
         {solicitacao.status === "aberta" && (
           <Pressable
             style={estilos.solicitacaoCancelarBotao}
@@ -224,6 +301,34 @@ export default function DetalhesSolicitacaoScreen() {
                 Cancelar solicitação
               </Text>
             )}
+          </Pressable>
+        )}
+
+        {solicitacao.status === "aberta" && (
+          <Pressable
+            style={estilos.solicitacaoCancelarBotao}
+            onPress={confirmarExclusao}
+            disabled={excluindo || cancelando}
+          >
+            {excluindo ? (
+              <ActivityIndicator color={cores.danger} />
+            ) : (
+              <Text style={estilos.solicitacaoCancelarTexto}>
+                Excluir solicitação
+              </Text>
+            )}
+          </Pressable>
+        )}
+
+        {solicitacao.status === "aberta" && (
+          <Pressable
+            style={estilos.solicitacoesNovoBotao}
+            onPress={editarSolicitacao}
+            disabled={cancelando || excluindo}
+          >
+            <Text style={estilos.solicitacoesNovoTexto}>
+              Editar solicitação
+            </Text>
           </Pressable>
         )}
       </ScrollView>

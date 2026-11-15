@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../types/Navigation";
 import { useEffect, useState } from "react";
-import { buscarUsuarioLogado } from "../services/Auth";
+import { buscarUsuarioLogado } from "../services/AuthService";
 import { ActivityIndicator, View } from "react-native";
 import LoginScreen from "../screens/autenticacao/LoginScreen";
 import CadastroDoadorScreen from "../screens/autenticacao/CadastroDoadorScreen";

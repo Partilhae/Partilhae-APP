@@ -1,5 +1,6 @@
 import {
   ActivityIndicator,
+  Alert,
   Pressable,
   ScrollView,
   Text,
@@ -11,6 +12,9 @@ import estilos, { cores } from "../../estilos/estilo";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { DoadorStackParamlist } from "../../types/Navigation";
 import { StatusSolicitacao } from "../../types/Solicitacao";
+import { useState } from "react";
+import { useDoacoes } from "../../context/DoacoesContext";
+import { buscarUsuarioLogado } from "../../services/AuthService";
 
 type DetalhesRoute = RouteProp<
   DoadorStackParamlist,
@@ -24,6 +28,9 @@ export default function DetalhesSolicitacaoDoadorScreen() {
   const { idSolicitacao } = route.params;
 
   const { solicitacoes, loading } = useSolicitacoes();
+
+  const { adicionarDoacao, loading: loadingDoacoes } = useDoacoes();
+  const [criandoDoacao, setCriandoDoacao] = useState(false);
 
   const solicitacao = solicitacoes.find((item) => item.id === idSolicitacao);
 
@@ -42,6 +49,70 @@ export default function DetalhesSolicitacaoDoadorScreen() {
 
   function formatarData(data: string) {
     return new Date(data).toLocaleDateString("pt-BR");
+  }
+
+  async function confirmarAjuda() {
+    if (!solicitacao || criandoDoacao) return;
+
+    try {
+      setCriandoDoacao(true);
+
+      const usuario = await buscarUsuarioLogado();
+
+      if (!usuario?.idDoador) {
+        Alert.alert("Erro", "Não foi possível identificar o doador.");
+        return;
+      }
+
+      if (solicitacao.status !== "aberta") {
+        Alert.alert(
+          "Indisponível",
+          "Esta solicitação não está mais disponível.",
+        );
+        return;
+      }
+
+      await adicionarDoacao(solicitacao.id, usuario.idDoador);
+
+      Alert.alert(
+        "Doação iniciada!",
+        "Você começou a ajudar este beneficiário.",
+        [
+          {
+            text: "OK",
+            onPress: () => navigation.goBack(),
+          },
+        ],
+      );
+    } catch (error) {
+      console.log("Erro ao iniciar doação:", error);
+
+      Alert.alert(
+        "Erro",
+        error instanceof Error
+          ? error.message
+          : "Não foi possível iniciar a doação.",
+      );
+    } finally {
+      setCriandoDoacao(false);
+    }
+  }
+
+  function iniciarDoacao() {
+    Alert.alert(
+      "Confirmar ajuda",
+      "Deseja iniciar uma doação para esta solicitação?",
+      [
+        {
+          text: "Voltar",
+          style: "cancel",
+        },
+        {
+          text: "Quero ajudar",
+          onPress: confirmarAjuda,
+        },
+      ],
+    );
   }
 
   if (loading) {
@@ -88,7 +159,6 @@ export default function DetalhesSolicitacaoDoadorScreen() {
           </Text>
         </View>
 
-        {/* INFORMAÇÕES DA SOLICITAÇÃO */}
         <View style={estilos.solicitacaoDetalhesCard}>
           <Text style={estilos.solicitacaoDetalhesTitulo}>
             {solicitacao.titulo}
@@ -125,7 +195,6 @@ export default function DetalhesSolicitacaoDoadorScreen() {
           </Text>
         </View>
 
-        {/* ALIMENTOS SOLICITADOS */}
         {solicitacao.tipoAjuda === "especifico" && (
           <View style={estilos.solicitacaoDetalhesSecao}>
             <Text style={estilos.cadastroSecaoTitulo}>
@@ -152,7 +221,6 @@ export default function DetalhesSolicitacaoDoadorScreen() {
           </View>
         )}
 
-        {/* AÇÃO DO DOADOR */}
         <View style={estilos.solicitacaoDetalhesSecao}>
           <Text style={estilos.cadastroSecaoTitulo}>Deseja ajudar?</Text>
 
@@ -160,12 +228,20 @@ export default function DetalhesSolicitacaoDoadorScreen() {
             Converse com o beneficiário para combinar como você pode contribuir.
           </Text>
 
-          <Pressable style={estilos.doadorQueroAjudar} disabled>
-            <Text style={estilos.doadorQueroAjudarTexto}>Quero ajudar</Text>
+          <Pressable
+            style={estilos.doadorQueroAjudar}
+            onPress={iniciarDoacao}
+            disabled={criandoDoacao || loadingDoacoes}
+          >
+            {criandoDoacao ? (
+              <ActivityIndicator color={cores.white} />
+            ) : (
+              <Text style={estilos.doadorQueroAjudarTexto}>Quero ajudar</Text>
+            )}
           </Pressable>
 
           <Text style={estilos.cadastroAjuda}>
-            A conversa estará disponível quando integrarmos o chat.
+            Ao confirmar, você iniciará uma doação para estaa solicitação.
           </Text>
         </View>
       </ScrollView>

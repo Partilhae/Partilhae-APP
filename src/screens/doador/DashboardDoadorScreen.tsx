@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import styles, { cores } from "../../estilos/estilo";
 import { DoadorTabParamlist } from "../../types/Navigation";
 import { UsuarioLogado } from "../../types/Auth";
-import { buscarUsuarioLogado } from "../../services/Auth";
+import { buscarUsuarioLogado } from "../../services/AuthService";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { useDoacoes } from "../../context/DoacoesContext";
 

@@ -5,7 +5,7 @@ export type RootStackParamList = {
   CadastroDoador: undefined;
   CadastroBeneficiario: undefined;
   Doador: undefined;
-  Beneficiario: undefined
+  Beneficiario: undefined;
 };
 
 export type DoadorTabParamlist = {
@@ -15,21 +15,28 @@ export type DoadorTabParamlist = {
   PerfilDoador: undefined;
 };
 
-export type DoadorStackParamlist= {
+export type DoadorStackParamlist = {
   DoadorTabs: NavigatorScreenParams<DoadorTabParamlist> | undefined;
   EditarPerfilDoador: undefined;
-  DetalhesSolicitacaoDoador: {idSolicitacao: string};
-}
+  DetalhesSolicitacaoDoador: { idSolicitacao: string };
+  DetalhesDoacaoDoador: {
+    idDoacao: string;
+  };
+};
 
 export type BeneficiarioTabParamlist = {
   InicioBeneficiario: undefined;
   MinhasSolicitacoes: undefined;
+  DoacoesRecebidasBeneficiario: undefined;
   PerfilBeneficiario: undefined;
 };
 
-export type BeneficiarioStackParamlist= {
+export type BeneficiarioStackParamlist = {
   BeneficiarioTabs: NavigatorScreenParams<BeneficiarioTabParamlist> | undefined;
   EditarPerfilBeneficiario: undefined;
   NovaSolicitacaoBeneficiario: undefined;
-  DetalhesSolicitacaoBeneficiario: undefined;
+  DetalhesSolicitacaoBeneficiario: { idSolicitacao: string };
+  EditarSolicitacaoBeneficiario: {
+    idSolicitacao: string;
+  };
 };

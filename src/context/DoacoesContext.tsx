@@ -17,6 +17,7 @@ type DoacoesContextType = {
   loading: boolean;
   adicionarDoacao: (idSolicitacao: string, idDoador: number) => Promise<void>;
   atualizarStatusDoacao: (id: string, status: StatusDoacao) => Promise<void>;
+  excluirDoacao: (id: string) => Promise<void>;
 };
 
 const DoacoesContext = createContext<DoacoesContextType>(
@@ -27,7 +28,11 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
   const [doacoes, setDoacoes] = useState<Doacao[]>([]);
   const [loading, setLoading] = useState(true);
 
-  const { solicitacoes, atualizarStatus } = useSolicitacoes();
+  const {
+    solicitacoes,
+    loading: loadingSolicitacoes,
+    atualizarStatus,
+  } = useSolicitacoes();
 
   useEffect(() => {
     carregarDoacoes();
@@ -54,6 +59,10 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
   }
 
   async function adicionarDoacao(idSolicitacao: string, idDoador: number) {
+    if (loading || loadingSolicitacoes) {
+      throw new Error("Aguarde o carregamento dos dados.");
+    }
+
     const solicitacao = solicitacoes.find((item) => item.id === idSolicitacao);
 
     if (!solicitacao) {
@@ -73,9 +82,6 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
       throw new Error("Esta solicitação já possui uma doação.");
     }
 
-    if (solicitacao.idReceptor === idDoador) {
-    }
-
     const novaDoacao: Doacao = {
       id: `${Date.now()}-${Math.random()}`,
       idSolicitacao,
@@ -91,10 +97,27 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
   }
 
   async function atualizarStatusDoacao(id: string, status: StatusDoacao) {
+    if (loading || loadingSolicitacoes) {
+      throw new Error("Aguarde o carregamento dos dados.");
+    }
+
     const doacao = doacoes.find((item) => item.id === id);
 
     if (!doacao) {
       throw new Error("Doação não encontrada.");
+    }
+
+    if (doacao.status === "concluida" || doacao.status === "cancelada") {
+      throw new Error("Esta doação já foi finalizada e não pode ser alterada.");
+    }
+
+    const podeAtualizar =
+      (doacao.status === "em_andamento" &&
+        (status === "entregue" || status === "cancelada")) ||
+      (doacao.status === "entregue" && status === "concluida");
+
+    if (!podeAtualizar) {
+      throw new Error("Esta mudança de status não é permitida.");
     }
 
     const listaAtualizada: Doacao[] = doacoes.map((item) =>
@@ -121,13 +144,30 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
     }
   }
 
+  async function excluirDoacao(id: string) {
+    const doacao = doacoes.find((item) => item.id === id);
+
+    if (!doacao) {
+      throw new Error("Doação não encontrada.");
+    }
+
+    if (doacao.status !== "cancelada") {
+      throw new Error("Somente doações canceladas podem ser excluídas.");
+    }
+
+    const listaAtualizada = doacoes.filter((item) => item.id !== id);
+
+    await salvarDoacoes(listaAtualizada);
+  }
+
   return (
     <DoacoesContext.Provider
       value={{
         doacoes,
-        loading,
+        loading: loading || loadingSolicitacoes,
         adicionarDoacao,
         atualizarStatusDoacao,
+        excluirDoacao,
       }}
     >
       {children}

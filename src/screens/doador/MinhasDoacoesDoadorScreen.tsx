@@ -10,12 +10,16 @@ import {
 import estilos, { cores } from "../../estilos/estilo";
 import { useDoacoes } from "../../context/DoacoesContext";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
-import { buscarUsuarioLogado } from "../../services/Auth";
-import { Doacao, StatusDoacao } from "../../types/Doacao";
+import { buscarUsuarioLogado } from "../../services/AuthService";
+import { Doacao, FiltroDoacao, StatusDoacao } from "../../types/Doacao";
+import { DoadorStackParamlist } from "../../types/Navigation";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 
-type FiltroDoacao = "em_andamento" | "concluida";
+type Navigation = NativeStackNavigationProp<DoadorStackParamlist>;
 
 export default function MinhasDoacoesScreen() {
+  const navigation = useNavigation<Navigation>();
   const { doacoes, loading } = useDoacoes();
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
 
@@ -50,6 +54,12 @@ export default function MinhasDoacoesScreen() {
     }
   }
 
+  function abrirDetalhes(idDoacao: string) {
+    navigation.navigate("DetalhesDoacaoDoador", {
+      idDoacao,
+    });
+  }
+
   function formatarStatus(status: StatusDoacao) {
     switch (status) {
       case "em_andamento":
@@ -69,11 +79,12 @@ export default function MinhasDoacoesScreen() {
 
   const minhasDoacoes = doacoes
     .filter((doacao) => doacao.idDoador === idDoador)
-    .filter((doacao) =>
-      filtro === "em_andamento"
-        ? doacao.status === "em_andamento" || doacao.status === "entregue"
-        : doacao.status === "concluida",
-    )
+    .filter((doacao) => {
+      if (filtro === "em_andamento") {
+        return doacao.status === "em_andamento" || doacao.status === "entregue";
+      }
+      return doacao.status === filtro;
+    })
     .sort(
       (a, b) =>
         new Date(b.dataCriacao).getTime() - new Date(a.dataCriacao).getTime(),
@@ -110,6 +121,13 @@ export default function MinhasDoacoesScreen() {
             Concluída em {formatarData(item.dataConclusao)}
           </Text>
         )}
+
+        <Pressable
+          style={estilos.explorarVerDetalhes}
+          onPress={() => abrirDetalhes(item.id)}
+        >
+          <Text style={estilos.explorarVerDetalhesTexto}>Ver detalhes</Text>
+        </Pressable>
       </View>
     );
   }
@@ -187,6 +205,23 @@ export default function MinhasDoacoesScreen() {
                   Concluídas
                 </Text>
               </Pressable>
+
+              <Pressable
+                style={[
+                  estilos.doacoesFiltro,
+                  filtro === "cancelada" && estilos.doacoesFiltroAtivo,
+                ]}
+                onPress={() => setFiltro("cancelada")}
+              >
+                <Text
+                  style={[
+                    estilos.doacoesFiltroTexto,
+                    filtro === "cancelada" && estilos.doacoesFiltroTextoAtivo,
+                  ]}
+                >
+                  Canceladas
+                </Text>
+              </Pressable>
             </View>
           </View>
         }
@@ -195,13 +230,17 @@ export default function MinhasDoacoesScreen() {
             <Text style={estilos.solicitacoesVazioTitulo}>
               {filtro === "em_andamento"
                 ? "Nenhuma doação em andamento"
-                : "Nenhuma doação concluída"}
+                : filtro === "concluida"
+                  ? "Nenhuma doação concluída"
+                  : "Nenhuma doação cancelada"}
             </Text>
 
             <Text style={estilos.solicitacoesVazioTexto}>
               {filtro === "em_andamento"
-                ? "Quando você combinar uma ajuda, ela aparecerá aqui."
-                : "Suas doações finalizadas aparecerão aqui."}
+                ? "Quando você iniciar uma ajuda, ela aparecerá aqui."
+                : filtro === "concluida"
+                  ? "Suas doações finalizadas aparecerão aqui."
+                  : "Suas doações canceladas aparecerão aqui."}
             </Text>
           </View>
         }

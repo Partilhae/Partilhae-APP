@@ -63,7 +63,7 @@ export default function PerfilDoadorForm({
 
       setForm((anterior) => ({
         ...anterior,
-        endereco: endereco.logradouro || anterior.endereco,
+        endereco: endereco.logradouro || anterior.logradouro,
         bairro: endereco.bairro || anterior.bairro,
         cidade: endereco.localidade || anterior.cidade,
         estado: endereco.uf || anterior.estado,
@@ -90,7 +90,7 @@ export default function PerfilDoadorForm({
     if (form.cep.replace(/\D/g, "").length !== 8)
       novosErros.cep = "Informe um CEP válido.";
 
-    if (!form.endereco.trim()) novosErros.endereco = "Informe o endereço.";
+    if (!form.logradouro.trim()) novosErros.logradouro = "Informe a rua/avenida.";
 
     if (!form.numero.trim()) novosErros.numero = "Informe o número.";
 
@@ -158,9 +158,9 @@ export default function PerfilDoadorForm({
 
       <Input
         label="Logradouro"
-        value={form.endereco}
-        onChangeText={(v) => atualizar("endereco", v)}
-        error={erros.endereco}
+        value={form.logradouro}
+        onChangeText={(v) => atualizar("logradouro", v)}
+        error={erros.logradouro}
       />
 
       <Input

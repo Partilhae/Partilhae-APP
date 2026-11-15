@@ -11,7 +11,7 @@ export type CadastroBeneficiario = {
   cep: string;
   logradouro: string;
   numero: string;
-  complemento: string;
+  complemento: string ;
   bairro: string;
   cidade: string;
   estado: string;
@@ -20,7 +20,6 @@ export type CadastroBeneficiario = {
 
   tipoBeneficiario: BeneficiarioTipo;
   nomeOrganizacao?: string;
-  raioBuscaKm: 5 | 10 | 20;
 };
 
 export type BeneficiarioErros = {
@@ -39,7 +38,6 @@ export type BeneficiarioErros = {
 
   tipoBeneficiario?: string;
   nomeOrganizacao?: string;
-  raioBuscaKm?: string;
 };
 
 export type BeneficiarioRequest = {
@@ -50,15 +48,15 @@ export type BeneficiarioRequest = {
   telefone: string;
 
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento?: string | null;
   bairro: string;
   cidade: string;
   estado: string;
 
   tipoBeneficiario: BeneficiarioTipo;
   nomeOrganizacao?: string | null;
-  raioBuscaKm: 5 | 10 | 20;
 };
 
 export type BeneficiarioResponse = {
@@ -71,15 +69,15 @@ export type BeneficiarioResponse = {
   telefone: string;
 
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento?: string | null;
   bairro: string;
   cidade: string;
   estado: string;
 
   tipoBeneficiario: BeneficiarioTipo;
   nomeOrganizacao?: string | null;
-  raioBuscaKm: 5 | 10 | 20;
 
   quantidadePessoasFamilia?: number | null;
   possuiCriancas?: boolean | null;
@@ -95,15 +93,15 @@ export type PerfilBeneficiarioFormData = {
   telefone: string;
 
   cep: string;
-  endereco: string;
+  logradouro: string;
   numero: string;
+  complemento: string;
   bairro: string;
   cidade: string;
   estado: string;
 
   tipoBeneficiario: BeneficiarioTipo;
   nomeOrganizacao: string;
-  raioBuscaKm: 5 | 10 | 20;
 
   quantidadePessoasFamilia: string;
   possuiCriancas: boolean | null;

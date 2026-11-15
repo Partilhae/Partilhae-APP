@@ -35,7 +35,6 @@ export default function BeneficiarioForm({
     senha: "",
     tipoBeneficiario: "pessoaFisica",
     nomeOrganizacao: "",
-    raioBuscaKm: 10,
   });
 
   const [erros, setErros] = useState<BeneficiarioErros>({});
@@ -54,13 +53,6 @@ export default function BeneficiarioForm({
       tipoBeneficiario,
       nomeOrganizacao:
         tipoBeneficiario === "pessoaFisica" ? "" : prev.nomeOrganizacao,
-    }));
-  }
-
-  function selecionarRaio(raioBuscaKm: 5 | 10 | 20) {
-    setForm((prev) => ({
-      ...prev,
-      raioBuscaKm,
     }));
   }
 
@@ -183,258 +175,198 @@ export default function BeneficiarioForm({
     });
   }
 
-  
-return (
-  <View style={estilos.cadastroForm}>
-    <View style={estilos.cadastroSecao}>
-      <Text style={estilos.cadastroSecaoTitulo}>
-        Dados pessoais
-      </Text>
+  return (
+    <View style={estilos.cadastroForm}>
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Dados pessoais</Text>
 
-      <Input
-        label="Nome completo"
-        placeholder="Seu nome completo"
-        value={form.nome}
-        onChangeText={(value) => setField("nome", value)}
-        error={erros.nome}
-      />
-
-      <Input
-        label="E-mail"
-        placeholder="seu@email.com"
-        value={form.email}
-        onChangeText={(value) => setField("email", value)}
-        keyboardType="email-address"
-        autoCapitalize="none"
-        error={erros.email}
-      />
-
-      <Input
-        label="CPF"
-        placeholder="000.000.000-00"
-        value={form.cpf}
-        onChangeText={(value) => setField("cpf", value)}
-        keyboardType="numeric"
-        error={erros.cpf}
-      />
-
-      <Input
-        label="Telefone"
-        placeholder="(11) 99999-9999"
-        value={form.telefone}
-        onChangeText={(value) => setField("telefone", value)}
-        keyboardType="phone-pad"
-        error={erros.telefone}
-      />
-
-      <Text style={estilos.cadastroCampoTitulo}>
-        Tipo de beneficiário
-      </Text>
-
-      <View style={estilos.cadastroOpcoes}>
-        <Pressable
-          style={[
-            estilos.cadastroOpcao,
-            form.tipoBeneficiario === "pessoaFisica" &&
-              estilos.cadastroOpcaoAtiva,
-          ]}
-          onPress={() => selecionarTipo("pessoaFisica")}
-        >
-          <Text
-            style={[
-              estilos.cadastroOpcaoTexto,
-              form.tipoBeneficiario === "pessoaFisica" &&
-                estilos.cadastroOpcaoTextoAtivo,
-            ]}
-          >
-            Pessoa física
-          </Text>
-        </Pressable>
-
-        <Pressable
-          style={[
-            estilos.cadastroOpcao,
-            form.tipoBeneficiario === "ONG" &&
-              estilos.cadastroOpcaoAtiva,
-          ]}
-          onPress={() => selecionarTipo("ONG")}
-        >
-          <Text
-            style={[
-              estilos.cadastroOpcaoTexto,
-              form.tipoBeneficiario === "ONG" &&
-                estilos.cadastroOpcaoTextoAtivo,
-            ]}
-          >
-            ONG
-          </Text>
-        </Pressable>
-      </View>
-
-      {form.tipoBeneficiario === "ONG" && (
         <Input
-          label="Nome da ONG"
-          placeholder="Nome da organização"
-          value={form.nomeOrganizacao || ""}
-          onChangeText={(value) =>
-            setField("nomeOrganizacao", value)
-          }
-          error={erros.nomeOrganizacao}
+          label="Nome completo"
+          placeholder="Seu nome completo"
+          value={form.nome}
+          onChangeText={(value) => setField("nome", value)}
+          error={erros.nome}
         />
-      )}
-    </View>
 
-    <View style={estilos.cadastroSecao}>
-      <Text style={estilos.cadastroSecaoTitulo}>
-        Endereço
-      </Text>
+        <Input
+          label="E-mail"
+          placeholder="seu@email.com"
+          value={form.email}
+          onChangeText={(value) => setField("email", value)}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          error={erros.email}
+        />
 
-      <Input
-        label="CEP"
-        placeholder="00000-000"
-        value={form.cep}
-        onChangeText={consultarCep}
-        keyboardType="numeric"
-        error={erros.cep}
-      />
+        <Input
+          label="CPF"
+          placeholder="000.000.000-00"
+          value={form.cpf}
+          onChangeText={(value) => setField("cpf", value)}
+          keyboardType="numeric"
+          error={erros.cpf}
+        />
 
-      {buscandoCep && (
-        <Text style={estilos.cadastroAjuda}>
-          Buscando endereço...
-        </Text>
-      )}
+        <Input
+          label="Telefone"
+          placeholder="(11) 99999-9999"
+          value={form.telefone}
+          onChangeText={(value) => setField("telefone", value)}
+          keyboardType="phone-pad"
+          error={erros.telefone}
+        />
 
-      <Input
-        label="Rua"
-        placeholder="Rua ou avenida"
-        value={form.logradouro}
-        onChangeText={(value) =>
-          setField("logradouro", value)
-        }
-        error={erros.logradouro}
-      />
+        <Text style={estilos.cadastroCampoTitulo}>Tipo de beneficiário</Text>
 
-      <View style={estilos.cadastroLinha}>
-        <View style={estilos.cadastroCampoMenor}>
-          <Input
-            label="Número"
-            placeholder="Número"
-            value={form.numero}
-            onChangeText={(value) =>
-              setField("numero", value)
-            }
-            error={erros.numero}
-          />
-        </View>
-
-        <View style={estilos.cadastroCampoMaior}>
-          <Input
-            label="Complemento"
-            placeholder="Opcional"
-            value={form.complemento}
-            onChangeText={(value) =>
-              setField("complemento", value)
-            }
-          />
-        </View>
-      </View>
-
-      <Input
-        label="Bairro"
-        placeholder="Bairro"
-        value={form.bairro}
-        onChangeText={(value) => setField("bairro", value)}
-        error={erros.bairro}
-      />
-
-      <View style={estilos.cadastroLinha}>
-        <View style={estilos.cadastroCampoMaior}>
-          <Input
-            label="Cidade"
-            placeholder="Cidade"
-            value={form.cidade}
-            onChangeText={(value) =>
-              setField("cidade", value)
-            }
-            error={erros.cidade}
-          />
-        </View>
-
-        <View style={estilos.cadastroCampoMenor}>
-          <Input
-            label="Estado"
-            placeholder="UF"
-            value={form.estado}
-            onChangeText={(value) =>
-              setField("estado", value)
-            }
-            autoCapitalize="characters"
-            error={erros.estado}
-          />
-        </View>
-      </View>
-    </View>
-
-    <View style={estilos.cadastroSecao}>
-      <Text style={estilos.cadastroSecaoTitulo}>
-        Preferências de busca
-      </Text>
-
-      <Text style={estilos.cadastroAjuda}>
-        Escolha a distância máxima para encontrar solicitações
-        próximas de você.
-      </Text>
-
-      <View style={estilos.cadastroOpcoes}>
-        {([5, 10, 20] as const).map((raio) => (
+        <View style={estilos.cadastroOpcoes}>
           <Pressable
-            key={raio}
             style={[
               estilos.cadastroOpcao,
-              form.raioBuscaKm === raio &&
+              form.tipoBeneficiario === "pessoaFisica" &&
                 estilos.cadastroOpcaoAtiva,
             ]}
-            onPress={() => selecionarRaio(raio)}
+            onPress={() => selecionarTipo("pessoaFisica")}
           >
             <Text
               style={[
                 estilos.cadastroOpcaoTexto,
-                form.raioBuscaKm === raio &&
+                form.tipoBeneficiario === "pessoaFisica" &&
                   estilos.cadastroOpcaoTextoAtivo,
               ]}
             >
-              {raio} km
+              Pessoa física
             </Text>
           </Pressable>
-        ))}
+
+          <Pressable
+            style={[
+              estilos.cadastroOpcao,
+              form.tipoBeneficiario === "ONG" && estilos.cadastroOpcaoAtiva,
+            ]}
+            onPress={() => selecionarTipo("ONG")}
+          >
+            <Text
+              style={[
+                estilos.cadastroOpcaoTexto,
+                form.tipoBeneficiario === "ONG" &&
+                  estilos.cadastroOpcaoTextoAtivo,
+              ]}
+            >
+              ONG
+            </Text>
+          </Pressable>
+        </View>
+
+        {form.tipoBeneficiario === "ONG" && (
+          <Input
+            label="Nome da ONG"
+            placeholder="Nome da organização"
+            value={form.nomeOrganizacao || ""}
+            onChangeText={(value) => setField("nomeOrganizacao", value)}
+            error={erros.nomeOrganizacao}
+          />
+        )}
       </View>
-    </View>
 
-    <View style={estilos.cadastroSecao}>
-      <Text style={estilos.cadastroSecaoTitulo}>
-        Segurança
-      </Text>
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Endereço</Text>
 
-      <Input
-        label="Senha"
-        placeholder="Crie uma senha"
-        value={form.senha}
-        onChangeText={(value) => setField("senha", value)}
-        isSenha
-        error={erros.senha}
+        <Input
+          label="CEP"
+          placeholder="00000-000"
+          value={form.cep}
+          onChangeText={consultarCep}
+          keyboardType="numeric"
+          error={erros.cep}
+        />
+
+        {buscandoCep && (
+          <Text style={estilos.cadastroAjuda}>Buscando endereço...</Text>
+        )}
+
+        <Input
+          label="Rua"
+          placeholder="Rua ou avenida"
+          value={form.logradouro}
+          onChangeText={(value) => setField("logradouro", value)}
+          error={erros.logradouro}
+        />
+
+        <View style={estilos.cadastroLinha}>
+          <View style={estilos.cadastroCampoMenor}>
+            <Input
+              label="Número"
+              placeholder="Número"
+              value={form.numero}
+              onChangeText={(value) => setField("numero", value)}
+              error={erros.numero}
+            />
+          </View>
+
+          <View style={estilos.cadastroCampoMaior}>
+            <Input
+              label="Complemento"
+              placeholder="Opcional"
+              value={form.complemento}
+              onChangeText={(value) => setField("complemento", value)}
+            />
+          </View>
+        </View>
+
+        <Input
+          label="Bairro"
+          placeholder="Bairro"
+          value={form.bairro}
+          onChangeText={(value) => setField("bairro", value)}
+          error={erros.bairro}
+        />
+
+        <View style={estilos.cadastroLinha}>
+          <View style={estilos.cadastroCampoMaior}>
+            <Input
+              label="Cidade"
+              placeholder="Cidade"
+              value={form.cidade}
+              onChangeText={(value) => setField("cidade", value)}
+              error={erros.cidade}
+            />
+          </View>
+
+          <View style={estilos.cadastroCampoMenor}>
+            <Input
+              label="Estado"
+              placeholder="UF"
+              value={form.estado}
+              onChangeText={(value) => setField("estado", value)}
+              autoCapitalize="characters"
+              error={erros.estado}
+            />
+          </View>
+        </View>
+      </View>
+
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Segurança</Text>
+
+        <Input
+          label="Senha"
+          placeholder="Crie uma senha"
+          value={form.senha}
+          onChangeText={(value) => setField("senha", value)}
+          isSenha
+          error={erros.senha}
+        />
+
+        <Text style={estilos.cadastroAjuda}>
+          Sua senha deve ter pelo menos 6 caracteres.
+        </Text>
+      </View>
+
+      <Botao
+        label="Criar conta"
+        onPress={handleSubmit}
+        loading={loading || buscandoCep}
       />
-
-      <Text style={estilos.cadastroAjuda}>
-        Sua senha deve ter pelo menos 6 caracteres.
-      </Text>
     </View>
-
-    <Botao
-      label="Criar conta"
-      onPress={handleSubmit}
-      loading={loading || buscandoCep}
-    />
-  </View>
-);
-
+  );
 }
