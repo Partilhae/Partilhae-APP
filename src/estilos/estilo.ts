@@ -1,24 +1,24 @@
 import { StyleSheet } from "react-native";
 
 export const cores = {
-  background: "#FCF9F5",
+  background: "#FAF9F7",
   white: "#FFFFFF",
 
   primary: "#A94F65",
   primaryMedium: "#C65765",
-  primarySoft: "#F6E5E3",
+  primarySoft: "#F7E9EC",
 
   yellow: "#F1C86D",
   yellowMedium: "#F5D994",
-  yellowSoft: "#FFF3D8",
+  yellowSoft: "#FFF5DF",
 
-  text: "#493D3D",
-  textSecondary: "#806B70",
-  muted: "#A18F92",
-  placeholder: "#B5A3A6",
+  text: "#30343B",
+  textSecondary: "#656A73",
+  muted: "#85878D",
+  placeholder: "#999BA3",
 
-  border: "#E8DDDA",
-  borderStrong: "#D9BEC2",
+  border: "#E7E5E4",
+  borderStrong: "#D3CFCC",
 
   success: "#39845B",
   successSoft: "#E4F5E8",
@@ -26,7 +26,7 @@ export const cores = {
   info: "#4388A5",
   infoSoft: "#E6F4FA",
 
-  warning: "#A87526",
+  warning: "#966A24",
   warningSoft: "#FFF0C9",
 
   danger: "#C94B43",
@@ -1029,6 +1029,65 @@ const estilos = StyleSheet.create({
     fontSize: 14,
     fontWeight: "700",
     color: cores.danger,
+  },
+
+  explorarVerDetalhes: {
+    backgroundColor: cores.primarySoft,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+    marginTop: 14,
+  },
+
+  explorarVerDetalhesTexto: {
+    color: cores.primary,
+    fontSize: 14,
+    fontWeight: "700",
+  },
+  doadorQueroAjudar: {
+    backgroundColor: cores.primary,
+    borderRadius: 12,
+    paddingVertical: 15,
+    alignItems: "center",
+    marginTop: 16,
+    opacity: 0.6,
+  },
+
+  doadorQueroAjudarTexto: {
+    color: cores.white,
+    fontSize: 15,
+    fontWeight: "700",
+  },
+
+  doacoesFiltros: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 20,
+  },
+
+  doacoesFiltro: {
+    flex: 1,
+    backgroundColor: cores.white,
+    borderWidth: 1,
+    borderColor: cores.border,
+    borderRadius: 12,
+    paddingVertical: 12,
+    alignItems: "center",
+  },
+
+  doacoesFiltroAtivo: {
+    backgroundColor: cores.primarySoft,
+    borderColor: cores.primarySoft,
+  },
+
+  doacoesFiltroTexto: {
+    color: cores.textSecondary,
+    fontSize: 13,
+    fontWeight: "600",
+  },
+
+  doacoesFiltroTextoAtivo: {
+    color: cores.primary,
   },
 });
 

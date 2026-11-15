@@ -18,11 +18,11 @@ export type DoadorTabParamlist = {
 export type DoadorStackParamlist= {
   DoadorTabs: NavigatorScreenParams<DoadorTabParamlist> | undefined;
   EditarPerfilDoador: undefined;
+  DetalhesSolicitacaoDoador: {idSolicitacao: string};
 }
 
 export type BeneficiarioTabParamlist = {
   InicioBeneficiario: undefined;
-  NovaSolicitacao: undefined;
   MinhasSolicitacoes: undefined;
   PerfilBeneficiario: undefined;
 };

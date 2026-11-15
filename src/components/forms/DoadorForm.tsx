@@ -172,7 +172,6 @@ export default function DoadorForm({
 
   return (
     <View style={estilos.cadastroForm}>
-      {/* DADOS PESSOAIS */}
       <View style={estilos.cadastroSecao}>
         <Text style={estilos.cadastroSecaoTitulo}>Dados pessoais</Text>
 
@@ -257,7 +256,6 @@ export default function DoadorForm({
         )}
       </View>
 
-      {/* ENDEREÇO */}
       <View style={estilos.cadastroSecao}>
         <Text style={estilos.cadastroSecaoTitulo}>Endereço</Text>
 
@@ -335,7 +333,6 @@ export default function DoadorForm({
         </View>
       </View>
 
-      {/* SEGURANÇA */}
       <View style={estilos.cadastroSecao}>
         <Text style={estilos.cadastroSecaoTitulo}>Segurança</Text>
 

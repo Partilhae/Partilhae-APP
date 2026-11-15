@@ -4,6 +4,8 @@ import estilos, { cores } from "../estilos/estilo";
 import { Ionicons } from "@expo/vector-icons";
 import DashboardDoadorScreen from "../screens/doador/DashboardDoadorScreen";
 import PerfilDoadorScreen from "../screens/doador/PerfilDoadorScreen";
+import ExplorarSolicitacoesScreen from "../screens/doador/ExplorarSolicitacoesDoadorScreen";
+import MinhasDoacoesScreen from "../screens/doador/MinhasDoacoesDoadorScreen";
 
 const Tab = createBottomTabNavigator<DoadorTabParamlist>();
 
@@ -25,6 +27,26 @@ export default function DoadorTabs() {
           title: "Início",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Solicitacoes"
+        component={ExplorarSolicitacoesScreen}
+        options={{
+          title: "Ajudar",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="heart-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="MinhasDoacoes"
+        component={MinhasDoacoesScreen}
+        options={{
+          title: "Doações",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="gift-outline" color={color} size={size} />
           ),
         }}
       />

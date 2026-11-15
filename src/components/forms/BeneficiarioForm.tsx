@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Alert, Pressable, Text, View } from "react-native";
-import estilos, { cores } from "../../estilos/estilo";
+import estilos from "../../estilos/estilo";
 import Input from "../Input";
 import Botao from "../Botao";
 import {
@@ -186,7 +186,6 @@ export default function BeneficiarioForm({
   
 return (
   <View style={estilos.cadastroForm}>
-    {/* DADOS PESSOAIS */}
     <View style={estilos.cadastroSecao}>
       <Text style={estilos.cadastroSecaoTitulo}>
         Dados pessoais
@@ -285,7 +284,6 @@ return (
       )}
     </View>
 
-    {/* ENDEREÇO */}
     <View style={estilos.cadastroSecao}>
       <Text style={estilos.cadastroSecaoTitulo}>
         Endereço
@@ -377,7 +375,6 @@ return (
       </View>
     </View>
 
-    {/* PREFERÊNCIAS */}
     <View style={estilos.cadastroSecao}>
       <Text style={estilos.cadastroSecaoTitulo}>
         Preferências de busca
@@ -413,7 +410,6 @@ return (
       </View>
     </View>
 
-    {/* SEGURANÇA */}
     <View style={estilos.cadastroSecao}>
       <Text style={estilos.cadastroSecaoTitulo}>
         Segurança
