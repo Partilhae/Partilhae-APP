@@ -1,13 +1,22 @@
 import { useEffect, useState } from "react";
-import { ActivityIndicator, FlatList, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  FlatList,
+  Pressable,
+  Text,
+  View,
+} from "react-native";
 
 import estilos, { cores } from "../../estilos/estilo";
 import { useDoacoes } from "../../context/DoacoesContext";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Doacao, StatusDoacao } from "../../types/Doacao";
+import { useNavigation } from "@react-navigation/native";
+import { BeneficiarioNavigation } from "../../types/Navigation";
 
 export default function DoacoesRecebidasBeneficiarioScreen() {
+  const navigation = useNavigation<BeneficiarioNavigation>();
   const { doacoes, loading } = useDoacoes();
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
 
@@ -70,7 +79,14 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
     );
 
     return (
-      <View style={estilos.solicitacaoCard}>
+      <Pressable
+        style={estilos.solicitacaoCard}
+        onPress={() =>
+          navigation.navigate("DetalhesDoacoesRecebidasBeneficiario", {
+            idDoacao: item.id,
+          })
+        }
+      >
         <Text style={estilos.solicitacaoCardTitulo}>
           {solicitacao?.titulo ?? "Solicitação indisponível"}
         </Text>
@@ -93,7 +109,10 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
             Concluída em {formatarData(item.dataConclusao)}
           </Text>
         )}
-      </View>
+        <View style={estilos.explorarVerDetalhes}>
+          <Text style={estilos.explorarVerDetalhesTexto}>Ver detalhes</Text>
+        </View>
+      </Pressable>
     );
   }
 
@@ -126,7 +145,6 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
         ListHeaderComponent={
           <View style={estilos.solicitacoesHeader}>
             <Text style={estilos.cadastroTitulo}>Ajudas recebidas</Text>
-
             <Text style={estilos.cadastroSubtitulo}>
               Acompanhe as doações iniciadas para suas solicitações.
             </Text>

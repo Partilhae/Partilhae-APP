@@ -1,10 +1,11 @@
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { BeneficiarioTabParamlist } from "../types/Navigation";
 import estilos, { cores } from "../estilos/estilo";
-import DashboardBeneficiarioScreen from "../screens/beneficiario/DashboardBeneficiarioScreen";
 import { Ionicons } from "@expo/vector-icons";
-import PerfilBeneficiarioScreen from "../screens/beneficiario/PerfilBeneficiarioScreen";
+import DashboardBeneficiarioScreen from "../screens/beneficiario/DashboardBeneficiarioScreen";
 import MinhasSolicitacoesScreen from "../screens/beneficiario/MinhasSolicitacoesBeneficiarioScreen";
+import DoacoesRecebidasBeneficiarioScreen from "../screens/beneficiario/DoacoesRecebidasBeneficiarioScreen";
+import PerfilBeneficiarioScreen from "../screens/beneficiario/PerfilBeneficiarioScreen";
 
 const Tab = createBottomTabNavigator<BeneficiarioTabParamlist>();
 
@@ -41,7 +42,7 @@ export default function BeneficiarioTabs() {
       />
       <Tab.Screen
         name="DoacoesRecebidasBeneficiario"
-        component={DashboardBeneficiarioScreen}
+        component={DoacoesRecebidasBeneficiarioScreen}
         options={{
           title: "Doações",
           tabBarIcon: ({ color, size }) => (

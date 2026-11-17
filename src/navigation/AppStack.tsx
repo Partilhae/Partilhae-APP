@@ -6,30 +6,33 @@ import { ActivityIndicator, View } from "react-native";
 import LoginScreen from "../screens/autenticacao/LoginScreen";
 import CadastroDoadorScreen from "../screens/autenticacao/CadastroDoadorScreen";
 import CadastroBeneficiarioScreen from "../screens/autenticacao/CadastroBeneficiarioScreen";
+import DoadorStack from "./DoadorStack";
+import BeneficiarioStack from "./BeneficiarioStack";
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
-export default function AppStack(){
+export default function AppStack() {
   const [loading, setLoading] = useState(true);
-  const [initialRoute, setInitialRoute] = useState<keyof RootStackParamList>("Login");
+  const [initialRoute, setInitialRoute] =
+    useState<keyof RootStackParamList>("Login");
 
   useEffect(() => {
     verificarSessao();
   }, []);
 
-  async function verificarSessao(){
+  async function verificarSessao() {
     try {
       const usuario = await buscarUsuarioLogado();
 
-      if(!usuario){
+      if (!usuario) {
         setInitialRoute("Login");
         return;
       }
-      if(usuario.role === "RECEPTOR"){
+      if (usuario.role === "RECEPTOR") {
         setInitialRoute("Beneficiario");
         return;
       }
-      if(usuario.role === "DOADOR"){
+      if (usuario.role === "DOADOR") {
         setInitialRoute("Doador");
         return;
       }
@@ -44,21 +47,27 @@ export default function AppStack(){
     }
   }
 
-  if(loading){
+  if (loading) {
     return (
-      <View style={{flex: 1, justifyContent: "center", alignItems:"center"}}>
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
         <ActivityIndicator size="large" />
       </View>
     );
   }
 
-  return(
-    <Stack.Navigator 
-    initialRouteName={initialRoute}
-    screenOptions={{headerShown: false}}>
+  return (
+    <Stack.Navigator
+      initialRouteName={initialRoute}
+      screenOptions={{ headerShown: false }}
+    >
       <Stack.Screen name="Login" component={LoginScreen} />
       <Stack.Screen name="CadastroDoador" component={CadastroDoadorScreen} />
-      <Stack.Screen name="CadastroBeneficiario" component={CadastroBeneficiarioScreen} />
+      <Stack.Screen
+        name="CadastroBeneficiario"
+        component={CadastroBeneficiarioScreen}
+      />
+      <Stack.Screen name="Doador" component={DoadorStack} />
+      <Stack.Screen name="Beneficiario" component={BeneficiarioStack} />
     </Stack.Navigator>
-  )
+  );
 }

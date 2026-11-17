@@ -9,6 +9,7 @@ import {
 
 import { Doacao, StatusDoacao } from "../types/Doacao";
 import { useSolicitacoes } from "./SolicitacoesContext";
+import { buscarUsuarioLogado } from "../services/AuthService";
 
 const CHAVE_DOACOES = "@partilhae_doacoes";
 
@@ -82,11 +83,32 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
       throw new Error("Esta solicitação já possui uma doação.");
     }
 
+    if (
+      !Number.isInteger(solicitacao.idUsuarioBeneficiario) ||
+      solicitacao.idUsuarioBeneficiario <= 0
+    ) {
+      throw new Error(
+        "Não foi possível identificar o beneficiário desta solicitação.",
+      );
+    }
+
+    const usuario = await buscarUsuarioLogado();
+
+    if (
+      !usuario ||
+      usuario.role !== "DOADOR" ||
+      usuario.idDoador !== idDoador
+    ) {
+      throw new Error("Doador não autorizado.");
+    }
+
     const novaDoacao: Doacao = {
       id: `${Date.now()}-${Math.random()}`,
       idSolicitacao,
       idDoador,
       idReceptor: solicitacao.idReceptor,
+      idUsuarioDoador: usuario.idUsuario,
+      idUsuarioBeneficiario: solicitacao.idUsuarioBeneficiario,
       status: "em_andamento",
       dataCriacao: new Date().toISOString(),
     };

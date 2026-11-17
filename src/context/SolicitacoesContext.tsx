@@ -11,6 +11,7 @@ import {
   Solicitacao,
   StatusSolicitacao,
 } from "../types/Solicitacao";
+import { buscarUsuarioLogado } from "../services/AuthService";
 
 const CHAVE_SOLICITACOES = "@partilhae_solicitacoes";
 
@@ -32,7 +33,6 @@ const SolicitacoesContext = createContext<SolicitacoesContextType>(
 
 export function SolicitacoesProvider({ children }: PropsWithChildren) {
   const [solicitacoes, setSolicitacoes] = useState<Solicitacao[]>([]);
-
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -63,10 +63,21 @@ export function SolicitacoesProvider({ children }: PropsWithChildren) {
     dados: NovaSolicitacao,
     idReceptor: number,
   ) {
+    if(loading){
+      throw new Error("Aguarde o carregamento das solicitações.");
+    }
+
+    const usuario = await buscarUsuarioLogado();
+
+    if(!usuario || usuario.role !== "RECEPTOR" || usuario.idReceptor !== idReceptor){
+      throw new Error("Você não tem permissão para criar esta solicitação."); 
+    }
+
     const novaSolicitacao: Solicitacao = {
       ...dados,
       id: `${Date.now()}-${Math.random()}`,
       idReceptor,
+      idUsuarioBeneficiario: usuario.idUsuario,
       status: "aberta",
       dataCriacao: new Date().toISOString(),
     };

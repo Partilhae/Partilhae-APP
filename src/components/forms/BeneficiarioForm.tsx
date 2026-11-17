@@ -26,7 +26,7 @@ export default function BeneficiarioForm({
     cpf: "",
     telefone: "",
     cep: "",
-    logradouro: "",
+    endereco: "",
     numero: "",
     complemento: "",
     bairro: "",
@@ -72,7 +72,7 @@ export default function BeneficiarioForm({
 
       setForm((prev) => ({
         ...prev,
-        logradouro: endereco.logradouro,
+        endereco: endereco.logradouro,
         bairro: endereco.bairro,
         cidade: endereco.cidade,
         estado: endereco.estado,
@@ -115,8 +115,8 @@ export default function BeneficiarioForm({
       novosErros.cep = "CEP deve possuir 8 números.";
     }
 
-    if (!form.logradouro.trim()) {
-      novosErros.logradouro = "Informe a rua.";
+    if (!form.endereco.trim()) {
+      novosErros.endereco = "Informe a rua.";
     }
 
     if (!form.numero.trim()) {
@@ -162,7 +162,7 @@ export default function BeneficiarioForm({
       cpf: form.cpf.replace(/\D/g, ""),
       telefone: form.telefone.replace(/\D/g, ""),
       cep: form.cep.replace(/\D/g, ""),
-      logradouro: form.logradouro.trim(),
+      endereco: form.endereco.trim(),
       numero: form.numero.trim(),
       complemento: form.complemento.trim(),
       bairro: form.bairro.trim(),
@@ -287,9 +287,9 @@ export default function BeneficiarioForm({
         <Input
           label="Rua"
           placeholder="Rua ou avenida"
-          value={form.logradouro}
-          onChangeText={(value) => setField("logradouro", value)}
-          error={erros.logradouro}
+          value={form.endereco}
+          onChangeText={(value) => setField("endereco", value)}
+          error={erros.endereco}
         />
 
         <View style={estilos.cadastroLinha}>

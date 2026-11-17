@@ -1,4 +1,7 @@
-import { NavigatorScreenParams } from "@react-navigation/native";
+import {
+  NavigationProp,
+  NavigatorScreenParams,
+} from "@react-navigation/native";
 
 export type RootStackParamList = {
   Login: undefined;
@@ -17,12 +20,24 @@ export type DoadorTabParamlist = {
 
 export type DoadorStackParamlist = {
   DoadorTabs: NavigatorScreenParams<DoadorTabParamlist> | undefined;
-  EditarPerfilDoador: undefined;
+  NovaSolicitacao: { idSolicitacao: string };
   DetalhesSolicitacaoDoador: { idSolicitacao: string };
+  EditarSolicitacao: { idSolicitacao: string };
+  Conversas: undefined;
+  Chat: { idConversa: string };
+  NovaDenuncia: { idUsuarioDenunciado: number };
   DetalhesDoacaoDoador: {
     idDoacao: string;
   };
+  EditarPerfilDoador: undefined;
+  ConfiguracoesPerfilDoador: undefined;
+  MinhasDenuncias: undefined;
 };
+
+export type DoadorNavigationParamlist = DoadorTabParamlist &
+  DoadorStackParamlist;
+
+export type DoadorNavigation = NavigationProp<DoadorNavigationParamlist>;
 
 export type BeneficiarioTabParamlist = {
   InicioBeneficiario: undefined;
@@ -33,10 +48,22 @@ export type BeneficiarioTabParamlist = {
 
 export type BeneficiarioStackParamlist = {
   BeneficiarioTabs: NavigatorScreenParams<BeneficiarioTabParamlist> | undefined;
-  EditarPerfilBeneficiario: undefined;
   NovaSolicitacaoBeneficiario: undefined;
   DetalhesSolicitacaoBeneficiario: { idSolicitacao: string };
   EditarSolicitacaoBeneficiario: {
     idSolicitacao: string;
   };
+  DetalhesDoacoesRecebidasBeneficiario: { idDoacao: string };
+  Conversas: undefined;
+  Chat: { idConversa: string };
+  NovaDenuncia: { idUsuarioDenunciado: number };
+  EditarPerfilBeneficiario: undefined;
+  ConfiguracoesPerfilBeneficiario: undefined;
+  MinhasDenuncias: undefined;
 };
+
+export type BeneficiarioNavigationParamlist = BeneficiarioTabParamlist &
+  BeneficiarioStackParamlist;
+
+export type BeneficiarioNavigation =
+  NavigationProp<BeneficiarioNavigationParamlist>;

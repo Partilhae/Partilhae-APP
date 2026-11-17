@@ -1,104 +1,100 @@
 import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
-  Alert,
   Pressable,
   ScrollView,
   Text,
   View,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { useFocusEffect } from "@react-navigation/native";
-
+import {
+  NavigationProp,
+  useFocusEffect,
+  useNavigation,
+} from "@react-navigation/native";
 import styles, { cores } from "../../estilos/estilo";
-import { UsuarioLogado } from "../../types/Auth";
 import { buscarUsuarioLogado, logoutUsuario } from "../../services/AuthService";
+import { DoadorStackParamlist } from "../../types/Navigation";
+import { DoadorResponse } from "../../types/Doador";
+import { buscarDoador } from "../../services/DoadorService";
+import estilos from "../../estilos/estilo";
 
 export default function PerfilDoadorScreen() {
-  const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
+  const navigation = useNavigation<NavigationProp<DoadorStackParamlist>>();
+  const [perfil, setPerfil] = useState<DoadorResponse | null>(null);
   const [loading, setLoading] = useState(true);
-  const [saindo, setSaindo] = useState(false);
 
   useFocusEffect(
     useCallback(() => {
-      let ativo = true;
-
-      async function carregar() {
-        try {
-          setLoading(true);
-          const dados = await buscarUsuarioLogado();
-
-          if (ativo) setUsuario(dados);
-        } catch {
-          Alert.alert("Erro", "Não foi possível carregar o perfil.");
-        } finally {
-          if (ativo) setLoading(false);
-        }
-      }
-
-      carregar();
-
-      return () => {
-        ativo = false;
-      };
+      carregarPerfil();
     }, []),
   );
 
-  function confirmarLogout() {
-    Alert.alert("Sair da conta", "Deseja realmente sair do Partilhaê?", [
-      { text: "Cancelar", style: "cancel" },
-      {
-        text: "Sair",
-        onPress: async () => {
-          try {
-            setSaindo(true);
-            await logoutUsuario();
-            Alert.alert("Sessão encerrada", "Você saiu da sua conta.");
-          } catch {
-            Alert.alert("Erro", "Não foi possível sair.");
-          } finally {
-            setSaindo(false);
-          }
-        },
-      },
-    ]);
+  async function carregarPerfil() {
+    try {
+      setLoading(true);
+
+      const usuario = await buscarUsuarioLogado();
+
+      if (!usuario || !usuario.idDoador) {
+        return;
+      }
+
+      const doador = await buscarDoador(usuario.idDoador);
+
+      setPerfil(doador);
+    } catch (error) {
+      console.log("Erro ao carregar perfil:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function logout() {
+    await logoutUsuario();
+
+    navigation
+      .getParent()
+      ?.getParent()
+      ?.reset({
+        index: 0,
+        routes: [{ name: "Login" }],
+      });
   }
 
   if (loading) {
     return (
-      <View style={styles.loading}>
+      <View style={styles.safe}>
         <ActivityIndicator size="large" color={cores.primary} />
+      </View>
+    );
+  }
+
+  if (!perfil) {
+    return (
+      <View style={styles.safe}>
+        <Text>Não foi possível carregar o perfil.</Text>
       </View>
     );
   }
 
   return (
     <View style={styles.safe}>
-      <ScrollView contentContainerStyle={styles.pageContent}>
-        <View style={styles.headerText}>
-          <Text style={styles.pageTitle}>Meu perfil</Text>
-          <Text style={styles.pageSubtitle}>
-            Suas informações e configurações
-          </Text>
-        </View>
+      <ScrollView
+        contentContainerStyle={styles.scroll}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.profileHeader}>
+          <View style={styles.profileAvatar}>
+            <Ionicons name="person-outline" size={48} color={cores.primary} />
+          </View>
 
-        <View style={styles.card}>
-          <View style={styles.profileHeader}>
-            <View style={styles.profileAvatar}>
-              <Ionicons name="person-outline" size={36} color={cores.primary} />
-            </View>
+          <Text style={styles.profileName}>{perfil.nomeUsuario}</Text>
 
-            <Text style={styles.profileName}>
-              {usuario?.nomeUsuario || "Nome não disponível"}
-            </Text>
+          <Text style={styles.profileEmail}>{perfil.email}</Text>
 
-            <Text style={styles.profileEmail}>
-              {usuario?.email || "E-mail não disponível"}
-            </Text>
-
-            <View style={styles.profileBadge}>
-              <Text style={styles.profileBadgeText}>Doador</Text>
-            </View>
+          <View style={styles.profileBadge}>
+            <Text style={styles.profileBadgeText}>Doador</Text>
           </View>
         </View>
 
@@ -107,11 +103,25 @@ export default function PerfilDoadorScreen() {
 
           <View style={styles.card}>
             <View style={styles.detailRow}>
-              <Ionicons name="person-outline" size={20} color={cores.primary} />
+              <Ionicons name="call-outline" size={20} color={cores.primary} />
               <View style={styles.detailContent}>
-                <Text style={styles.detailLabel}>Nome</Text>
+                <Text style={styles.detailLabel}>Telefone</Text>
+                <Text style={styles.detailValue}>{perfil.telefone}</Text>
+              </View>
+            </View>
+
+            <View style={styles.separator} />
+
+            <View style={styles.detailRow}>
+              <Ionicons
+                name="location-outline"
+                size={20}
+                color={cores.primary}
+              />
+              <View style={styles.detailContent}>
+                <Text style={styles.detailLabel}>Endereço</Text>
                 <Text style={styles.detailValue}>
-                  {usuario?.nomeUsuario || "Não informado"}
+                  {perfil.endereco}, {perfil.numero}
                 </Text>
               </View>
             </View>
@@ -119,22 +129,12 @@ export default function PerfilDoadorScreen() {
             <View style={styles.separator} />
 
             <View style={styles.detailRow}>
-              <Ionicons name="mail-outline" size={20} color={cores.primary} />
+              <Ionicons name="map-outline" size={20} color={cores.primary} />
               <View style={styles.detailContent}>
-                <Text style={styles.detailLabel}>E-mail</Text>
+                <Text style={styles.detailLabel}>Estado e cidade</Text>
                 <Text style={styles.detailValue}>
-                  {usuario?.email || "Não informado"}
+                  {perfil.estado}, {perfil.cidade}
                 </Text>
-              </View>
-            </View>
-
-            <View style={styles.separator} />
-
-            <View style={styles.detailRow}>
-              <Ionicons name="heart-outline" size={20} color={cores.primary} />
-              <View style={styles.detailContent}>
-                <Text style={styles.detailLabel}>Tipo de conta</Text>
-                <Text style={styles.detailValue}>Doador</Text>
               </View>
             </View>
           </View>
@@ -143,19 +143,32 @@ export default function PerfilDoadorScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Configurações</Text>
 
-          <View style={styles.card}>
-            <View style={styles.settingsRow}>
+          <Pressable
+            style={({ pressed }) => [
+              estilos.settingsRow,
+              pressed && { opacity: 0.7 },
+            ]}
+            onPress={() =>
+              navigation.navigate("ConfiguracoesPerfilDoador")
+            }
+          >
+            <View style={styles.card}>
               <Ionicons name="create-outline" size={22} color={cores.muted} />
-              <Text style={styles.settingsText}>Editar perfil</Text>
-              <Text style={styles.disabledText}>Em breve</Text>
+              <Text style={styles.settingsText}>
+                Edite seus dados e gerencie sua conta.
+              </Text>
             </View>
+          </Pressable>
 
-            <View style={styles.separator} />
+          <View style={styles.separator} />
 
+          <View style={styles.card}>
             <Pressable
-              style={styles.settingsRow}
-              onPress={confirmarLogout}
-              disabled={saindo}
+              style={({ pressed }) => [
+                styles.settingsRow,
+                pressed && { opacity: 0.7 },
+              ]}
+              onPress={logout}
             >
               <Ionicons
                 name="log-out-outline"
@@ -163,26 +176,7 @@ export default function PerfilDoadorScreen() {
                 color={cores.primary}
               />
               <Text style={styles.settingsText}>Sair da conta</Text>
-              {saindo ? (
-                <ActivityIndicator color={cores.primary} />
-              ) : (
-                <Ionicons
-                  name="chevron-forward"
-                  size={18}
-                  color={cores.muted}
-                />
-              )}
             </Pressable>
-
-            <View style={styles.separator} />
-
-            <View style={styles.settingsRow}>
-              <Ionicons name="trash-outline" size={22} color={cores.danger} />
-              <Text style={[styles.settingsText, styles.settingsDangerText]}>
-                Excluir conta
-              </Text>
-              <Text style={styles.disabledText}>Em breve</Text>
-            </View>
           </View>
         </View>
       </ScrollView>

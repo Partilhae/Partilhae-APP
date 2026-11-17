@@ -22,7 +22,7 @@ export default function DoadorForm({
     cpf: "",
     telefone: "",
     cep: "",
-    logradouro: "",
+    endereco: "",
     numero: "",
     complemento: "",
     bairro: "",
@@ -65,7 +65,7 @@ export default function DoadorForm({
 
       setForm((prev) => ({
         ...prev,
-        logradouro: endereco.logradouro,
+        endereco: endereco.logradouro,
         bairro: endereco.bairro,
         cidade: endereco.cidade,
         estado: endereco.estado,
@@ -108,8 +108,8 @@ export default function DoadorForm({
       novosErros.cep = "CEP deve possuir 8 números.";
     }
 
-    if (!form.logradouro.trim()) {
-      novosErros.logradouro = "Informe a rua/avenida.";
+    if (!form.endereco.trim()) {
+      novosErros.endereco = "Informe a rua/avenida.";
     }
 
     if (!form.numero.trim()) {
@@ -157,7 +157,7 @@ export default function DoadorForm({
       cpf: form.cpf.replace(/\D/g, ""),
       telefone: form.telefone.replace(/\D/g, ""),
       cep: form.cep.replace(/\D/g, ""),
-      logradouro: form.logradouro.trim(),
+      endereco: form.endereco.trim(),
       numero: form.numero.trim(),
       complemento: form.complemento.trim(),
       bairro: form.bairro.trim(),
@@ -275,9 +275,9 @@ export default function DoadorForm({
         <Input
           label="Rua"
           placeholder="Rua ou avenida"
-          value={form.logradouro}
-          onChangeText={(value) => setField("logradouro", value)}
-          error={erros.logradouro}
+          value={form.endereco}
+          onChangeText={(value) => setField("endereco", value)}
+          error={erros.endereco}
         />
 
         <View style={estilos.cadastroLinha}>

@@ -2,6 +2,8 @@ import { Alert } from "react-native";
 import { JavaAPI } from "./API/JavaAPI";
 import { CadastroDoador, DoadorRequest, DoadorResponse } from "../types/Doador";
 
+import axios from "axios";
+
 export async function cadastrarDoador(cadastro: CadastroDoador) {
   try {
     const { data } = await JavaAPI.post("/doadores", {
@@ -12,7 +14,7 @@ export async function cadastrarDoador(cadastro: CadastroDoador) {
       senha: cadastro.senha,
 
       cep: cadastro.cep,
-      logradouro: cadastro.logradouro,
+      endereco: cadastro.endereco,
       numero: cadastro.numero,
       complemento: cadastro.complemento,
       bairro: cadastro.bairro,
@@ -28,11 +30,17 @@ export async function cadastrarDoador(cadastro: CadastroDoador) {
 
     return data;
   } catch (error) {
-    console.log("Erro ao cadastrar doador:", error);
+    if (axios.isAxiosError(error)) {
+      console.log("STATUS DA API:", error.response?.status);
+      console.log(
+        "RESPOSTA DA API:",
+        JSON.stringify(error.response?.data, null, 2),
+      );
+    } else {
+      console.log("Erro inesperado:", error);
+    }
 
-    Alert.alert("Erro", "Não foi possível cadastrar o doador.");
-
-    return null;
+    throw error;
   }
 }
 
@@ -64,10 +72,7 @@ export async function atualizarDoador(
   } catch (error) {
     console.log("Erro ao atualizar doador:", error);
 
-    Alert.alert(
-      "Erro",
-      "Não foi possível atualizar os dados desse doador.",
-    );
+    Alert.alert("Erro", "Não foi possível atualizar os dados desse doador.");
 
     return null;
   }

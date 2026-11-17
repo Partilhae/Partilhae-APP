@@ -9,7 +9,7 @@ export type CadastroDoador = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento: string;
   bairro: string;
@@ -30,7 +30,7 @@ export type DoadorErros = {
   senha?: string;
 
   cep?: string;
-  logradouro?: string;
+  endereco?: string;
   numero?: string;
   bairro?: string;
   cidade?: string;
@@ -48,7 +48,7 @@ export type DoadorRequest = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento?: string | null;
   bairro: string;
@@ -69,7 +69,7 @@ export type DoadorResponse = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento?: string | null;
   bairro: string;
@@ -92,7 +92,7 @@ export type PerfilDoadorFormData = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento: string;
   bairro: string;

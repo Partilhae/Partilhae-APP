@@ -16,6 +16,7 @@ export type ItemSolicitacao = {
 export type Solicitacao = {
   id: string;
   idReceptor: number;
+  idUsuarioBeneficiario: number;
   titulo: string;
   descricao: string;
   tipoAjuda: TipoAjuda;

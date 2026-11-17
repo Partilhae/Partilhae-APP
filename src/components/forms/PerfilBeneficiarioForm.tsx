@@ -67,7 +67,7 @@ export default function PerfilBeneficiarioForm({
 
       setForm((anterior) => ({
         ...anterior,
-        endereco: endereco.logradouro || anterior.logradouro,
+        endereco: endereco.endereco || anterior.endereco,
         bairro: endereco.bairro || anterior.bairro,
         cidade: endereco.localidade || anterior.cidade,
         estado: endereco.uf || anterior.estado,
@@ -94,7 +94,7 @@ export default function PerfilBeneficiarioForm({
     if (form.cep.replace(/\D/g, "").length !== 8)
       novosErros.cep = "Informe um CEP válido.";
 
-    if (!form.logradouro.trim()) novosErros.logradouro = "Informe o endereço.";
+    if (!form.endereco.trim()) novosErros.endereco = "Informe o endereço.";
 
     if (!form.numero.trim()) novosErros.numero = "Informe o número.";
 
@@ -166,9 +166,9 @@ export default function PerfilBeneficiarioForm({
 
       <Input
         label="Logradouro"
-        value={form.logradouro}
-        onChangeText={(v) => atualizar("logradouro", v)}
-        error={erros.logradouro}
+        value={form.endereco}
+        onChangeText={(v) => atualizar("endereco", v)}
+        error={erros.endereco}
       />
 
       <Input

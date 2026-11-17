@@ -9,7 +9,7 @@ export type CadastroBeneficiario = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento: string ;
   bairro: string;
@@ -30,7 +30,7 @@ export type BeneficiarioErros = {
   senha?: string;
 
   cep?: string;
-  logradouro?: string;
+  endereco?: string;
   numero?: string;
   bairro?: string;
   cidade?: string;
@@ -48,7 +48,7 @@ export type BeneficiarioRequest = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento?: string | null;
   bairro: string;
@@ -69,7 +69,7 @@ export type BeneficiarioResponse = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento?: string | null;
   bairro: string;
@@ -93,7 +93,7 @@ export type PerfilBeneficiarioFormData = {
   telefone: string;
 
   cep: string;
-  logradouro: string;
+  endereco: string;
   numero: string;
   complemento: string;
   bairro: string;

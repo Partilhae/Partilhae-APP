@@ -14,16 +14,23 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import styles, { cores } from "../../estilos/estilo";
-import { BeneficiarioTabParamlist } from "../../types/Navigation";
+import {
+  BeneficiarioStackParamlist,
+  BeneficiarioTabParamlist,
+} from "../../types/Navigation";
 import { UsuarioLogado } from "../../types/Auth";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { Solicitacao } from "../../types/Solicitacao";
+import { useConversas } from "../../context/ConversasContext";
 
 export default function DashboardBeneficiarioScreen() {
   const navigation = useNavigation<NavigationProp<BeneficiarioTabParamlist>>();
 
+  const navegacao = useNavigation<NavigationProp<BeneficiarioStackParamlist>>();
+
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
+  const { conversas, loading: loadingConversas } = useConversas();
 
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
   const [loadingUsuario, setLoadingUsuario] = useState(true);
@@ -43,6 +50,10 @@ export default function DashboardBeneficiarioScreen() {
           }
         } catch (error) {
           console.log("Erro ao carregar usuário:", error);
+
+          if (ativo) {
+            setUsuario(null);
+          }
         } finally {
           if (ativo) {
             setLoadingUsuario(false);
@@ -57,6 +68,13 @@ export default function DashboardBeneficiarioScreen() {
       };
     }, []),
   );
+
+  function abrirConversas() {
+    const stackNavigation =
+      navigation.getParent<NavigationProp<BeneficiarioStackParamlist>>();
+
+    stackNavigation?.navigate("Conversas");
+  }
 
   function textoStatus(status: Solicitacao["status"]) {
     switch (status) {
@@ -97,7 +115,7 @@ export default function DashboardBeneficiarioScreen() {
     }
   }
 
-  if (loadingUsuario || loadingSolicitacoes) {
+  if (loadingUsuario || loadingSolicitacoes || loadingConversas) {
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color={cores.primary} />
@@ -117,6 +135,12 @@ export default function DashboardBeneficiarioScreen() {
     (solicitacao) => solicitacao.status === "concluida",
   );
 
+  const minhasConversas = conversas.filter(
+    (conversa) =>
+      usuario?.idUsuario != null &&
+      conversa.idUsuarioBeneficiario === usuario.idUsuario,
+  );
+
   const solicitacoesRecentes = [...minhasSolicitacoes]
     .sort(
       (a, b) =>
@@ -132,12 +156,9 @@ export default function DashboardBeneficiarioScreen() {
       >
         <View style={styles.header}>
           <View style={styles.headerText}>
-            <Text style={styles.headerBrand}>PARTILHAÊ 💛</Text>
-
             <Text style={styles.pageTitle}>
               Olá, {usuario?.nomeUsuario || "bem-vindo"}!
             </Text>
-
             <Text style={styles.pageSubtitle}>
               Sua rede de apoio começa aqui.
             </Text>
@@ -195,11 +216,49 @@ export default function DashboardBeneficiarioScreen() {
 
           <Pressable
             style={styles.actionButton}
-            onPress={() => navigation.navigate("NovaSolicitacao")}
+            onPress={() => navegacao.navigate("NovaSolicitacaoBeneficiario")}
           >
             <Ionicons name="add" size={20} color={cores.white} />
 
             <Text style={styles.actionButtonText}>Criar solicitação</Text>
+          </Pressable>
+        </View>
+
+        <View style={styles.section}>
+          <View style={styles.headerInline}>
+            <Text style={styles.sectionTitle}>Minhas conversas</Text>
+
+            <Pressable onPress={abrirConversas}>
+              <Text style={styles.linkText}>Ver todas</Text>
+            </Pressable>
+          </View>
+
+          <Pressable style={styles.card} onPress={abrirConversas}>
+            <View style={styles.cardRow}>
+              <Ionicons
+                name="chatbubbles-outline"
+                size={28}
+                color={cores.primary}
+              />
+
+              <View style={[styles.detailContent, { flex: 1 }]}>
+                <Text style={styles.itemTitle}>Mensagens</Text>
+
+                <Text style={styles.itemSubtitle}>
+                  {minhasConversas.length === 0
+                    ? "Você ainda não possui conversas."
+                    : minhasConversas.length === 1
+                      ? "Você possui 1 conversa."
+                      : `Você possui ${minhasConversas.length} conversas.`}
+                </Text>
+              </View>
+
+              <Ionicons
+                name="chevron-forward-outline"
+                size={20}
+                color={cores.textSecondary}
+              />
+            </View>
           </Pressable>
         </View>
 
@@ -216,7 +275,9 @@ export default function DashboardBeneficiarioScreen() {
             {solicitacoesRecentes.map((solicitacao) => (
               <View key={solicitacao.id} style={styles.card}>
                 <View style={styles.cardRow}>
-                  <Text style={[styles.itemTitle, {flex: 1}]}>{solicitacao.titulo}</Text>
+                  <Text style={[styles.itemTitle, { flex: 1 }]}>
+                    {solicitacao.titulo}
+                  </Text>
 
                   <View
                     style={[

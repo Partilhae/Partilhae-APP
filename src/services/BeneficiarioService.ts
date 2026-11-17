@@ -5,6 +5,7 @@ import {
   CadastroBeneficiario,
 } from "../types/Beneficiario";
 import { JavaAPI } from "./API/JavaAPI";
+import axios from "axios";
 
 export async function cadastrarBeneficiario(cadastro: CadastroBeneficiario) {
   try {
@@ -16,7 +17,7 @@ export async function cadastrarBeneficiario(cadastro: CadastroBeneficiario) {
       senha: cadastro.senha,
 
       cep: cadastro.cep,
-      endereco: cadastro.logradouro,
+      endereco: cadastro.endereco,
       numero: cadastro.numero,
       complemento: cadastro.complemento,
       bairro: cadastro.bairro,
@@ -32,11 +33,17 @@ export async function cadastrarBeneficiario(cadastro: CadastroBeneficiario) {
 
     return data;
   } catch (error) {
-    console.log("Erro ao cadastrar beneficiário:", error);
+    if (axios.isAxiosError(error)) {
+      console.log("STATUS DA API:", error.response?.status);
+      console.log(
+        "RESPOSTA DA API:",
+        JSON.stringify(error.response?.data, null, 2),
+      );
+    } else {
+      console.log("Erro inesperado:", error);
+    }
 
-    Alert.alert("Erro", "Não foi possível cadastrar beneficiário");
-
-    return null;
+    throw error;
   }
 }
 
@@ -76,7 +83,6 @@ export async function atualizarBeneficiario(
     return null;
   }
 }
-
 
 export async function deletarBeneficiario(id: number): Promise<boolean> {
   try {

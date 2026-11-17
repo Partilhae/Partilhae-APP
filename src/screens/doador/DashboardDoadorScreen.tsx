@@ -14,18 +14,22 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 
 import styles, { cores } from "../../estilos/estilo";
-import { DoadorTabParamlist } from "../../types/Navigation";
+import {
+  DoadorStackParamlist,
+  DoadorTabParamlist,
+} from "../../types/Navigation";
 import { UsuarioLogado } from "../../types/Auth";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { useDoacoes } from "../../context/DoacoesContext";
+import { useConversas } from "../../context/ConversasContext";
 
 export default function DashboardDoadorScreen() {
   const navigation = useNavigation<NavigationProp<DoadorTabParamlist>>();
 
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
-
   const { doacoes, loading: loadingDoacoes } = useDoacoes();
+  const { conversas, loading: loadingConversas } = useConversas();
 
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
   const [loadingUsuario, setLoadingUsuario] = useState(true);
@@ -64,7 +68,19 @@ export default function DashboardDoadorScreen() {
     }, []),
   );
 
-  if (loadingUsuario || loadingSolicitacoes || loadingDoacoes) {
+  function abrirConversas() {
+    const stackNavigation =
+      navigation.getParent<NavigationProp<DoadorStackParamlist>>();
+
+    stackNavigation?.navigate("Conversas");
+  }
+
+  if (
+    loadingUsuario ||
+    loadingSolicitacoes ||
+    loadingDoacoes ||
+    loadingConversas
+  ) {
     return (
       <View style={styles.loading}>
         <ActivityIndicator size="large" color={cores.primary} />
@@ -86,6 +102,12 @@ export default function DashboardDoadorScreen() {
     (doacao) => doacao.status === "concluida",
   );
 
+  const minhasConversas = conversas.filter(
+    (conversa) =>
+      usuario?.idUsuario != null &&
+      conversa.idUsuarioDoador === usuario.idUsuario,
+  );
+
   const solicitacoesRecentes = solicitacoes
     .filter((solicitacao) => solicitacao.status === "aberta")
     .sort(
@@ -102,8 +124,6 @@ export default function DashboardDoadorScreen() {
       >
         <View style={styles.header}>
           <View style={styles.headerText}>
-            <Text style={styles.headerBrand}>PARTILHAÊ 💛</Text>
-
             <Text style={styles.pageTitle}>
               Olá, {usuario?.nomeUsuario || "bem-vindo"}!
             </Text>
@@ -168,6 +188,44 @@ export default function DashboardDoadorScreen() {
           </Pressable>
         </View>
 
+        <View style={styles.section}>
+          <View style={styles.headerInline}>
+            <Text style={styles.sectionTitle}>Minhas conversas</Text>
+
+            <Pressable onPress={abrirConversas}>
+              <Text style={styles.linkText}>Ver todas</Text>
+            </Pressable>
+          </View>
+
+          <Pressable style={styles.card} onPress={abrirConversas}>
+            <View style={styles.cardRow}>
+              <Ionicons
+                name="chatbubbles-outline"
+                size={28}
+                color={cores.primary}
+              />
+
+              <View style={[styles.detailContent, { flex: 1 }]}>
+                <Text style={styles.itemTitle}>Mensagens</Text>
+
+                <Text style={styles.itemSubtitle}>
+                  {minhasConversas.length === 0
+                    ? "Você ainda não possui conversas."
+                    : minhasConversas.length === 1
+                      ? "Você possui 1 conversa."
+                      : `Você possui ${minhasConversas.length} conversas.`}
+                </Text>
+              </View>
+
+              <Ionicons
+                name="chevron-forward-outline"
+                size={20}
+                color={cores.textSecondary}
+              />
+            </View>
+          </Pressable>
+        </View>
+
         <View style={styles.headerInline}>
           <Text style={styles.sectionTitle}>Pedidos recentes</Text>
 
@@ -181,7 +239,9 @@ export default function DashboardDoadorScreen() {
             {solicitacoesRecentes.map((solicitacao) => (
               <View key={solicitacao.id} style={styles.card}>
                 <View style={styles.cardRow}>
-                  <Text style={[styles.itemTitle, {flex: 1}]}>{solicitacao.titulo}</Text>
+                  <Text style={[styles.itemTitle, { flex: 1 }]}>
+                    {solicitacao.titulo}
+                  </Text>
 
                   <View
                     style={[

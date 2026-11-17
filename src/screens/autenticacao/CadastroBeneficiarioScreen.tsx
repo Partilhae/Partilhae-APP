@@ -6,6 +6,7 @@ import { useState } from "react";
 import { CadastroBeneficiario } from "../../types/Beneficiario";
 import BeneficiarioForm from "../../components/forms/BeneficiarioForm";
 import { cadastrarBeneficiario } from "../../services/BeneficiarioService";
+import { logarUsuario } from "../../services/AuthService";
 
 export default function CadastroBeneficiarioScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -21,16 +22,37 @@ export default function CadastroBeneficiarioScreen() {
         return;
       }
 
-      Alert.alert("Sucesso", "Beneficiário cadastrado com sucesso.", [
-        {
-          text: "Entrar",
-          onPress: () => navigation.goBack(),
-        },
-      ]);
+      const usuario = await logarUsuario(dados.email, dados.senha);
+
+      if(!usuario){
+        Alert.alert("Cadastro realizao", "Sua conta foi criada com sucesso. Faça login para continuar",
+          [
+            {
+              text: "Ir para Login",
+              onPress: () =>
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "Login" }],
+                }),
+            }
+          ]
+        )
+        return;
+      }
+
+      if(usuario.role !== "RECEPTOR"){
+        Alert.alert("Erro", "O perfil retornado não corresponde o de beneficiário.");
+        return;
+      }
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Beneficiario" }],
+      });
     } catch (error) {
       console.log("Erro ao cadastrar beneficiário:", error);
 
-      Alert.alert("Erro", "Não foi possível realizar o cadastro.");
+      Alert.alert("Erro", "Não foi possível concluir o cadastro. Tente novamente.");
     } finally {
       setLoading(false);
     }

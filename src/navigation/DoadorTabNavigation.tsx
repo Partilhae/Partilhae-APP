@@ -3,9 +3,9 @@ import { DoadorTabParamlist } from "../types/Navigation";
 import estilos, { cores } from "../estilos/estilo";
 import { Ionicons } from "@expo/vector-icons";
 import DashboardDoadorScreen from "../screens/doador/DashboardDoadorScreen";
-import PerfilDoadorScreen from "../screens/doador/PerfilDoadorScreen";
 import ExplorarSolicitacoesScreen from "../screens/doador/ExplorarSolicitacoesDoadorScreen";
 import MinhasDoacoesScreen from "../screens/doador/MinhasDoacoesDoadorScreen";
+import PerfilDoadorScreen from "../screens/doador/PerfilDoadorScreen";
 
 const Tab = createBottomTabNavigator<DoadorTabParamlist>();
 
