@@ -6,6 +6,7 @@ import DashboardBeneficiarioScreen from "../screens/beneficiario/DashboardBenefi
 import MinhasSolicitacoesScreen from "../screens/beneficiario/MinhasSolicitacoesBeneficiarioScreen";
 import DoacoesRecebidasBeneficiarioScreen from "../screens/beneficiario/DoacoesRecebidasBeneficiarioScreen";
 import PerfilBeneficiarioScreen from "../screens/beneficiario/PerfilBeneficiarioScreen";
+import ConversasScreen from "../screens/usuarios/ConversasScreen";
 
 const Tab = createBottomTabNavigator<BeneficiarioTabParamlist>();
 
@@ -47,6 +48,16 @@ export default function BeneficiarioTabs() {
           title: "Doações",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="heart-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Conversas"
+        component={ConversasScreen}
+        options={{
+          title: "Conversas",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubbles-outline" color={color} size={size} />
           ),
         }}
       />

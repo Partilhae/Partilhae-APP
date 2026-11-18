@@ -108,3 +108,8 @@ export type PerfilBeneficiarioFormData = {
   restricaoAlimentar: string;
   observacao: string;
 };
+
+export type BeneficiarioUpdateRequest =
+  Partial<Omit<PerfilBeneficiarioFormData, "quantidadePessoasFamilia">> & {
+    quantidadePessoasFamilia?: number;
+  };

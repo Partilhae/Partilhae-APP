@@ -6,31 +6,21 @@ import {
   Text,
   View,
 } from "react-native";
-import {
-  NavigationProp,
-  useFocusEffect,
-  useNavigation,
-} from "@react-navigation/native";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import styles, { cores } from "../../estilos/estilo";
-import {
-  BeneficiarioStackParamlist,
-  BeneficiarioTabParamlist,
-} from "../../types/Navigation";
+import estilos, { cores } from "../../estilos/estilo";
+import { BeneficiarioNavigation } from "../../types/Navigation";
 import { UsuarioLogado } from "../../types/Auth";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { Solicitacao } from "../../types/Solicitacao";
-import { useConversas } from "../../context/ConversasContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DashboardBeneficiarioScreen() {
-  const navigation = useNavigation<NavigationProp<BeneficiarioTabParamlist>>();
-
-  const navegacao = useNavigation<NavigationProp<BeneficiarioStackParamlist>>();
+  const navigation = useNavigation<BeneficiarioNavigation>();
 
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
-  const { conversas, loading: loadingConversas } = useConversas();
 
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
   const [loadingUsuario, setLoadingUsuario] = useState(true);
@@ -69,13 +59,6 @@ export default function DashboardBeneficiarioScreen() {
     }, []),
   );
 
-  function abrirConversas() {
-    const stackNavigation =
-      navigation.getParent<NavigationProp<BeneficiarioStackParamlist>>();
-
-    stackNavigation?.navigate("Conversas");
-  }
-
   function textoStatus(status: Solicitacao["status"]) {
     switch (status) {
       case "aberta":
@@ -89,35 +72,37 @@ export default function DashboardBeneficiarioScreen() {
     }
   }
 
-  function corStatus(status: Solicitacao["status"]) {
+  function estiloStatus(status: Solicitacao["status"]) {
     switch (status) {
       case "aberta":
-        return cores.warning;
+        return {
+          fundo: estilos.conversaStatusEmAndamento,
+          texto: estilos.conversaStatusTextoEmAndamento,
+        };
+
       case "em_andamento":
-        return cores.info;
+        return {
+          fundo: estilos.conversaStatusEntregue,
+          texto: estilos.conversaStatusTextoEntregue,
+        };
+
       case "concluida":
-        return cores.success;
+        return {
+          fundo: estilos.conversaStatusConcluida,
+          texto: estilos.conversaStatusTextoConcluida,
+        };
+
       case "cancelada":
-        return cores.danger;
+        return {
+          fundo: estilos.conversaStatusCancelada,
+          texto: estilos.conversaStatusTextoCancelada,
+        };
     }
   }
 
-  function fundoStatus(status: Solicitacao["status"]) {
-    switch (status) {
-      case "aberta":
-        return cores.warningSoft;
-      case "em_andamento":
-        return cores.infoSoft;
-      case "concluida":
-        return cores.successSoft;
-      case "cancelada":
-        return cores.dangerSoft;
-    }
-  }
-
-  if (loadingUsuario || loadingSolicitacoes || loadingConversas) {
+  if (loadingUsuario || loadingSolicitacoes) {
     return (
-      <View style={styles.loading}>
+      <View style={estilos.loading}>
         <ActivityIndicator size="large" color={cores.primary} />
       </View>
     );
@@ -135,12 +120,6 @@ export default function DashboardBeneficiarioScreen() {
     (solicitacao) => solicitacao.status === "concluida",
   );
 
-  const minhasConversas = conversas.filter(
-    (conversa) =>
-      usuario?.idUsuario != null &&
-      conversa.idUsuarioBeneficiario === usuario.idUsuario,
-  );
-
   const solicitacoesRecentes = [...minhasSolicitacoes]
     .sort(
       (a, b) =>
@@ -149,150 +128,108 @@ export default function DashboardBeneficiarioScreen() {
     .slice(0, 2);
 
   return (
-    <View style={styles.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <ScrollView
-        contentContainerStyle={styles.pageContent}
+        contentContainerStyle={estilos.pageContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <View style={styles.headerText}>
-            <Text style={styles.pageTitle}>
+        <View style={estilos.header}>
+          <View style={estilos.headerText}>
+            <Text style={estilos.pageTitle}>
               Olá, {usuario?.nomeUsuario || "bem-vindo"}!
             </Text>
-            <Text style={styles.pageSubtitle}>
+            <Text style={estilos.pageSubtitle}>
               Sua rede de apoio começa aqui.
             </Text>
           </View>
 
-          <View style={styles.headerIcon}>
+          <View style={estilos.headerIcon}>
             <Ionicons name="heart-outline" size={27} color={cores.primary} />
           </View>
         </View>
 
-        <View style={styles.indicatorRow}>
-          <View style={styles.indicator}>
+        <View style={estilos.indicatorRow}>
+          <View style={estilos.indicator}>
             <Ionicons
               name="document-text-outline"
               size={24}
               color={cores.primary}
             />
 
-            <Text style={styles.indicatorValue}>
+            <Text style={estilos.indicatorValue}>
               {solicitacoesAbertas.length}
             </Text>
 
-            <Text style={styles.indicatorLabel}>Solicitações abertas</Text>
+            <Text style={estilos.indicatorLabel}>Solicitações abertas</Text>
           </View>
 
-          <View style={styles.indicator}>
+          <View style={estilos.indicator}>
             <Ionicons
               name="heart-circle-outline"
               size={24}
               color={cores.success}
             />
 
-            <Text style={styles.indicatorValue}>
+            <Text style={estilos.indicatorValue}>
               {solicitacoesConcluidas.length}
             </Text>
 
-            <Text style={styles.indicatorLabel}>Solicitações concluídas</Text>
+            <Text style={estilos.indicatorLabel}>Solicitações concluídas</Text>
           </View>
         </View>
 
-        <View style={styles.highlightCard}>
-          <View style={styles.header}>
+        <View style={estilos.highlightCard}>
+          <View style={estilos.header}>
             <Ionicons
               name="hand-left-outline"
               size={24}
               color={cores.primary}
             />
 
-            <Text style={styles.cardTitle}>Precisa de uma mãozinha?</Text>
+            <Text style={estilos.cardTitle}>Precisa de uma mãozinha?</Text>
           </View>
 
-          <Text style={styles.cardDescription}>
+          <Text style={estilos.cardDescription}>
             Conte o que você precisa e conecte-se a pessoas dispostas a ajudar.
           </Text>
 
           <Pressable
-            style={styles.actionButton}
-            onPress={() => navegacao.navigate("NovaSolicitacaoBeneficiario")}
+            style={estilos.actionButton}
+            onPress={() => navigation.navigate("NovaSolicitacaoBeneficiario")}
           >
             <Ionicons name="add" size={20} color={cores.white} />
 
-            <Text style={styles.actionButtonText}>Criar solicitação</Text>
+            <Text style={estilos.actionButtonText}>Criar solicitação</Text>
           </Pressable>
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.headerInline}>
-            <Text style={styles.sectionTitle}>Minhas conversas</Text>
-
-            <Pressable onPress={abrirConversas}>
-              <Text style={styles.linkText}>Ver todas</Text>
-            </Pressable>
-          </View>
-
-          <Pressable style={styles.card} onPress={abrirConversas}>
-            <View style={styles.cardRow}>
-              <Ionicons
-                name="chatbubbles-outline"
-                size={28}
-                color={cores.primary}
-              />
-
-              <View style={[styles.detailContent, { flex: 1 }]}>
-                <Text style={styles.itemTitle}>Mensagens</Text>
-
-                <Text style={styles.itemSubtitle}>
-                  {minhasConversas.length === 0
-                    ? "Você ainda não possui conversas."
-                    : minhasConversas.length === 1
-                      ? "Você possui 1 conversa."
-                      : `Você possui ${minhasConversas.length} conversas.`}
-                </Text>
-              </View>
-
-              <Ionicons
-                name="chevron-forward-outline"
-                size={20}
-                color={cores.textSecondary}
-              />
-            </View>
-          </Pressable>
-        </View>
-
-        <View style={styles.headerInline}>
-          <Text style={styles.sectionTitle}>Suas solicitações</Text>
+        <View style={estilos.headerInline}>
+          <Text style={estilos.sectionTitle}>Suas solicitações</Text>
 
           <Pressable onPress={() => navigation.navigate("MinhasSolicitacoes")}>
-            <Text style={styles.linkText}>Ver todas</Text>
+            <Text style={estilos.linkText}>Ver todas</Text>
           </Pressable>
         </View>
 
         {solicitacoesRecentes.length > 0 ? (
-          <View style={styles.list}>
+          <View style={estilos.list}>
             {solicitacoesRecentes.map((solicitacao) => (
-              <View key={solicitacao.id} style={styles.card}>
-                <View style={styles.cardRow}>
-                  <Text style={[styles.itemTitle, { flex: 1 }]}>
+              <View key={solicitacao.id} style={estilos.card}>
+                <View style={estilos.cardRow}>
+                  <Text style={[estilos.itemTitle, { flex: 1 }]}>
                     {solicitacao.titulo}
                   </Text>
 
                   <View
                     style={[
-                      styles.statusBadge,
-                      {
-                        backgroundColor: fundoStatus(solicitacao.status),
-                      },
+                      estilos.statusBadge,
+                      estiloStatus(solicitacao.status).fundo,
                     ]}
                   >
                     <Text
                       style={[
-                        styles.statusBadgeText,
-                        {
-                          color: corStatus(solicitacao.status),
-                        },
+                        estilos.statusBadgeText,
+                        estiloStatus(solicitacao.status).texto,
                       ]}
                     >
                       {textoStatus(solicitacao.status)}
@@ -300,18 +237,18 @@ export default function DashboardBeneficiarioScreen() {
                   </View>
                 </View>
 
-                <Text style={styles.itemSubtitle} numberOfLines={2}>
+                <Text style={estilos.itemSubtitle} numberOfLines={2}>
                   {solicitacao.descricao}
                 </Text>
 
-                <View style={styles.infoRow}>
+                <View style={estilos.infoRow}>
                   <Ionicons
                     name="calendar-outline"
                     size={15}
                     color={cores.textSecondary}
                   />
 
-                  <Text style={styles.infoText}>
+                  <Text style={estilos.infoText}>
                     {new Date(solicitacao.dataCriacao).toLocaleDateString(
                       "pt-BR",
                     )}
@@ -321,8 +258,8 @@ export default function DashboardBeneficiarioScreen() {
             ))}
           </View>
         ) : (
-          <View style={styles.emptyState}>
-            <View style={styles.emptyIcon}>
+          <View style={estilos.emptyState}>
+            <View style={estilos.emptyIcon}>
               <Ionicons
                 name="file-tray-outline"
                 size={32}
@@ -330,15 +267,15 @@ export default function DashboardBeneficiarioScreen() {
               />
             </View>
 
-            <Text style={styles.emptyTitle}>Nenhuma solicitação por aqui</Text>
+            <Text style={estilos.emptyTitle}>Nenhuma solicitação por aqui</Text>
 
-            <Text style={styles.emptyText}>
+            <Text style={estilos.emptyText}>
               Quando você criar um pedido, poderá acompanhar o andamento dele
               aqui.
             </Text>
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

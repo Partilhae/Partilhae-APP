@@ -15,6 +15,7 @@ export type DoadorTabParamlist = {
   InicioDoador: undefined;
   Solicitacoes: undefined;
   MinhasDoacoes: undefined;
+  Conversas: undefined;
   PerfilDoador: undefined;
 };
 
@@ -23,12 +24,11 @@ export type DoadorStackParamlist = {
   NovaSolicitacao: { idSolicitacao: string };
   DetalhesSolicitacaoDoador: { idSolicitacao: string };
   EditarSolicitacao: { idSolicitacao: string };
-  Conversas: undefined;
-  Chat: { idConversa: string };
   NovaDenuncia: { idUsuarioDenunciado: number };
   DetalhesDoacaoDoador: {
     idDoacao: string;
   };
+  Chat: { idConversa: string };
   EditarPerfilDoador: undefined;
   ConfiguracoesPerfilDoador: undefined;
   MinhasDenuncias: undefined;
@@ -43,6 +43,7 @@ export type BeneficiarioTabParamlist = {
   InicioBeneficiario: undefined;
   MinhasSolicitacoes: undefined;
   DoacoesRecebidasBeneficiario: undefined;
+  Conversas: undefined;
   PerfilBeneficiario: undefined;
 };
 
@@ -54,7 +55,6 @@ export type BeneficiarioStackParamlist = {
     idSolicitacao: string;
   };
   DetalhesDoacoesRecebidasBeneficiario: { idDoacao: string };
-  Conversas: undefined;
   Chat: { idConversa: string };
   NovaDenuncia: { idUsuarioDenunciado: number };
   EditarPerfilBeneficiario: undefined;

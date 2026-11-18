@@ -7,6 +7,7 @@ import { CadastroBeneficiario } from "../../types/Beneficiario";
 import BeneficiarioForm from "../../components/forms/BeneficiarioForm";
 import { cadastrarBeneficiario } from "../../services/BeneficiarioService";
 import { logarUsuario } from "../../services/AuthService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CadastroBeneficiarioScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -59,12 +60,16 @@ export default function CadastroBeneficiarioScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <Pressable style={estilos.backBtn} onPress={() => navigation.goBack()}>
+          <Text style={estilos.backBtnText}>← Voltar</Text>
+        </Pressable>
+        
         <View style={estilos.cadastroHeader}>
           <Text style={estilos.cadastroTitulo}>Receba ajuda</Text>
 
@@ -86,6 +91,6 @@ export default function CadastroBeneficiarioScreen() {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

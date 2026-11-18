@@ -1,17 +1,6 @@
-
 import { useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  Text,
-  View,
-} from "react-native";
-import {
-  RouteProp,
-  useNavigation,
-  useRoute,
-} from "@react-navigation/native";
+import { ActivityIndicator, Alert, Pressable, ScrollView, Text, View } from "react-native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
 import estilos, { cores } from "../../estilos/estilo";
 import { BeneficiarioStackParamlist } from "../../types/Navigation";
@@ -19,31 +8,23 @@ import { NovaSolicitacao } from "../../types/Solicitacao";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import SolicitacaoForm from "../../components/forms/SolicitacaoForm";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function EditarSolicitacaoBeneficiarioScreen() {
   const navigation = useNavigation();
 
   const route =
     useRoute<
-      RouteProp<
-        BeneficiarioStackParamlist,
-        "EditarSolicitacaoBeneficiario"
-      >
+      RouteProp<BeneficiarioStackParamlist, "EditarSolicitacaoBeneficiario">
     >();
 
   const { idSolicitacao } = route.params;
 
-  const {
-    solicitacoes,
-    loading,
-    atualizarSolicitacao,
-  } = useSolicitacoes();
+  const { solicitacoes, loading, atualizarSolicitacao } = useSolicitacoes();
 
   const [salvando, setSalvando] = useState(false);
 
-  const solicitacao = solicitacoes.find(
-    (item) => item.id === idSolicitacao,
-  );
+  const solicitacao = solicitacoes.find((item) => item.id === idSolicitacao);
 
   async function handleSalvar(dados: NovaSolicitacao) {
     if (!solicitacao || salvando) return;
@@ -87,10 +68,7 @@ export default function EditarSolicitacaoBeneficiarioScreen() {
     } catch (error) {
       console.log("Erro ao editar solicitação:", error);
 
-      Alert.alert(
-        "Erro",
-        "Não foi possível salvar as alterações.",
-      );
+      Alert.alert("Erro", "Não foi possível salvar as alterações.");
     } finally {
       setSalvando(false);
     }
@@ -99,10 +77,7 @@ export default function EditarSolicitacaoBeneficiarioScreen() {
   if (loading) {
     return (
       <View style={estilos.solicitacaoCarregando}>
-        <ActivityIndicator
-          size="large"
-          color={cores.primary}
-        />
+        <ActivityIndicator size="large" color={cores.primary} />
       </View>
     );
   }
@@ -118,19 +93,21 @@ export default function EditarSolicitacaoBeneficiarioScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={estilos.solicitacaoVoltar}>← Voltar</Text>
+        </Pressable>
+
         <View style={estilos.cadastroHeader}>
-          <Text style={estilos.cadastroTitulo}>
-            Editar solicitação
-          </Text>
+          <Text style={estilos.cadastroTitulo}>Editar solicitação</Text>
 
           <Text style={estilos.cadastroSubtitulo}>
-            Atualize as informações do seu pedido de ajuda.
+            Atualize as informações do seu pedido.
           </Text>
         </View>
 
@@ -140,11 +117,14 @@ export default function EditarSolicitacaoBeneficiarioScreen() {
             descricao: solicitacao.descricao,
             tipoAjuda: solicitacao.tipoAjuda,
             itens: solicitacao.itens,
+            estado: solicitacao.estado,
+            cidade: solicitacao.cidade,
+            bairro: solicitacao.bairro
           }}
           onSubmit={handleSalvar}
           loading={salvando}
         />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

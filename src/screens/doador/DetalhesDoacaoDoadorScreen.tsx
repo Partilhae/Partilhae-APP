@@ -16,6 +16,7 @@ import { buscarUsuarioLogado } from "../../services/AuthService";
 import { DoadorNavigation, DoadorStackParamlist } from "../../types/Navigation";
 import { StatusDoacao } from "../../types/Doacao";
 import { useConversas } from "../../context/ConversasContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type DetalhesRoute = RouteProp<DoadorStackParamlist, "DetalhesDoacaoDoador">;
 
@@ -211,7 +212,7 @@ export default function DetalhesDoacaoDoadorScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         showsVerticalScrollIndicator={false}
@@ -222,7 +223,6 @@ export default function DetalhesDoacaoDoadorScreen() {
 
         <View style={estilos.cadastroHeader}>
           <Text style={estilos.cadastroTitulo}>Detalhes da doação</Text>
-
           <Text style={estilos.cadastroSubtitulo}>
             Acompanhe sua contribuição.
           </Text>
@@ -233,11 +233,11 @@ export default function DetalhesDoacaoDoadorScreen() {
             {solicitacao?.titulo ?? "Solicitação indisponível"}
           </Text>
 
-          <Text style={estilos.solicitacaoDetalhesLabel}>Status</Text>
-
-          <Text style={estilos.solicitacaoDetalhesValor}>
-            {formatarStatus(doacao.status)}
-          </Text>
+          <View style={estilos.solicitacaoDetalhesStatus}>
+            <Text style={estilos.solicitacaoStatusTexto}>
+              {formatarStatus(doacao.status)}
+            </Text>
+          </View>
 
           <Text style={estilos.solicitacaoDetalhesLabel}>Data de início</Text>
 
@@ -288,8 +288,7 @@ export default function DetalhesDoacaoDoadorScreen() {
             <Text style={estilos.cadastroSecaoTitulo}>Comunicação</Text>
 
             <Text style={estilos.cadastroAjuda}>
-              Converse com o beneficiário para combinar os detalhes da entrega
-              dos alimentos.
+              Combine os detalhes da entrega pelo chat.
             </Text>
 
             <Pressable
@@ -301,7 +300,7 @@ export default function DetalhesDoacaoDoadorScreen() {
                 <ActivityIndicator color={cores.white} />
               ) : (
                 <Text style={estilos.doadorQueroAjudarTexto}>
-                  Conversar com beneficiário
+                  Abrir conversa
                 </Text>
               )}
             </Pressable>
@@ -313,8 +312,8 @@ export default function DetalhesDoacaoDoadorScreen() {
             <Text style={estilos.cadastroSecaoTitulo}>Gerenciar doação</Text>
 
             <Text style={estilos.cadastroAjuda}>
-              Após realizar a entrega, informe para que o beneficiário possa
-              confirmar o recebimento.
+              Entregou os alimentos? Informe para o beneficiário confirmar o
+              recebimento.
             </Text>
 
             <Pressable
@@ -328,7 +327,7 @@ export default function DetalhesDoacaoDoadorScreen() {
             </Pressable>
 
             <Pressable onPress={confirmarCancelamento} disabled={salvando}>
-              <Text style={estilos.solicitacaoVoltar}>Cancelar doação</Text>
+              <Text style={[estilos.solicitacaoVoltar, {color: cores.danger, textAlign:"center"}]}>Cancelar doação</Text>
             </Pressable>
           </View>
         )}
@@ -339,6 +338,6 @@ export default function DetalhesDoacaoDoadorScreen() {
           </Text>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

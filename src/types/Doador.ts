@@ -105,3 +105,5 @@ export type PerfilDoadorFormData = {
   disponibilidade: string;
   observacao: string;
 };
+
+export type DoadorUpdateRequest = Partial<PerfilDoadorFormData>;

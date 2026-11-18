@@ -14,30 +14,15 @@ import Input from "../../components/Input";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { buscarDoador } from "../../services/DoadorService";
-import { JavaAPI } from "../../services/API/JavaAPI";
 
 import { DoadorNavigation } from "../../types/Navigation";
 import { Solicitacao } from "../../types/Solicitacao";
-import { BeneficiarioResponse } from "../../types/Beneficiario";
-
-type Localizacao = {
-  bairro: string;
-  cidade: string;
-  estado: string;
-};
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ExplorarSolicitacoesScreen() {
   const navigation = useNavigation<DoadorNavigation>();
 
   const { solicitacoes, loading } = useSolicitacoes();
-
-  const [localizacoes, setLocalizacoes] = useState<Record<number, Localizacao>>(
-    {},
-  );
-
-  const [carregandoLocalizacoes, setCarregandoLocalizacoes] = useState(true);
-
-  const [erroLocalizacoes, setErroLocalizacoes] = useState(false);
 
   const [estado, setEstado] = useState("");
   const [cidade, setCidade] = useState("");
@@ -47,7 +32,6 @@ export default function ExplorarSolicitacoesScreen() {
 
   const filtrosAlterados = useRef(false);
 
-  // Solicitações abertas, ordenadas pelas mais recentes
   const solicitacoesAbertas = useMemo(() => {
     return solicitacoes
       .filter((item) => item.status === "aberta")
@@ -57,7 +41,6 @@ export default function ExplorarSolicitacoesScreen() {
       );
   }, [solicitacoes]);
 
-  // Buscar a região cadastrada do doador
   useEffect(() => {
     let ativo = true;
 
@@ -95,88 +78,6 @@ export default function ExplorarSolicitacoesScreen() {
     };
   }, []);
 
-  // Buscar a localização dos beneficiários
-  useEffect(() => {
-    if (loading) return;
-
-    let ativo = true;
-
-    async function carregarLocalizacoes() {
-      setCarregandoLocalizacoes(true);
-      setErroLocalizacoes(false);
-
-      try {
-        const idsBeneficiarios = [
-          ...new Set(solicitacoesAbertas.map((item) => item.idReceptor)),
-        ];
-
-        if (idsBeneficiarios.length === 0) {
-          if (ativo) {
-            setLocalizacoes({});
-          }
-          return;
-        }
-
-        const resultados = await Promise.all(
-          idsBeneficiarios.map(async (id) => {
-            try {
-              const { data } = await JavaAPI.get<BeneficiarioResponse>(
-                `/beneficiarios/${id}`,
-              );
-
-              return {
-                id,
-                localizacao: {
-                  bairro: data.bairro ?? "",
-                  cidade: data.cidade ?? "",
-                  estado: data.estado ?? "",
-                },
-              };
-            } catch (error) {
-              console.log(
-                `Erro ao buscar localização do beneficiário ${id}:`,
-                error,
-              );
-
-              return null;
-            }
-          }),
-        );
-
-        if (!ativo) return;
-
-        const novasLocalizacoes: Record<number, Localizacao> = {};
-
-        resultados.forEach((resultado) => {
-          if (resultado) {
-            novasLocalizacoes[resultado.id] = resultado.localizacao;
-          }
-        });
-
-        setLocalizacoes(novasLocalizacoes);
-
-        setErroLocalizacoes(resultados.some((resultado) => resultado === null));
-      } catch (error) {
-        console.log("Erro ao carregar localizações:", error);
-
-        if (ativo) {
-          setErroLocalizacoes(true);
-        }
-      } finally {
-        if (ativo) {
-          setCarregandoLocalizacoes(false);
-        }
-      }
-    }
-
-    carregarLocalizacoes();
-
-    return () => {
-      ativo = false;
-    };
-  }, [loading, solicitacoesAbertas]);
-
-  // Normalizar texto sem causar erro com undefined ou null
   function normalizar(texto?: string | null) {
     return (texto ?? "")
       .normalize("NFD")
@@ -185,35 +86,23 @@ export default function ExplorarSolicitacoesScreen() {
       .toLowerCase();
   }
 
-  // Filtrar solicitações por localização
+
   const solicitacoesFiltradas = useMemo(() => {
     return solicitacoesAbertas.filter((item) => {
-      const localizacao = localizacoes[item.idReceptor];
-
-      const possuiFiltros =
-        estado.trim() !== "" || cidade.trim() !== "" || bairro.trim() !== "";
-
-      // Sem localização, só aparece quando não há filtros
-      if (!localizacao) {
-        return !possuiFiltros;
-      }
-
       const correspondeEstado =
-        !estado.trim() || normalizar(localizacao.estado) === normalizar(estado);
+        !estado.trim() || normalizar(item.estado) === normalizar(estado);
 
       const correspondeCidade =
-        !cidade.trim() ||
-        normalizar(localizacao.cidade).includes(normalizar(cidade));
+        !cidade.trim() || normalizar(item.cidade).includes(normalizar(cidade));
 
       const correspondeBairro =
-        !bairro.trim() ||
-        normalizar(localizacao.bairro).includes(normalizar(bairro));
+        !bairro.trim() || normalizar(item.bairro).includes(normalizar(bairro));
 
       return correspondeEstado && correspondeCidade && correspondeBairro;
     });
-  }, [solicitacoesAbertas, localizacoes, estado, cidade, bairro]);
+  }, [solicitacoesAbertas, estado, cidade, bairro]);
 
-  // Alterar filtros manualmente
+
   function alterarEstado(valor: string) {
     filtrosAlterados.current = true;
     setEstado(valor);
@@ -247,9 +136,10 @@ export default function ExplorarSolicitacoesScreen() {
     });
   }
 
-  // Renderizar cada solicitação
   function renderizarSolicitacao({ item }: { item: Solicitacao }) {
-    const localizacao = localizacoes[item.idReceptor];
+    const localizacao = [item.bairro, item.cidade, item.estado]
+      .filter(Boolean)
+      .join(", ");
 
     return (
       <View style={estilos.solicitacaoCard}>
@@ -265,14 +155,9 @@ export default function ExplorarSolicitacoesScreen() {
           {item.tipoAjuda === "geral" ? "Ajuda geral" : "Ajuda específica"}
         </Text>
 
-        {localizacao &&
-          (localizacao.bairro || localizacao.cidade || localizacao.estado) && (
-            <Text style={estilos.solicitacaoCardData}>
-              {[localizacao.bairro, localizacao.cidade, localizacao.estado]
-                .filter(Boolean)
-                .join(", ")}
-            </Text>
-          )}
+        <Text style={estilos.solicitacaoCardData}>
+          {localizacao || "Localização não disponível"}
+        </Text>
 
         <Text style={estilos.solicitacaoCardData}>
           Publicada em {formatarData(item.dataCriacao)}
@@ -294,7 +179,6 @@ export default function ExplorarSolicitacoesScreen() {
     );
   }
 
-  // Carregamento inicial das solicitações
   if (loading) {
     return (
       <View style={estilos.solicitacaoCarregando}>
@@ -303,10 +187,10 @@ export default function ExplorarSolicitacoesScreen() {
     );
   }
 
-  const carregando = carregandoRegiao || carregandoLocalizacoes;
+  const carregando = carregandoRegiao;
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <FlatList
         data={carregando ? [] : solicitacoesFiltradas}
         keyExtractor={(item) => item.id}
@@ -358,13 +242,6 @@ export default function ExplorarSolicitacoesScreen() {
                 {solicitacoesFiltradas.length} solicitação(ões) encontrada(s)
               </Text>
             )}
-
-            {erroLocalizacoes && !carregandoLocalizacoes && (
-              <Text style={estilos.cadastroAjuda}>
-                Não foi possível consultar a localização de alguns
-                beneficiários.
-              </Text>
-            )}
           </View>
         }
         ListEmptyComponent={
@@ -390,6 +267,6 @@ export default function ExplorarSolicitacoesScreen() {
           )
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }

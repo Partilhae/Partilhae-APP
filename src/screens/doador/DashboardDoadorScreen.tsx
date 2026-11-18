@@ -13,23 +13,19 @@ import {
 } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
 
-import styles, { cores } from "../../estilos/estilo";
-import {
-  DoadorStackParamlist,
-  DoadorTabParamlist,
-} from "../../types/Navigation";
+import estilos, { cores } from "../../estilos/estilo";
+import { DoadorTabParamlist } from "../../types/Navigation";
 import { UsuarioLogado } from "../../types/Auth";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { useDoacoes } from "../../context/DoacoesContext";
-import { useConversas } from "../../context/ConversasContext";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DashboardDoadorScreen() {
   const navigation = useNavigation<NavigationProp<DoadorTabParamlist>>();
 
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
   const { doacoes, loading: loadingDoacoes } = useDoacoes();
-  const { conversas, loading: loadingConversas } = useConversas();
 
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
   const [loadingUsuario, setLoadingUsuario] = useState(true);
@@ -68,21 +64,9 @@ export default function DashboardDoadorScreen() {
     }, []),
   );
 
-  function abrirConversas() {
-    const stackNavigation =
-      navigation.getParent<NavigationProp<DoadorStackParamlist>>();
-
-    stackNavigation?.navigate("Conversas");
-  }
-
-  if (
-    loadingUsuario ||
-    loadingSolicitacoes ||
-    loadingDoacoes ||
-    loadingConversas
-  ) {
+  if (loadingUsuario || loadingSolicitacoes || loadingDoacoes) {
     return (
-      <View style={styles.loading}>
+      <View style={estilos.loading}>
         <ActivityIndicator size="large" color={cores.primary} />
       </View>
     );
@@ -102,12 +86,6 @@ export default function DashboardDoadorScreen() {
     (doacao) => doacao.status === "concluida",
   );
 
-  const minhasConversas = conversas.filter(
-    (conversa) =>
-      usuario?.idUsuario != null &&
-      conversa.idUsuarioDoador === usuario.idUsuario,
-  );
-
   const solicitacoesRecentes = solicitacoes
     .filter((solicitacao) => solicitacao.status === "aberta")
     .sort(
@@ -117,167 +95,129 @@ export default function DashboardDoadorScreen() {
     .slice(0, 3);
 
   return (
-    <View style={styles.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <ScrollView
-        contentContainerStyle={styles.pageContent}
+        contentContainerStyle={estilos.pageContent}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.header}>
-          <View style={styles.headerText}>
-            <Text style={styles.pageTitle}>
+        <View style={estilos.header}>
+          <View style={estilos.headerText}>
+            <Text style={estilos.pageTitle}>
               Olá, {usuario?.nomeUsuario || "bem-vindo"}!
             </Text>
 
-            <Text style={styles.pageSubtitle}>
+            <Text style={estilos.pageSubtitle}>
               Pequenos gestos transformam vidas.
             </Text>
           </View>
 
-          <View style={styles.headerIcon}>
+          <View style={estilos.headerIcon}>
             <Ionicons name="heart-outline" size={27} color={cores.primary} />
           </View>
         </View>
 
-        <View style={styles.indicatorRow}>
-          <View style={styles.indicator}>
+        <View style={estilos.indicatorRow}>
+          <View style={estilos.indicator}>
             <Ionicons name="cube-outline" size={24} color={cores.primary} />
 
-            <Text style={styles.indicatorValue}>
+            <Text style={estilos.indicatorValue}>
               {doacoesEmAndamento.length}
             </Text>
 
-            <Text style={styles.indicatorLabel}>Doações em andamento</Text>
+            <Text style={estilos.indicatorLabel}>Doações em andamento</Text>
           </View>
 
-          <View style={styles.indicator}>
+          <View style={estilos.indicator}>
             <Ionicons
               name="checkmark-circle-outline"
               size={24}
               color={cores.success}
             />
 
-            <Text style={styles.indicatorValue}>
+            <Text style={estilos.indicatorValue}>
               {doacoesConcluidas.length}
             </Text>
 
-            <Text style={styles.indicatorLabel}>Doações concluídas</Text>
+            <Text style={estilos.indicatorLabel}>Doações concluídas</Text>
           </View>
         </View>
 
-        <View style={styles.highlightCard}>
-          <View style={styles.header}>
+        <View style={estilos.highlightCard}>
+          <View style={estilos.header}>
             <Ionicons name="heart-outline" size={25} color={cores.primary} />
 
-            <Text style={styles.cardTitle}>
+            <Text style={estilos.cardTitle}>
               Que tal fazer a diferença hoje?
             </Text>
           </View>
 
-          <Text style={styles.cardDescription}>
+          <Text style={estilos.cardDescription}>
             Existem pessoas que podem precisar da sua ajuda. Explore os pedidos
             e escolha como contribuir.
           </Text>
 
           <Pressable
-            style={styles.actionButton}
+            style={estilos.actionButton}
             onPress={() => navigation.navigate("Solicitacoes")}
           >
             <Ionicons name="search-outline" size={20} color={cores.white} />
 
-            <Text style={styles.actionButtonText}>Explorar solicitações</Text>
+            <Text style={estilos.actionButtonText}>Explorar solicitações</Text>
           </Pressable>
         </View>
 
-        <View style={styles.section}>
-          <View style={styles.headerInline}>
-            <Text style={styles.sectionTitle}>Minhas conversas</Text>
-
-            <Pressable onPress={abrirConversas}>
-              <Text style={styles.linkText}>Ver todas</Text>
-            </Pressable>
-          </View>
-
-          <Pressable style={styles.card} onPress={abrirConversas}>
-            <View style={styles.cardRow}>
-              <Ionicons
-                name="chatbubbles-outline"
-                size={28}
-                color={cores.primary}
-              />
-
-              <View style={[styles.detailContent, { flex: 1 }]}>
-                <Text style={styles.itemTitle}>Mensagens</Text>
-
-                <Text style={styles.itemSubtitle}>
-                  {minhasConversas.length === 0
-                    ? "Você ainda não possui conversas."
-                    : minhasConversas.length === 1
-                      ? "Você possui 1 conversa."
-                      : `Você possui ${minhasConversas.length} conversas.`}
-                </Text>
-              </View>
-
-              <Ionicons
-                name="chevron-forward-outline"
-                size={20}
-                color={cores.textSecondary}
-              />
-            </View>
-          </Pressable>
-        </View>
-
-        <View style={styles.headerInline}>
-          <Text style={styles.sectionTitle}>Pedidos recentes</Text>
+        <View style={estilos.headerInline}>
+          <Text style={estilos.sectionTitle}>Pedidos recentes</Text>
 
           <Pressable onPress={() => navigation.navigate("Solicitacoes")}>
-            <Text style={styles.linkText}>Ver todos</Text>
+            <Text style={estilos.linkText}>Ver todos</Text>
           </Pressable>
         </View>
 
         {solicitacoesRecentes.length > 0 ? (
-          <View style={styles.list}>
+          <View style={estilos.list}>
             {solicitacoesRecentes.map((solicitacao) => (
-              <View key={solicitacao.id} style={styles.card}>
-                <View style={styles.cardRow}>
-                  <Text style={[styles.itemTitle, { flex: 1 }]}>
+              <View key={solicitacao.id} style={estilos.card}>
+                <View style={estilos.cardRow}>
+                  <Text style={[estilos.itemTitle, { flex: 1 }]}>
                     {solicitacao.titulo}
                   </Text>
 
                   <View
                     style={[
-                      styles.statusBadge,
+                      estilos.statusBadge,
                       {
                         backgroundColor: cores.successSoft,
                       },
                     ]}
                   >
                     <Text
-                      style={[styles.statusBadgeText, { color: cores.success }]}
+                      style={[estilos.statusBadgeText, { color: cores.success }]}
                     >
                       Aberta
                     </Text>
                   </View>
                 </View>
 
-                <Text style={styles.itemSubtitle} numberOfLines={2}>
+                <Text style={estilos.itemSubtitle} numberOfLines={2}>
                   {solicitacao.descricao}
                 </Text>
 
-                <View style={styles.infoRow}>
+                <View style={estilos.infoRow}>
                   <Ionicons
                     name="calendar-outline"
                     size={15}
                     color={cores.textSecondary}
                   />
 
-                  <Text style={styles.infoText}>
+                  <Text style={estilos.infoText}>
                     {new Date(solicitacao.dataCriacao).toLocaleDateString(
                       "pt-BR",
                     )}
                   </Text>
                 </View>
 
-                <View style={styles.infoRow}>
+                <View style={estilos.infoRow}>
                   <Ionicons
                     name={
                       solicitacao.tipoAjuda === "especifico"
@@ -288,7 +228,7 @@ export default function DashboardDoadorScreen() {
                     color={cores.primaryMedium}
                   />
 
-                  <Text style={styles.infoText}>
+                  <Text style={estilos.infoText}>
                     {solicitacao.tipoAjuda === "especifico"
                       ? "Pedido de itens específicos"
                       : "Pedido de ajuda geral"}
@@ -298,8 +238,8 @@ export default function DashboardDoadorScreen() {
             ))}
           </View>
         ) : (
-          <View style={styles.emptyState}>
-            <View style={styles.emptyIcon}>
+          <View style={estilos.emptyState}>
+            <View style={estilos.emptyIcon}>
               <Ionicons
                 name="file-tray-outline"
                 size={32}
@@ -307,15 +247,15 @@ export default function DashboardDoadorScreen() {
               />
             </View>
 
-            <Text style={styles.emptyTitle}>Nenhum pedido disponível</Text>
+            <Text style={estilos.emptyTitle}>Nenhum pedido disponível</Text>
 
-            <Text style={styles.emptyText}>
+            <Text style={estilos.emptyText}>
               Quando os beneficiários criarem solicitações, elas aparecerão
               aqui.
             </Text>
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

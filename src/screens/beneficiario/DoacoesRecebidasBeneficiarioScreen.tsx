@@ -14,6 +14,7 @@ import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Doacao, StatusDoacao } from "../../types/Doacao";
 import { useNavigation } from "@react-navigation/native";
 import { BeneficiarioNavigation } from "../../types/Navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DoacoesRecebidasBeneficiarioScreen() {
   const navigation = useNavigation<BeneficiarioNavigation>();
@@ -62,6 +63,34 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
     }
   }
 
+  function estiloStatus(status: StatusDoacao) {
+    switch (status) {
+      case "em_andamento":
+        return {
+          fundo: estilos.conversaStatusEmAndamento,
+          texto: estilos.conversaStatusTextoEmAndamento,
+        };
+
+      case "entregue":
+        return {
+          fundo: estilos.conversaStatusEntregue,
+          texto: estilos.conversaStatusTextoEntregue,
+        };
+
+      case "concluida":
+        return {
+          fundo: estilos.conversaStatusConcluida,
+          texto: estilos.conversaStatusTextoConcluida,
+        };
+
+      case "cancelada":
+        return {
+          fundo: estilos.conversaStatusCancelada,
+          texto: estilos.conversaStatusTextoCancelada,
+        };
+    }
+  }
+
   function formatarData(data: string) {
     return new Date(data).toLocaleDateString("pt-BR");
   }
@@ -87,18 +116,19 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
           })
         }
       >
-        <Text style={estilos.solicitacaoCardTitulo}>
-          {solicitacao?.titulo ?? "Solicitação indisponível"}
-        </Text>
+        <View style={estilos.solicitacaoCardTopo}>
+          <Text style={estilos.solicitacaoCardTitulo} numberOfLines={2}>
+            {solicitacao?.titulo ?? "Solicitação indisponível"}
+          </Text>
 
-        <Text style={estilos.solicitacaoCardDescricao} numberOfLines={3}>
-          {solicitacao?.descricao ??
-            "Não foi possível carregar os detalhes da solicitação."}
-        </Text>
-
-        <Text style={estilos.solicitacaoCardData}>
-          Status: {formatarStatus(item.status)}
-        </Text>
+          <View style={[estilos.statusBadge, estiloStatus(item.status).fundo]}>
+            <Text
+              style={[estilos.statusBadgeText, estiloStatus(item.status).texto]}
+            >
+              {formatarStatus(item.status)}
+            </Text>
+          </View>
+        </View>
 
         <Text style={estilos.solicitacaoCardData}>
           Iniciada em {formatarData(item.dataCriacao)}
@@ -135,7 +165,7 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <FlatList
         data={minhasDoacoes}
         keyExtractor={(item) => item.id}
@@ -146,7 +176,7 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
           <View style={estilos.solicitacoesHeader}>
             <Text style={estilos.cadastroTitulo}>Ajudas recebidas</Text>
             <Text style={estilos.cadastroSubtitulo}>
-              Acompanhe as doações iniciadas para suas solicitações.
+              Veja quem está ajudando você.
             </Text>
           </View>
         }
@@ -157,12 +187,11 @@ export default function DoacoesRecebidasBeneficiarioScreen() {
             </Text>
 
             <Text style={estilos.solicitacoesVazioTexto}>
-              Quando um doador escolher ajudar em uma das suas solicitações, a
-              doação aparecerá aqui.
+              Quando alguém aceitar lhe ajudar, a situação aparecerá aqui.
             </Text>
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }

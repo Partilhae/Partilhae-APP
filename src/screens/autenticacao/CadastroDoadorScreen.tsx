@@ -7,65 +7,74 @@ import { RootStackParamList } from "../../types/Navigation";
 import { useState } from "react";
 import { cadastrarDoador } from "../../services/DoadorService";
 import { logarUsuario } from "../../services/AuthService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function CadastroDoadorScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const [loading, setLoading] = useState(false);
 
   async function handleRegister(dados: CadastroDoador) {
-      try {
-        setLoading(true);
-  
-        const beneficiario = await cadastrarDoador(dados);
-  
-        if (!beneficiario) {
-          return;
-        }
-  
-        const usuario = await logarUsuario(dados.email, dados.senha);
-  
-        if(!usuario){
-          Alert.alert("Cadastro realizao", "Sua conta foi criada com sucesso. Faça login para continuar",
-            [
-              {
-                text: "Ir para Login",
-                onPress: () =>
-                  navigation.reset({
-                    index: 0,
-                    routes: [{ name: "Login" }],
-                  }),
-              }
-            ]
-          )
-          return;
-        }
-  
-        if(usuario.role !== "DOADOR"){
-          Alert.alert("Erro", "O perfil retornado não corresponde o de doador.");
-          return;
-        }
-  
-        navigation.reset({
-          index: 0,
-          routes: [{ name: "Doador" }],
-        });
-      } catch (error) {
-        console.log("Erro ao cadastrar doador:", error);
-  
-        Alert.alert("Erro", "Não foi possível concluir o cadastro. Tente novamente.");
-      } finally {
-        setLoading(false);
+    try {
+      setLoading(true);
+
+      const beneficiario = await cadastrarDoador(dados);
+
+      if (!beneficiario) {
+        return;
       }
+
+      const usuario = await logarUsuario(dados.email, dados.senha);
+
+      if (!usuario) {
+        Alert.alert(
+          "Cadastro realizao",
+          "Sua conta foi criada com sucesso. Faça login para continuar",
+          [
+            {
+              text: "Ir para Login",
+              onPress: () =>
+                navigation.reset({
+                  index: 0,
+                  routes: [{ name: "Login" }],
+                }),
+            },
+          ],
+        );
+        return;
+      }
+
+      if (usuario.role !== "DOADOR") {
+        Alert.alert("Erro", "O perfil retornado não corresponde o de doador.");
+        return;
+      }
+
+      navigation.reset({
+        index: 0,
+        routes: [{ name: "Doador" }],
+      });
+    } catch (error) {
+      console.log("Erro ao cadastrar doador:", error);
+
+      Alert.alert(
+        "Erro",
+        "Não foi possível concluir o cadastro. Tente novamente.",
+      );
+    } finally {
+      setLoading(false);
     }
-  
+  }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <Pressable style={estilos.backBtn} onPress={() => navigation.goBack()}>
+          <Text style={estilos.backBtnText}>← Voltar</Text>
+        </Pressable>
+        
         <View style={estilos.cadastroHeader}>
           <Text style={estilos.cadastroTitulo}>Seja um doador</Text>
 
@@ -88,6 +97,6 @@ export default function CadastroDoadorScreen() {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

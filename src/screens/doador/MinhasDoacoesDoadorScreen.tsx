@@ -12,14 +12,12 @@ import { useDoacoes } from "../../context/DoacoesContext";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Doacao, FiltroDoacao, StatusDoacao } from "../../types/Doacao";
-import { DoadorStackParamlist } from "../../types/Navigation";
-import { NativeStackNavigationProp } from "@react-navigation/native-stack";
+import { DoadorNavigation } from "../../types/Navigation";
 import { useNavigation } from "@react-navigation/native";
-
-type Navigation = NativeStackNavigationProp<DoadorStackParamlist>;
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MinhasDoacoesScreen() {
-  const navigation = useNavigation<Navigation>();
+  const navigation = useNavigation<DoadorNavigation>();
   const { doacoes, loading } = useDoacoes();
   const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
 
@@ -73,6 +71,34 @@ export default function MinhasDoacoesScreen() {
     }
   }
 
+  function estiloStatus(status: StatusDoacao) {
+    switch (status) {
+      case "em_andamento":
+        return {
+          fundo: estilos.conversaStatusEmAndamento,
+          texto: estilos.conversaStatusTextoEmAndamento,
+        };
+
+      case "entregue":
+        return {
+          fundo: estilos.conversaStatusEntregue,
+          texto: estilos.conversaStatusTextoEntregue,
+        };
+
+      case "concluida":
+        return {
+          fundo: estilos.conversaStatusConcluida,
+          texto: estilos.conversaStatusTextoConcluida,
+        };
+
+      case "cancelada":
+        return {
+          fundo: estilos.conversaStatusCancelada,
+          texto: estilos.conversaStatusTextoCancelada,
+        };
+    }
+  }
+
   function formatarData(data: string) {
     return new Date(data).toLocaleDateString("pt-BR");
   }
@@ -97,24 +123,23 @@ export default function MinhasDoacoesScreen() {
 
     return (
       <View style={estilos.solicitacaoCard}>
-        <Text style={estilos.solicitacaoCardTitulo}>
-          {solicitacao?.titulo ?? "Solicitação indisponível"}
-        </Text>
-
-        <Text style={estilos.solicitacaoCardDescricao} numberOfLines={3}>
-          {solicitacao?.descricao ??
-            "Não foi possível carregar os detalhes desta solicitação."}
-        </Text>
-
-        <View style={estilos.solicitacaoCardInfo}>
-          <Text style={estilos.solicitacaoCardData}>
-            {formatarStatus(item.status)}
+        <View style={estilos.solicitacaoCardTopo}>
+          <Text style={estilos.solicitacaoCardTitulo} numberOfLines={2}>
+            {solicitacao?.titulo ?? "Solicitação indisponível"}
           </Text>
 
-          <Text style={estilos.solicitacaoCardData}>
-            {formatarData(item.dataCriacao)}
-          </Text>
+          <View style={[estilos.statusBadge, estiloStatus(item.status).fundo]}>
+            <Text
+              style={[estilos.statusBadgeText, estiloStatus(item.status).texto]}
+            >
+              {formatarStatus(item.status)}
+            </Text>
+          </View>
         </View>
+
+        <Text style={estilos.solicitacaoCardData}>
+          Iniciada em {formatarData(item.dataCriacao)}
+        </Text>
 
         {item.status === "concluida" && item.dataConclusao && (
           <Text style={estilos.solicitacaoCardData}>
@@ -155,7 +180,7 @@ export default function MinhasDoacoesScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <FlatList
         data={minhasDoacoes}
         keyExtractor={(item) => item.id}
@@ -167,7 +192,7 @@ export default function MinhasDoacoesScreen() {
             <Text style={estilos.cadastroTitulo}>Minhas doações</Text>
 
             <Text style={estilos.cadastroSubtitulo}>
-              Acompanhe suas contribuições e ajudas realizadas.
+              Acompanhe o andamento das suas doações.
             </Text>
 
             <View style={estilos.doacoesFiltros}>
@@ -245,6 +270,6 @@ export default function MinhasDoacoesScreen() {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }

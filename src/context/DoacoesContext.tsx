@@ -10,6 +10,7 @@ import {
 import { Doacao, StatusDoacao } from "../types/Doacao";
 import { useSolicitacoes } from "./SolicitacoesContext";
 import { buscarUsuarioLogado } from "../services/AuthService";
+import { enviarNotificacao } from "../services/NotificacaoService";
 
 const CHAVE_DOACOES = "@partilhae_doacoes";
 
@@ -116,6 +117,11 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
     await salvarDoacoes([...doacoes, novaDoacao]);
 
     await atualizarStatus(idSolicitacao, "em_andamento");
+
+    await enviarNotificacao(
+      "Sua solicitação foi aceita!",
+      `Um doador começou a ajudar com a solicitação.`,
+    );
   }
 
   async function atualizarStatusDoacao(id: string, status: StatusDoacao) {
@@ -157,8 +163,26 @@ export function DoacoesProvider({ children }: PropsWithChildren) {
 
     await salvarDoacoes(listaAtualizada);
 
+    await salvarDoacoes(listaAtualizada);
+
+    if (status === "entregue") {
+      await enviarNotificacao(
+        "Entrega informada!",
+        "O doador informou que entregou os alimentos. Confirme o recebimento no aplicativo.",
+      );
+    }
+
     if (status === "concluida") {
       await atualizarStatus(doacao.idSolicitacao, "concluida");
+
+      await enviarNotificacao(
+        "Doação concluida!",
+        "O beneficiário confirmou que recebeu sua doação. Obrigado por ajudar!",
+      );
+    }
+
+    if (status === "cancelada") {
+      await atualizarStatus(doacao.idSolicitacao, "aberta");
     }
 
     if (status === "cancelada") {

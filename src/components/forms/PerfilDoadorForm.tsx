@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Input from "../Input";
 import Botao from "../Botao";
-import styles from "../../estilos/estilo";
+import estilos from "../../estilos/estilo";
 import { DoadorTipo, PerfilDoadorFormData } from "../../types/Doador";
 
 type Props = {
@@ -27,7 +27,7 @@ export default function PerfilDoadorForm({
     setForm(dadosIniciais);
   }, [dadosIniciais]);
 
-  function atualizar(campo: keyof PerfilDoadorFormData, valor: string) {
+  function atualizar(campo: keyof PerfilDoadorFormData, valor: string | null) {
     setForm((anterior) => ({
       ...anterior,
       [campo]: valor,
@@ -63,7 +63,7 @@ export default function PerfilDoadorForm({
 
       setForm((anterior) => ({
         ...anterior,
-        endereco: endereco.endereco || anterior.endereco,
+        endereco: endereco.logradouro || anterior.endereco,
         bairro: endereco.bairro || anterior.bairro,
         cidade: endereco.localidade || anterior.cidade,
         estado: endereco.uf || anterior.estado,
@@ -118,8 +118,8 @@ export default function PerfilDoadorForm({
   }
 
   return (
-    <View style={styles.form}>
-      <Text style={styles.sectionTitle}>Dados pessoais</Text>
+    <View style={estilos.form}>
+      <Text style={estilos.sectionTitle}>Dados pessoais</Text>
 
       <Input
         label="Nome"
@@ -145,7 +145,7 @@ export default function PerfilDoadorForm({
         error={erros.telefone}
       />
 
-      <Text style={styles.sectionTitle}>Endereço</Text>
+      <Text style={estilos.sectionTitle}>Endereço</Text>
 
       <Input
         label="CEP"
@@ -163,12 +163,24 @@ export default function PerfilDoadorForm({
         error={erros.endereco}
       />
 
-      <Input
-        label="Número"
-        value={form.numero}
-        onChangeText={(v) => atualizar("numero", v)}
-        error={erros.numero}
-      />
+      <View style={estilos.cadastroLinha}>
+        <View style={estilos.cadastroCampoMenor}>
+          <Input
+            label="Número"
+            value={form.numero}
+            onChangeText={(v) => atualizar("numero", v)}
+            error={erros.numero}
+          />
+        </View>
+
+        <View style={estilos.cadastroCampoMaior}>
+          <Input
+            label="Complemento"
+            value={form.complemento}
+            onChangeText={(v) => atualizar("complemento", v)}
+          />
+        </View>
+      </View>
 
       <Input
         label="Bairro"
@@ -177,25 +189,31 @@ export default function PerfilDoadorForm({
         error={erros.bairro}
       />
 
-      <Input
-        label="Cidade"
-        value={form.cidade}
-        onChangeText={(v) => atualizar("cidade", v)}
-        error={erros.cidade}
-      />
+      <View style={estilos.cadastroLinha}>
+        <View style={estilos.cadastroCampoMaior}>
+          <Input
+            label="Cidade"
+            value={form.cidade}
+            onChangeText={(v) => atualizar("cidade", v)}
+            error={erros.cidade}
+          />
+        </View>
 
-      <Input
-        label="Estado"
-        value={form.estado}
-        onChangeText={(v) => atualizar("estado", v)}
-        error={erros.estado}
-      />
+        <View style={estilos.cadastroCampoMenor}>
+          <Input
+            label="Estado"
+            value={form.estado}
+            onChangeText={(v) => atualizar("estado", v)}
+            error={erros.estado}
+          />
+        </View>
+      </View>
 
-      <Text style={styles.sectionTitle}>Informações do doador</Text>
+      <Text style={estilos.sectionTitle}>Informações do doador</Text>
 
-      <Text style={styles.inputLabel}>Tipo de doador</Text>
+      <Text style={estilos.inputLabel}>Tipo de doador</Text>
 
-      <View style={styles.toggle}>
+      <View style={estilos.toggle}>
         {(
           [
             ["pessoaFisica", "Pessoa física"],
@@ -206,15 +224,15 @@ export default function PerfilDoadorForm({
           <Pressable
             key={tipo}
             style={[
-              styles.toggleBtn,
-              form.tipoDoador === tipo && styles.toggleActive,
+              estilos.toggleBtn,
+              form.tipoDoador === tipo && estilos.toggleActive,
             ]}
             onPress={() => atualizar("tipoDoador", tipo)}
           >
             <Text
               style={[
-                styles.toggleText,
-                form.tipoDoador === tipo && styles.toggleTextActive,
+                estilos.toggleText,
+                form.tipoDoador === tipo && estilos.toggleTextActive,
               ]}
             >
               {titulo}
@@ -245,7 +263,7 @@ export default function PerfilDoadorForm({
       />
 
       {!salvamentoDisponivel && (
-        <Text style={styles.disabledText}>
+        <Text style={estilos.disabledText}>
           O salvamento estará disponível após a integração com a API Java.
         </Text>
       )}

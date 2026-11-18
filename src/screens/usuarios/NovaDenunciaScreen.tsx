@@ -1,6 +1,7 @@
 import { useState } from "react";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import DenunciaForm from "../../components/forms/DenunciaForm";
 import { criarDenuncia } from "../../services/DenunciasService";
@@ -63,19 +64,26 @@ export default function NovaDenunciaScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
-        contentContainerStyle={estilos.scroll}
+        contentContainerStyle={estilos.pageContent}
+        showsVerticalScrollIndicator={false}
         keyboardShouldPersistTaps="handled"
       >
-        <Text style={estilos.pageTitle}>Nova denúncia</Text>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={estilos.solicitacaoVoltar}>← Voltar</Text>
+        </Pressable>
 
-        <Text style={estilos.pageSubtitle}>
-          Conte o que aconteceu para que sua denúncia possa ser analisada.
-        </Text>
+        <View style={estilos.cadastroHeader}>
+          <Text style={estilos.cadastroTitulo}>Nova denúncia</Text>
+
+          <Text style={estilos.cadastroSubtitulo}>
+            Descreva o ocorrido para que sua denúncia possa ser analisada.
+          </Text>
+        </View>
 
         <DenunciaForm onSubmit={enviarDenuncia} loading={enviando} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

@@ -1,6 +1,6 @@
 import React from "react";
 import { ActivityIndicator, Pressable, Text, ViewStyle } from "react-native";
-import styles, { cores } from "../estilos/estilo";
+import estilos, { cores } from "../estilos/estilo";
 
 type BotaoProps = {
   label: string;
@@ -22,7 +22,7 @@ const Botao: React.FC<BotaoProps> = ({
   return (
     <Pressable
       style={({ pressed }) => [
-        isPrimary ? styles.primaryBtn : styles.outlineBtn,
+        isPrimary ? estilos.primaryBtn : estilos.outlineBtn,
         style,
         pressed && { opacity: 0.85 },
       ]}
@@ -34,7 +34,7 @@ const Botao: React.FC<BotaoProps> = ({
       ) : (
         <Text
           style={
-            isPrimary ? styles.primaryBtnText : styles.outlineBtnText
+            isPrimary ? estilos.primaryBtnText : estilos.outlineBtnText
           }
         >
           {label}

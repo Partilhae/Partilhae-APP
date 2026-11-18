@@ -2,11 +2,11 @@ import { useEffect, useState } from "react";
 import { Pressable, Text, View } from "react-native";
 import Input from "../Input";
 import Botao from "../Botao";
-import styles from "../../estilos/estilo";
 import {
   BeneficiarioTipo,
   PerfilBeneficiarioFormData,
 } from "../../types/Beneficiario";
+import estilos from "../../estilos/estilo";
 
 type Props = {
   dadosIniciais: PerfilBeneficiarioFormData;
@@ -67,7 +67,7 @@ export default function PerfilBeneficiarioForm({
 
       setForm((anterior) => ({
         ...anterior,
-        endereco: endereco.endereco || anterior.endereco,
+        endereco: endereco.logradouro || anterior.endereco,
         bairro: endereco.bairro || anterior.bairro,
         cidade: endereco.localidade || anterior.cidade,
         estado: endereco.uf || anterior.estado,
@@ -126,8 +126,8 @@ export default function PerfilBeneficiarioForm({
   }
 
   return (
-    <View style={styles.form}>
-      <Text style={styles.sectionTitle}>Dados pessoais</Text>
+    <View style={estilos.form}>
+      <Text style={estilos.sectionTitle}>Dados pessoais</Text>
 
       <Input
         label="Nome"
@@ -153,7 +153,7 @@ export default function PerfilBeneficiarioForm({
         error={erros.telefone}
       />
 
-      <Text style={styles.sectionTitle}>Endereço</Text>
+      <Text style={estilos.sectionTitle}>Endereço</Text>
 
       <Input
         label="CEP"
@@ -171,12 +171,24 @@ export default function PerfilBeneficiarioForm({
         error={erros.endereco}
       />
 
-      <Input
-        label="Número"
-        value={form.numero}
-        onChangeText={(v) => atualizar("numero", v)}
-        error={erros.numero}
-      />
+      <View style={estilos.cadastroLinha}>
+        <View style={estilos.cadastroCampoMenor}>
+          <Input
+            label="Número"
+            value={form.numero}
+            onChangeText={(v) => atualizar("numero", v)}
+            error={erros.numero}
+          />
+        </View>
+
+        <View style={estilos.cadastroCampoMaior}>
+          <Input
+            label="Complemento"
+            value={form.complemento}
+            onChangeText={(v) => atualizar("complemento", v)}
+          />
+        </View>
+      </View>
 
       <Input
         label="Bairro"
@@ -185,25 +197,31 @@ export default function PerfilBeneficiarioForm({
         error={erros.bairro}
       />
 
-      <Input
-        label="Cidade"
-        value={form.cidade}
-        onChangeText={(v) => atualizar("cidade", v)}
-        error={erros.cidade}
-      />
+      <View style={estilos.cadastroLinha}>
+        <View style={estilos.cadastroCampoMaior}>
+          <Input
+            label="Cidade"
+            value={form.cidade}
+            onChangeText={(v) => atualizar("cidade", v)}
+            error={erros.cidade}
+          />
+        </View>
 
-      <Input
-        label="Estado"
-        value={form.estado}
-        onChangeText={(v) => atualizar("estado", v)}
-        error={erros.estado}
-      />
+        <View style={estilos.cadastroCampoMenor}>
+          <Input
+            label="Estado"
+            value={form.estado}
+            onChangeText={(v) => atualizar("estado", v)}
+            error={erros.estado}
+          />
+        </View>
+      </View>
 
-      <Text style={styles.sectionTitle}>Informações do beneficiário</Text>
+      <Text style={estilos.sectionTitle}>Informações do beneficiário</Text>
 
-      <Text style={styles.inputLabel}>Tipo de beneficiário</Text>
+      <Text style={estilos.inputLabel}>Tipo de beneficiário</Text>
 
-      <View style={styles.toggle}>
+      <View style={estilos.toggle}>
         {(
           [
             ["pessoaFisica", "Pessoa física"],
@@ -213,15 +231,15 @@ export default function PerfilBeneficiarioForm({
           <Pressable
             key={tipo}
             style={[
-              styles.toggleBtn,
-              form.tipoBeneficiario === tipo && styles.toggleActive,
+              estilos.toggleBtn,
+              form.tipoBeneficiario === tipo && estilos.toggleActive,
             ]}
             onPress={() => atualizar("tipoBeneficiario", tipo)}
           >
             <Text
               style={[
-                styles.toggleText,
-                form.tipoBeneficiario === tipo && styles.toggleTextActive,
+                estilos.toggleText,
+                form.tipoBeneficiario === tipo && estilos.toggleTextActive,
               ]}
             >
               {titulo}
@@ -247,9 +265,9 @@ export default function PerfilBeneficiarioForm({
         error={erros.quantidadePessoasFamilia}
       />
 
-      <Text style={styles.inputLabel}>Possui crianças?</Text>
+      <Text style={estilos.inputLabel}>Possui crianças?</Text>
 
-      <View style={styles.toggle}>
+      <View style={estilos.toggle}>
         {[
           { valor: true, titulo: "Sim" },
           { valor: false, titulo: "Não" },
@@ -258,15 +276,15 @@ export default function PerfilBeneficiarioForm({
           <Pressable
             key={String(opcao.valor)}
             style={[
-              styles.toggleBtn,
-              form.possuiCriancas === opcao.valor && styles.toggleActive,
+              estilos.toggleBtn,
+              form.possuiCriancas === opcao.valor && estilos.toggleActive,
             ]}
             onPress={() => atualizar("possuiCriancas", opcao.valor)}
           >
             <Text
               style={[
-                styles.toggleText,
-                form.possuiCriancas === opcao.valor && styles.toggleTextActive,
+                estilos.toggleText,
+                form.possuiCriancas === opcao.valor && estilos.toggleTextActive,
               ]}
             >
               {opcao.titulo}
@@ -286,12 +304,6 @@ export default function PerfilBeneficiarioForm({
         value={form.observacao}
         onChangeText={(v) => atualizar("observacao", v)}
       />
-
-      {!salvamentoDisponivel && (
-        <Text style={styles.disabledText}>
-          O salvamento estará disponível após a integração com a API Java.
-        </Text>
-      )}
 
       {salvamentoDisponivel && (
         <Botao label="Salvar alterações" onPress={enviar} loading={loading} />

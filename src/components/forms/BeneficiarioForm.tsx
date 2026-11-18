@@ -358,7 +358,7 @@ export default function BeneficiarioForm({
         />
 
         <Text style={estilos.cadastroAjuda}>
-          Sua senha deve ter pelo menos 6 caracteres.
+          Sua senha deve ter pelo menos 8 caracteres.
         </Text>
       </View>
 

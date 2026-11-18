@@ -6,6 +6,7 @@ import DashboardDoadorScreen from "../screens/doador/DashboardDoadorScreen";
 import ExplorarSolicitacoesScreen from "../screens/doador/ExplorarSolicitacoesDoadorScreen";
 import MinhasDoacoesScreen from "../screens/doador/MinhasDoacoesDoadorScreen";
 import PerfilDoadorScreen from "../screens/doador/PerfilDoadorScreen";
+import ConversasScreen from "../screens/usuarios/ConversasScreen";
 
 const Tab = createBottomTabNavigator<DoadorTabParamlist>();
 
@@ -47,6 +48,16 @@ export default function DoadorTabs() {
           title: "Doações",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="gift-outline" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Conversas"
+        component={ConversasScreen}
+        options={{
+          title: "Conversas",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="chatbubbles-outline" color={color} size={size} />
           ),
         }}
       />

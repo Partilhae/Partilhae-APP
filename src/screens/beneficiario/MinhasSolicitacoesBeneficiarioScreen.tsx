@@ -18,6 +18,7 @@ import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Solicitacao, StatusSolicitacao } from "../../types/Solicitacao";
 import { BeneficiarioStackParamlist } from "../../types/Navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function MinhasSolicitacoesScreen() {
   const navigation =
@@ -89,6 +90,34 @@ export default function MinhasSolicitacoesScreen() {
     }
   }
 
+  function estiloStatus(status: StatusSolicitacao) {
+    switch (status) {
+      case "aberta":
+        return {
+          fundo: estilos.conversaStatusEmAndamento,
+          texto: estilos.conversaStatusTextoEmAndamento,
+        };
+
+      case "em_andamento":
+        return {
+          fundo: estilos.conversaStatusEntregue,
+          texto: estilos.conversaStatusTextoEntregue,
+        };
+
+      case "concluida":
+        return {
+          fundo: estilos.conversaStatusConcluida,
+          texto: estilos.conversaStatusTextoConcluida,
+        };
+
+      case "cancelada":
+        return {
+          fundo: estilos.conversaStatusCancelada,
+          texto: estilos.conversaStatusTextoCancelada,
+        };
+    }
+  }
+
   function formatarData(data: string) {
     return new Date(data).toLocaleDateString("pt-BR");
   }
@@ -104,10 +133,14 @@ export default function MinhasSolicitacoesScreen() {
         }
       >
         <View style={estilos.solicitacaoCardTopo}>
-          <Text style={estilos.solicitacaoCardTitulo}>{item.titulo}</Text>
+          <Text style={estilos.solicitacaoCardTitulo} numberOfLines={2}>
+            {item.titulo}
+          </Text>
 
-          <View style={estilos.solicitacaoStatus}>
-            <Text style={estilos.solicitacaoStatusTexto}>
+          <View style={[estilos.statusBadge, estiloStatus(item.status).fundo]}>
+            <Text
+              style={[estilos.statusBadgeText, estiloStatus(item.status).texto]}
+            >
               {formatarStatus(item.status)}
             </Text>
           </View>
@@ -146,7 +179,7 @@ export default function MinhasSolicitacoesScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <FlatList
         data={minhasSolicitacoes}
         keyExtractor={(item) => item.id}
@@ -158,8 +191,7 @@ export default function MinhasSolicitacoesScreen() {
             <Text style={estilos.cadastroTitulo}>Minhas solicitações</Text>
 
             <Text style={estilos.cadastroSubtitulo}>
-              Acompanhe seus pedidos de ajuda e veja o andamento de cada
-              solicitação.
+              Gerencie suas solicitações e acompanhe cada ajuda.
             </Text>
 
             <Pressable
@@ -185,6 +217,6 @@ export default function MinhasSolicitacoesScreen() {
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }

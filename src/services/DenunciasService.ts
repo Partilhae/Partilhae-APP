@@ -2,32 +2,25 @@ import { DenunciaRequest, DenunciaResponse } from "../types/Denuncia";
 import { JavaAPI } from "./API/JavaAPI";
 
 export async function criarDenuncia(
-    dados: DenunciaRequest,
+  dados: DenunciaRequest,
 ): Promise<DenunciaResponse> {
-    const { data } = await JavaAPI.post<DenunciaResponse>(
-        "/denuncias",
-        dados
-    );
+  const { data } = await JavaAPI.post<DenunciaResponse>("/denuncias", dados);
 
-    return data;
+  return data;
 }
 
-export async function buscarDenuncia(
-    id: number,
-): Promise<DenunciaResponse>{
-    const { data } = await JavaAPI.get<DenunciaResponse>(
-        `/denuncias/${id}`
-    );
+export async function buscarDenuncia(id: number): Promise<DenunciaResponse> {
+  const { data } = await JavaAPI.get<DenunciaResponse>(`/denuncias/${id}`);
 
-    return data;
+  return data;
 }
 
 export async function listarMinhasDenuncias(
-    idUsuario: number,
+  idUsuario: number,
 ): Promise<DenunciaResponse[]> {
-    const {data} = await JavaAPI.get<DenunciaResponse[]>(
-        `/denuncias/usuario/${idUsuario}`,
-    );
+  const { data } = await JavaAPI.get<{content: DenunciaResponse[]}>(
+    `/denuncias/usuario/${idUsuario}`,
+  );
 
-    return data;
+  return data.content;
 }

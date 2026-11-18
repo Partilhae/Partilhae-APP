@@ -6,9 +6,9 @@ import DetalhesSolicitacaoDoadorScreen from "../screens/doador/DetalhesSolicitac
 import DetalhesDoacaoDoadorScreen from "../screens/doador/DetalhesDoacaoDoadorScreen";
 import ConfiguracoesPerfilDoadorScreen from "../screens/doador/ConfiguracoesPerfilDoadorScreen";
 import ConversasScreen from "../screens/usuarios/ConversasScreen";
-import ChatScreen from "../screens/usuarios/ChatScreen";
 import NovaDenunciaScreen from "../screens/usuarios/NovaDenunciaScreen";
 import MinhasDenunciasScreen from "../screens/usuarios/MinhasDenunciasScreen";
+import ChatScreen from "../screens/usuarios/ChatScreen";
 
 const Stack = createNativeStackNavigator<DoadorStackParamlist>();
 
@@ -32,7 +32,6 @@ export default function DoadorStack() {
         name="ConfiguracoesPerfilDoador"
         component={ConfiguracoesPerfilDoadorScreen}
       />
-      <Stack.Screen name="Conversas" component={ConversasScreen} />
       <Stack.Screen name="Chat" component={ChatScreen} />
       <Stack.Screen name="NovaDenuncia" component={NovaDenunciaScreen} />
       <Stack.Screen name="MinhasDenuncias" component={MinhasDenunciasScreen} />

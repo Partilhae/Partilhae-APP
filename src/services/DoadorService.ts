@@ -1,6 +1,6 @@
 import { Alert } from "react-native";
 import { JavaAPI } from "./API/JavaAPI";
-import { CadastroDoador, DoadorRequest, DoadorResponse } from "../types/Doador";
+import { CadastroDoador, DoadorRequest, DoadorResponse, DoadorUpdateRequest } from "../types/Doador";
 
 import axios from "axios";
 
@@ -60,7 +60,7 @@ export async function buscarDoador(id: number): Promise<DoadorResponse | null> {
 
 export async function atualizarDoador(
   id: number,
-  dados: DoadorRequest,
+  dados: DoadorUpdateRequest,
 ): Promise<DoadorResponse | null> {
   try {
     const { data } = await JavaAPI.put<DoadorResponse>(

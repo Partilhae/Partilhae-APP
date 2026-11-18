@@ -63,14 +63,18 @@ export function SolicitacoesProvider({ children }: PropsWithChildren) {
     dados: NovaSolicitacao,
     idReceptor: number,
   ) {
-    if(loading){
+    if (loading) {
       throw new Error("Aguarde o carregamento das solicitações.");
     }
 
     const usuario = await buscarUsuarioLogado();
 
-    if(!usuario || usuario.role !== "RECEPTOR" || usuario.idReceptor !== idReceptor){
-      throw new Error("Você não tem permissão para criar esta solicitação."); 
+    if (
+      !usuario ||
+      usuario.role !== "RECEPTOR" ||
+      usuario.idReceptor !== idReceptor
+    ) {
+      throw new Error("Você não tem permissão para criar esta solicitação.");
     }
 
     const novaSolicitacao: Solicitacao = {
@@ -104,6 +108,9 @@ export function SolicitacoesProvider({ children }: PropsWithChildren) {
             descricao: dados.descricao,
             tipoAjuda: dados.tipoAjuda,
             itens: dados.tipoAjuda === "especifico" ? dados.itens : [],
+            bairro: dados.bairro,
+            cidade: dados.cidade,
+            estado: dados.estado,
           }
         : item,
     );

@@ -19,6 +19,7 @@ import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { StatusSolicitacao } from "../../types/Solicitacao";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { BeneficiarioStackParamlist } from "../../types/Navigation";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function DetalhesSolicitacaoScreen() {
   const navigation =
@@ -209,7 +210,7 @@ export default function DetalhesSolicitacaoScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         showsVerticalScrollIndicator={false}
@@ -222,7 +223,7 @@ export default function DetalhesSolicitacaoScreen() {
           <Text style={estilos.cadastroTitulo}>Detalhes da solicitação</Text>
 
           <Text style={estilos.cadastroSubtitulo}>
-            Acompanhe as informações do seu pedido.
+            Gerencie as informações do pedido.
           </Text>
         </View>
 
@@ -289,49 +290,54 @@ export default function DetalhesSolicitacaoScreen() {
         )}
 
         {solicitacao.status === "aberta" && (
-          <Pressable
-            style={estilos.solicitacaoCancelarBotao}
-            onPress={confirmarCancelamento}
-            disabled={cancelando}
-          >
-            {cancelando ? (
-              <ActivityIndicator color={cores.danger} />
-            ) : (
-              <Text style={estilos.solicitacaoCancelarTexto}>
-                Cancelar solicitação
+          <View style={{ gap: 12 }}>
+            <Pressable
+              style={estilos.solicitacoesNovoBotao}
+              onPress={editarSolicitacao}
+              disabled={cancelando || excluindo}
+            >
+              <Text style={estilos.solicitacoesNovoTexto}>
+                Editar solicitação
               </Text>
-            )}
-          </Pressable>
-        )}
+            </Pressable>
 
-        {solicitacao.status === "aberta" && (
-          <Pressable
-            style={estilos.solicitacaoCancelarBotao}
-            onPress={confirmarExclusao}
-            disabled={excluindo || cancelando}
-          >
-            {excluindo ? (
-              <ActivityIndicator color={cores.danger} />
-            ) : (
-              <Text style={estilos.solicitacaoCancelarTexto}>
-                Excluir solicitação
-              </Text>
-            )}
-          </Pressable>
-        )}
+            <Pressable
+              style={estilos.solicitacaoCancelarBotao}
+              onPress={confirmarCancelamento}
+              disabled={cancelando || excluindo}
+            >
+              {cancelando ? (
+                <ActivityIndicator color={cores.danger} />
+              ) : (
+                <Text style={estilos.solicitacaoCancelarTexto}>
+                  Cancelar solicitação
+                </Text>
+              )}
+            </Pressable>
 
-        {solicitacao.status === "aberta" && (
-          <Pressable
-            style={estilos.solicitacoesNovoBotao}
-            onPress={editarSolicitacao}
-            disabled={cancelando || excluindo}
-          >
-            <Text style={estilos.solicitacoesNovoTexto}>
-              Editar solicitação
-            </Text>
-          </Pressable>
+            <Pressable
+              onPress={confirmarExclusao}
+              disabled={excluindo || cancelando}
+              style={{ alignItems: "center", paddingVertical: 12 }}
+            >
+              {excluindo ? (
+                <ActivityIndicator color={cores.danger} />
+              ) : (
+                <Text
+                  style={{
+                    color: cores.danger,
+                    fontSize: 14,
+                    fontWeight: "600",
+                    textDecorationLine: "underline",
+                  }}
+                >
+                  Excluir solicitação
+                </Text>
+              )}
+            </Pressable>
+          </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

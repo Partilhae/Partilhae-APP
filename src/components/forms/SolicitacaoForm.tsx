@@ -20,17 +20,17 @@ export default function SolicitacaoForm({
   loading = false,
   dadosIniciais,
 }: SolicitacaoFormProps) {
-  const [titulo, setTitulo] = useState(
-    dadosIniciais?.titulo ?? "",
-  );
+  const [titulo, setTitulo] = useState(dadosIniciais?.titulo ?? "");
 
-  const [descricao, setDescricao] = useState(
-    dadosIniciais?.descricao ?? "",
-  );
+  const [descricao, setDescricao] = useState(dadosIniciais?.descricao ?? "");
 
   const [tipoAjuda, setTipoAjuda] = useState<TipoAjuda>(
     dadosIniciais?.tipoAjuda ?? "geral",
   );
+
+  const [estado, setEstado] = useState(dadosIniciais?.estado ?? "");
+  const [cidade, setCidade] = useState(dadosIniciais?.cidade ?? "");
+  const [bairro, setBairro] = useState(dadosIniciais?.bairro ?? "");
 
   const [itens, setItens] = useState<ItemSolicitacao[]>(
     dadosIniciais?.itens ?? [],
@@ -43,8 +43,10 @@ export default function SolicitacaoForm({
   const [erros, setErros] = useState({
     titulo: "",
     descricao: "",
+    estado: "",
+    cidade: "",
+    bairro: "",
   });
-
 
   function selecionarTipo(tipo: TipoAjuda) {
     setTipoAjuda(tipo);
@@ -88,6 +90,9 @@ export default function SolicitacaoForm({
     const novosErros = {
       titulo: "",
       descricao: "",
+      estado: "",
+      cidade: "",
+      bairro: "",
     };
 
     if (!titulo.trim()) {
@@ -95,6 +100,19 @@ export default function SolicitacaoForm({
     }
     if (!descricao.trim()) {
       novosErros.descricao = "Descreva a sua necessidade.";
+    }
+    if (!estado.trim()) {
+      novosErros.estado = "Informe o estado.";
+    } else if (!/^[a-zA-Z]{2}$/.test(estado.trim())) {
+      novosErros.estado = "Informe a sigla do estado com 2 letras.";
+    }
+
+    if (!cidade.trim()) {
+      novosErros.cidade = "Informe a cidade.";
+    }
+
+    if (!bairro.trim()) {
+      novosErros.bairro = "Informe o bairro.";
     }
 
     setErros(novosErros);
@@ -122,6 +140,9 @@ export default function SolicitacaoForm({
       descricao: descricao.trim(),
       tipoAjuda,
       itens: tipoAjuda === "especifico" ? itens : [],
+      estado: estado.trim().toUpperCase(),
+      cidade: cidade.trim(),
+      bairro: bairro.trim(),
     });
   }
 
@@ -143,6 +164,41 @@ export default function SolicitacaoForm({
           value={descricao}
           onChangeText={setDescricao}
           error={erros.descricao}
+        />
+      </View>
+
+      <View style={estilos.cadastroSecao}>
+        <Text style={estilos.cadastroSecaoTitulo}>Região da solicitação</Text>
+
+        <Text style={estilos.cadastroAjuda}>
+          Informe a região onde você precisa receber ajuda. Não é necessário
+          compartilhar seu endereço completo.
+        </Text>
+
+        <Input
+          label="Estado (UF)"
+          placeholder="Ex.: SP"
+          value={estado}
+          onChangeText={setEstado}
+          error={erros.estado}
+          autoCapitalize="characters"
+          maxLength={2}
+        />
+
+        <Input
+          label="Cidade"
+          placeholder="Ex.: São Paulo"
+          value={cidade}
+          onChangeText={setCidade}
+          error={erros.cidade}
+        />
+
+        <Input
+          label="Bairro"
+          placeholder="Ex.: Bela Vista"
+          value={bairro}
+          onChangeText={setBairro}
+          error={erros.bairro}
         />
       </View>
       <View style={estilos.cadastroSecao}>
@@ -177,6 +233,12 @@ export default function SolicitacaoForm({
             </Pressable>
           ))}
         </View>
+
+        <Text style={estilos.cadastroAjuda}>
+          {tipoAjuda === "geral"
+            ? "Para pedidos de alimentos variados, sem uma lista definida."
+            : "Para pedidos com alimentos e quantidades específicas."}
+        </Text>
       </View>
 
       {tipoAjuda === "especifico" && (
@@ -210,15 +272,15 @@ export default function SolicitacaoForm({
                 onChangeText={setUnidade}
               />
             </View>
-            <Pressable
-              style={estilos.solicitacaoAdicionar}
-              onPress={adicionarItem}
-            >
-              <Text style={estilos.solicitacaoAdicionarTexto}>
-                + Adicionar alimento
-              </Text>
-            </Pressable>
           </View>
+          <Pressable
+            style={estilos.solicitacaoAdicionar}
+            onPress={adicionarItem}
+          >
+            <Text style={estilos.solicitacaoAdicionarTexto}>
+              + Adicionar alimento
+            </Text>
+          </Pressable>
           {itens.length > 0 && (
             <View style={estilos.solicitacaoLista}>
               <Text style={estilos.cadastroCampoTitulo}>
@@ -249,11 +311,7 @@ export default function SolicitacaoForm({
       )}
 
       <Botao
-        label={
-          dadosIniciais
-          ? "Salvar alterações" 
-          : "Publicar solicitação"
-        }
+        label={dadosIniciais ? "Salvar alterações" : "Publicar solicitação"}
         onPress={handleSubmit}
         loading={loading}
       />

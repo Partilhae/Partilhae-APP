@@ -23,6 +23,10 @@ export type Solicitacao = {
   status: StatusSolicitacao;
   dataCriacao: string;
   itens: ItemSolicitacao[];
+
+  bairro: string;
+  cidade: string;
+  estado: string;
 };
 
 export type NovaSolicitacao = {
@@ -30,4 +34,8 @@ export type NovaSolicitacao = {
   descricao: string;
   tipoAjuda: TipoAjuda;
   itens: ItemSolicitacao[];
+
+  bairro: string;
+  cidade: string;
+  estado: string;
 };

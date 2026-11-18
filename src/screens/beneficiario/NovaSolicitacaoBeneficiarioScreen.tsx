@@ -3,9 +3,10 @@ import { useSolicitacoes } from "../../context/SolicitacoesContext";
 import { useState } from "react";
 import { NovaSolicitacao } from "../../types/Solicitacao";
 import { buscarUsuarioLogado } from "../../services/AuthService";
-import { Alert, ScrollView, Text, View } from "react-native";
+import { Alert, Pressable, ScrollView, Text, View } from "react-native";
 import estilos from "../../estilos/estilo";
 import SolicitacaoForm from "../../components/forms/SolicitacaoForm";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function NovaSolicitacaoBeneficiarioScreen() {
   const navigation = useNavigation();
@@ -46,22 +47,25 @@ export default function NovaSolicitacaoBeneficiarioScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={estilos.solicitacaoVoltar}>← Voltar</Text>
+        </Pressable>
         <View style={estilos.cadastroHeader}>
           <Text style={estilos.cadastroTitulo}>Nova solicitação</Text>
 
           <Text style={estilos.cadastroSubtitulo}>
-            Conte para a comunidade como podemos ajudar você.
+            Conte o que você precisa para receber ajuda.
           </Text>
         </View>
 
         <SolicitacaoForm onSubmit={handleCriarSolicitacao} loading={loading} />
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

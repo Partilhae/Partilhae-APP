@@ -21,6 +21,8 @@ import {
 
 import Botao from "../../components/Botao";
 import estilos, { cores } from "../../estilos/estilo";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { StatusDoacao } from "../../types/Doacao";
 
 type DetalhesDoacaoRoute = RouteProp<
   BeneficiarioStackParamlist,
@@ -182,44 +184,86 @@ export default function DetalhesDoacaoRecebidaBeneficiarioScreen() {
     );
   }
 
+  function estiloStatus(status: StatusDoacao) {
+    switch (status) {
+      case "em_andamento":
+        return {
+          fundo: estilos.conversaStatusEmAndamento,
+          texto: estilos.conversaStatusTextoEmAndamento,
+        };
+
+      case "entregue":
+        return {
+          fundo: estilos.conversaStatusEntregue,
+          texto: estilos.conversaStatusTextoEntregue,
+        };
+
+      case "concluida":
+        return {
+          fundo: estilos.conversaStatusConcluida,
+          texto: estilos.conversaStatusTextoConcluida,
+        };
+
+      case "cancelada":
+        return {
+          fundo: estilos.conversaStatusCancelada,
+          texto: estilos.conversaStatusTextoCancelada,
+        };
+    }
+  }
+
   const statusTexto = {
     em_andamento: "Em andamento",
-    entregue: "Entregue",
+    entregue: "Aguardando confirmação",
     concluida: "Concluída",
     cancelada: "Cancelada",
   }[doacao.status];
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
-        contentContainerStyle={estilos.scroll}
+        contentContainerStyle={estilos.cadastroScroll}
         showsVerticalScrollIndicator={false}
       >
         <Pressable style={estilos.backBtn} onPress={() => navigation.goBack()}>
           <Text style={estilos.backBtnText}>← Voltar</Text>
         </Pressable>
 
-        <Text style={estilos.title}>Detalhes da doação</Text>
+        <View style={estilos.cadastroHeader}>
+          <Text style={estilos.cadastroTitulo}>Detalhes da doação</Text>
 
-        <Text style={estilos.pageSubtitle}>Acompanhe a ajuda recebida.</Text>
+          <Text style={estilos.cadastroSubtitulo}>
+            Acompanhe a ajuda recebida.
+          </Text>
+        </View>
 
-        <View style={estilos.card}>
-          <Text style={estilos.cardTitle}>{solicitacao.titulo}</Text>
+        <View style={estilos.solicitacaoDetalhesCard}>
+          <Text style={estilos.solicitacaoDetalhesTitulo}>
+            {solicitacao.titulo}
+          </Text>
 
-          <Text style={estilos.cardDescription}>{solicitacao.descricao}</Text>
+          <Text style={estilos.solicitacaoDetalhesDescricao}>
+            {solicitacao.descricao}
+          </Text>
 
-          <View style={estilos.separator} />
+          <View style={estilos.solicitacaoDetalhesDivisor} />
 
-          <Text style={estilos.itemTitle}>Status da doação</Text>
+          <Text style={estilos.solicitacaoDetalhesLabel}>Status da doação</Text>
 
-          <View style={estilos.infoRow}>
-            <Ionicons
-              name="information-circle-outline"
-              size={20}
-              color={cores.primary}
-            />
-
-            <Text style={estilos.infoText}>{statusTexto}</Text>
+          <View
+            style={[
+              estilos.solicitacaoDetalhesStatus,
+              estiloStatus(doacao.status).fundo,
+            ]}
+          >
+            <Text
+              style={[
+                estilos.solicitacaoStatusTexto,
+                estiloStatus(doacao.status).texto,
+              ]}
+            >
+              {statusTexto}
+            </Text>
           </View>
 
           <Text style={estilos.itemSubtitle}>
@@ -235,39 +279,38 @@ export default function DetalhesDoacaoRecebidaBeneficiarioScreen() {
           )}
         </View>
 
-        <View style={estilos.section}>
-          <Text style={estilos.sectionTitle}>Itens solicitados</Text>
+        {solicitacao.tipoAjuda === "especifico" && (
+          <View style={estilos.section}>
+            <Text style={estilos.sectionTitle}>Alimentos solicitados</Text>
 
-          {solicitacao.itens.length > 0 ? (
-            solicitacao.itens.map((item) => (
-              <View key={item.id} style={estilos.solicitacaoItem}>
-                <View style={estilos.detailContent}>
-                  <Text style={estilos.itemTitle}>{item.nome}</Text>
+            {solicitacao.itens.length > 0 ? (
+              solicitacao.itens.map((item) => (
+                <View key={item.id} style={estilos.solicitacaoItem}>
+                  <View style={estilos.detailContent}>
+                    <Text style={estilos.itemTitle}>{item.nome}</Text>
 
-                  <Text style={estilos.itemSubtitle}>
-                    {item.quantidade} {item.unidade}
-                  </Text>
+                    <Text style={estilos.itemSubtitle}>
+                      {item.quantidade} {item.unidade}
+                    </Text>
+                  </View>
                 </View>
-              </View>
-            ))
-          ) : (
-            <Text style={estilos.emptyText}>
-              Nenhum item específico informado.
-            </Text>
-          )}
-        </View>
+              ))
+            ) : (
+              <Text style={estilos.emptyText}>Nenhum alimento informado.</Text>
+            )}
+          </View>
+        )}
 
-        {doacao.status !== "cancelada" && (
+        {(doacao.status === "em_andamento" || doacao.status === "entregue") && (
           <View style={estilos.section}>
             <Text style={estilos.sectionTitle}>Comunicação</Text>
 
             <Text style={estilos.pageSubtitle}>
-              Converse com o doador para combinar os detalhes da entrega dos
-              alimentos.
+              Combine os detalhes da entrega pelo chat.
             </Text>
 
             <Botao
-              label="Conversar com doador"
+              label="Abrir conversa"
               onPress={abrirChat}
               loading={abrindoChat || loadingConversas}
             />
@@ -292,31 +335,42 @@ export default function DetalhesDoacaoRecebidaBeneficiarioScreen() {
         )}
 
         {doacao.status === "concluida" && (
-          <View style={estilos.card}>
-            <View style={estilos.infoRow}>
-              <Ionicons
-                name="checkmark-circle"
-                size={24}
-                color={cores.success}
-              />
+          <View style={estilos.section}>
+            <View style={estilos.card}>
+              <View style={estilos.infoRow}>
+                <Ionicons
+                  name="checkmark-circle"
+                  size={24}
+                  color={cores.success}
+                />
 
-              <Text style={estilos.itemTitle}>Doação concluída</Text>
+                <Text style={estilos.itemTitle}>Doação concluída</Text>
+              </View>
+
+              <Text style={estilos.cardDescription}>
+                O recebimento desta doação foi confirmado.
+              </Text>
             </View>
-
-            <Text style={estilos.cardDescription}>
-              O recebimento desta doação foi confirmado.
-            </Text>
           </View>
         )}
 
         {doacao.status === "cancelada" && (
           <View style={estilos.card}>
+            <View style={estilos.infoRow}>
+                <Ionicons
+                  name="alert-circle"
+                  size={24}
+                  color={cores.danger}
+                />
+
+                <Text style={estilos.itemTitle}>Cancelada</Text>
+              </View>
             <Text style={estilos.cardDescription}>
               Esta doação foi cancelada.
             </Text>
           </View>
         )}
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

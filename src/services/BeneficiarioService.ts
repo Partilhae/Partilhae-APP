@@ -1,7 +1,7 @@
 import { Alert } from "react-native";
 import {
-  BeneficiarioRequest,
   BeneficiarioResponse,
+  BeneficiarioUpdateRequest,
   CadastroBeneficiario,
 } from "../types/Beneficiario";
 import { JavaAPI } from "./API/JavaAPI";
@@ -66,7 +66,7 @@ export async function buscarBeneficiario(
 
 export async function atualizarBeneficiario(
   id: number,
-  dados: BeneficiarioRequest,
+  dados: BeneficiarioUpdateRequest,
 ): Promise<BeneficiarioResponse | null> {
   try {
     const { data } = await JavaAPI.put<BeneficiarioResponse>(

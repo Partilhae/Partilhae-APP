@@ -12,12 +12,12 @@ import {
   useFocusEffect,
   useNavigation,
 } from "@react-navigation/native";
-import styles, { cores } from "../../estilos/estilo";
+import estilos, { cores } from "../../estilos/estilo";
 import { buscarUsuarioLogado, logoutUsuario } from "../../services/AuthService";
 import { DoadorStackParamlist } from "../../types/Navigation";
 import { DoadorResponse } from "../../types/Doador";
 import { buscarDoador } from "../../services/DoadorService";
-import estilos from "../../estilos/estilo";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function PerfilDoadorScreen() {
   const navigation = useNavigation<NavigationProp<DoadorStackParamlist>>();
@@ -64,7 +64,7 @@ export default function PerfilDoadorScreen() {
 
   if (loading) {
     return (
-      <View style={styles.safe}>
+      <View style={estilos.loading}>
         <ActivityIndicator size="large" color={cores.primary} />
       </View>
     );
@@ -72,67 +72,67 @@ export default function PerfilDoadorScreen() {
 
   if (!perfil) {
     return (
-      <View style={styles.safe}>
+      <View style={estilos.loading}>
         <Text>Não foi possível carregar o perfil.</Text>
       </View>
     );
   }
 
   return (
-    <View style={styles.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <ScrollView
-        contentContainerStyle={styles.scroll}
+        contentContainerStyle={estilos.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <View style={styles.profileHeader}>
-          <View style={styles.profileAvatar}>
+        <View style={estilos.profileHeader}>
+          <View style={estilos.profileAvatar}>
             <Ionicons name="person-outline" size={48} color={cores.primary} />
           </View>
 
-          <Text style={styles.profileName}>{perfil.nomeUsuario}</Text>
+          <Text style={estilos.profileName}>{perfil.nomeUsuario}</Text>
 
-          <Text style={styles.profileEmail}>{perfil.email}</Text>
+          <Text style={estilos.profileEmail}>{perfil.email}</Text>
 
-          <View style={styles.profileBadge}>
-            <Text style={styles.profileBadgeText}>Doador</Text>
+          <View style={estilos.profileBadge}>
+            <Text style={estilos.profileBadgeText}>Doador</Text>
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Dados da conta</Text>
+        <View style={estilos.section}>
+          <Text style={estilos.sectionTitle}>Dados da conta</Text>
 
-          <View style={styles.card}>
-            <View style={styles.detailRow}>
+          <View style={estilos.card}>
+            <View style={estilos.detailRow}>
               <Ionicons name="call-outline" size={20} color={cores.primary} />
-              <View style={styles.detailContent}>
-                <Text style={styles.detailLabel}>Telefone</Text>
-                <Text style={styles.detailValue}>{perfil.telefone}</Text>
+              <View style={estilos.detailContent}>
+                <Text style={estilos.detailLabel}>Telefone</Text>
+                <Text style={estilos.detailValue}>{perfil.telefone}</Text>
               </View>
             </View>
 
-            <View style={styles.separator} />
+            <View style={estilos.separator} />
 
-            <View style={styles.detailRow}>
+            <View style={estilos.detailRow}>
               <Ionicons
                 name="location-outline"
                 size={20}
                 color={cores.primary}
               />
-              <View style={styles.detailContent}>
-                <Text style={styles.detailLabel}>Endereço</Text>
-                <Text style={styles.detailValue}>
+              <View style={estilos.detailContent}>
+                <Text style={estilos.detailLabel}>Endereço</Text>
+                <Text style={estilos.detailValue}>
                   {perfil.endereco}, {perfil.numero}
                 </Text>
               </View>
             </View>
 
-            <View style={styles.separator} />
+            <View style={estilos.separator} />
 
-            <View style={styles.detailRow}>
+            <View style={estilos.detailRow}>
               <Ionicons name="map-outline" size={20} color={cores.primary} />
-              <View style={styles.detailContent}>
-                <Text style={styles.detailLabel}>Estado e cidade</Text>
-                <Text style={styles.detailValue}>
+              <View style={estilos.detailContent}>
+                <Text style={estilos.detailLabel}>Estado e cidade</Text>
+                <Text style={estilos.detailValue}>
                   {perfil.estado}, {perfil.cidade}
                 </Text>
               </View>
@@ -140,32 +140,30 @@ export default function PerfilDoadorScreen() {
           </View>
         </View>
 
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Configurações</Text>
+        <View style={estilos.section}>
+          <Text style={estilos.sectionTitle}>Configurações</Text>
 
-          <Pressable
-            style={({ pressed }) => [
-              estilos.settingsRow,
-              pressed && { opacity: 0.7 },
-            ]}
-            onPress={() =>
-              navigation.navigate("ConfiguracoesPerfilDoador")
-            }
-          >
-            <View style={styles.card}>
-              <Ionicons name="create-outline" size={22} color={cores.muted} />
-              <Text style={styles.settingsText}>
-                Edite seus dados e gerencie sua conta.
-              </Text>
-            </View>
-          </Pressable>
-
-          <View style={styles.separator} />
-
-          <View style={styles.card}>
+          <View style={estilos.card}>
             <Pressable
               style={({ pressed }) => [
-                styles.settingsRow,
+                estilos.settingsRow,
+                pressed && { opacity: 0.7 },
+              ]}
+              onPress={() => navigation.navigate("ConfiguracoesPerfilDoador")}
+            >
+              <Ionicons name="settings-outline" size={22} color={cores.muted} />
+              <View style={estilos.detailContent}>
+                <Text style={estilos.itemTitle}>Gerenciar conta</Text>
+                <Text style={estilos.itemSubtitle}>
+                  Edite seus dados e acesse as configurações.
+                </Text>
+              </View>
+              <Ionicons name="chevron-forward" size={20} color={cores.muted} />
+            </Pressable>
+            <View style={estilos.separator} />
+            <Pressable
+              style={({ pressed }) => [
+                estilos.settingsRow,
                 pressed && { opacity: 0.7 },
               ]}
               onPress={logout}
@@ -175,11 +173,15 @@ export default function PerfilDoadorScreen() {
                 size={22}
                 color={cores.primary}
               />
-              <Text style={styles.settingsText}>Sair da conta</Text>
+              <View style={estilos.detailContent}>
+                <Text style={estilos.itemTitle}>Sair da conta</Text>
+              </View>
+
+              <Ionicons name="chevron-forward" size={20} color={cores.muted} />
             </Pressable>
           </View>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

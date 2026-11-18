@@ -10,11 +10,12 @@ import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 
 import estilos, { cores } from "../../estilos/estilo";
 import { useSolicitacoes } from "../../context/SolicitacoesContext";
-import { DoadorStackParamlist } from "../../types/Navigation";
+import { DoadorNavigation, DoadorStackParamlist } from "../../types/Navigation";
 import { StatusSolicitacao } from "../../types/Solicitacao";
 import { useState } from "react";
 import { useDoacoes } from "../../context/DoacoesContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 type DetalhesRoute = RouteProp<
   DoadorStackParamlist,
@@ -22,7 +23,7 @@ type DetalhesRoute = RouteProp<
 >;
 
 export default function DetalhesSolicitacaoDoadorScreen() {
-  const navigation = useNavigation();
+  const navigation = useNavigation<DoadorNavigation>();
   const route = useRoute<DetalhesRoute>();
 
   const { idSolicitacao } = route.params;
@@ -80,7 +81,9 @@ export default function DetalhesSolicitacaoDoadorScreen() {
         [
           {
             text: "OK",
-            onPress: () => navigation.goBack(),
+            onPress: () => navigation.navigate("DoadorTabs", {
+              screen: "MinhasDoacoes"
+            }),
           },
         ],
       );
@@ -142,7 +145,7 @@ export default function DetalhesSolicitacaoDoadorScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
         contentContainerStyle={estilos.cadastroScroll}
         showsVerticalScrollIndicator={false}
@@ -155,7 +158,7 @@ export default function DetalhesSolicitacaoDoadorScreen() {
           <Text style={estilos.cadastroTitulo}>Detalhes da solicitação</Text>
 
           <Text style={estilos.cadastroSubtitulo}>
-            Conheça este pedido e veja como você pode ajudar.
+            Veja como você pode contribuir.
           </Text>
         </View>
 
@@ -185,6 +188,7 @@ export default function DetalhesSolicitacaoDoadorScreen() {
               ? "Ajuda geral"
               : "Ajuda específica"}
           </Text>
+          <Text style={estilos.solicitacaoDetalhesLabel}>Localização</Text>
 
           <Text style={estilos.solicitacaoDetalhesLabel}>
             Data de publicação
@@ -225,7 +229,7 @@ export default function DetalhesSolicitacaoDoadorScreen() {
           <Text style={estilos.cadastroSecaoTitulo}>Deseja ajudar?</Text>
 
           <Text style={estilos.cadastroAjuda}>
-            Converse com o beneficiário para combinar como você pode contribuir.
+            Inicie uma doação e combine os detalhes pelo chat.
           </Text>
 
           <Pressable
@@ -241,10 +245,10 @@ export default function DetalhesSolicitacaoDoadorScreen() {
           </Pressable>
 
           <Text style={estilos.cadastroAjuda}>
-            Ao confirmar, você iniciará uma doação para estaa solicitação.
+            Ao confirmar, esta solicitação ficará vinculada á sua doação.
           </Text>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }

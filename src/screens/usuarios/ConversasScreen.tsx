@@ -8,12 +8,14 @@ import {
 } from "react-native";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { Ionicons } from "@expo/vector-icons";
-
 import estilos, { cores } from "../../estilos/estilo";
 import { useConversas } from "../../context/ConversasContext";
 import { buscarUsuarioLogado } from "../../services/AuthService";
 import { Conversa } from "../../types/Conversa";
 import { UsuarioLogado } from "../../types/Auth";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useDoacoes } from "../../context/DoacoesContext";
+import { useSolicitacoes } from "../../context/SolicitacoesContext";
 
 type ConversasNavigation = NavigationProp<{
   Chat: { idConversa: string };
@@ -23,6 +25,8 @@ export default function ConversasScreen() {
   const navigation = useNavigation<ConversasNavigation>();
 
   const { conversas, mensagens, loading } = useConversas();
+  const { doacoes, loading: loadingDoacoes } = useDoacoes();
+  const { solicitacoes, loading: loadingSolicitacoes } = useSolicitacoes();
 
   const [usuario, setUsuario] = useState<UsuarioLogado | null>(null);
   const [carregandoUsuario, setCarregandoUsuario] = useState(true);
@@ -68,6 +72,40 @@ export default function ConversasScreen() {
   function renderizarConversa({ item }: { item: Conversa }) {
     const ultima = ultimaMensagem(item.id);
 
+    const doacao = doacoes.find((doacao) => doacao.id === item.idDoacao);
+
+    const solicitacao = solicitacoes.find(
+      (solicitacao) => solicitacao.id === doacao?.idSolicitacao,
+    );
+
+    const concluida = doacao?.status === "concluida";
+    const cancelada = doacao?.status === "cancelada";
+    const entregue = doacao?.status === "entregue";
+
+    const textoStatus = concluida
+      ? "Doação concluída"
+      : cancelada
+        ? "Doação cancelada"
+        : entregue
+          ? "Aguardando confirmação"
+          : "Em andamento";
+
+    const estiloStatus = concluida
+      ? estilos.conversaStatusConcluida
+      : cancelada
+        ? estilos.conversaStatusCancelada
+        : entregue
+          ? estilos.conversaStatusEntregue
+          : estilos.conversaStatusEmAndamento;
+
+    const estiloTextoStatus = concluida
+      ? estilos.conversaStatusTextoConcluida
+      : cancelada
+        ? estilos.conversaStatusTextoCancelada
+        : entregue
+          ? estilos.conversaStatusTextoEntregue
+          : estilos.conversaStatusTextoEmAndamento;
+
     return (
       <Pressable
         style={estilos.solicitacaoCard}
@@ -80,18 +118,36 @@ export default function ConversasScreen() {
         <View style={estilos.cardRow}>
           <View style={estilos.detailIcon}>
             <Ionicons
-              name="chatbubble-ellipses-outline"
+              name={
+                concluida
+                  ? "checkmark-circle-outline"
+                  : "chatbubble-ellipses-outline"
+              }
               size={22}
-              color={cores.primary}
+              color={concluida ? cores.success : cores.primary}
             />
           </View>
 
           <View style={estilos.detailContent}>
-            <Text style={estilos.itemTitle}>Conversa sobre a doação</Text>
+            <Text style={estilos.itemTitle} numberOfLines={1}>
+              {solicitacao?.titulo ?? "Conversa sobre a doação"}
+            </Text>
 
             <Text style={estilos.itemSubtitle} numberOfLines={2}>
               {ultima?.texto ?? "Nenhuma mensagem enviada."}
             </Text>
+
+            <View style={estilos.conversaStatusRow}>
+              <View style={[estilos.statusBadge, estiloStatus]}>
+                <Text style={[estilos.statusBadgeText, estiloTextoStatus]}>
+                  {textoStatus}
+                </Text>
+              </View>
+
+              {(concluida || cancelada) && (
+                <Text style={estilos.itemSubtitle}>Histórico disponível</Text>
+              )}
+            </View>
 
             {ultima && (
               <Text style={estilos.solicitacaoCardData}>
@@ -106,7 +162,7 @@ export default function ConversasScreen() {
     );
   }
 
-  if (loading || carregandoUsuario) {
+  if (loading || loadingDoacoes || loadingSolicitacoes || carregandoUsuario) {
     return (
       <View style={estilos.loading}>
         <ActivityIndicator size="large" color={cores.primary} />
@@ -115,7 +171,7 @@ export default function ConversasScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top"]}>
       <FlatList
         data={minhasConversas}
         keyExtractor={(item) => item.id}
@@ -144,12 +200,11 @@ export default function ConversasScreen() {
             </Text>
 
             <Text style={estilos.solicitacoesVazioTexto}>
-              Quando você iniciar uma conversa sobre uma doação, ela aparecerá
-              aqui.
+              Suas conversas aparecerão aqui.
             </Text>
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }

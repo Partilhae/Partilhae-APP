@@ -6,6 +6,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { buscarUsuarioLogado, logoutUsuario } from "../../services/AuthService";
 import estilos, { cores } from "../../estilos/estilo";
 import { deletarDoador } from "../../services/DoadorService";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function ConfiguracoesPerfilDoadorScreen() {
   const navigation = useNavigation<DoadorNavigation>();
@@ -54,26 +55,25 @@ export default function ConfiguracoesPerfilDoadorScreen() {
   }
 
   return (
-    <View style={estilos.safe}>
+    <SafeAreaView style={estilos.safe} edges={["top", "bottom"]}>
       <ScrollView
         contentContainerStyle={estilos.scroll}
         showsVerticalScrollIndicator={false}
       >
-        <Pressable style={estilos.backBtn} onPress={() => navigation.goBack()}>
-          <Text style={estilos.backBtnText}>← Voltar</Text>
+        <Pressable onPress={() => navigation.goBack()}>
+          <Text style={estilos.solicitacaoVoltar}>← Voltar</Text>
         </Pressable>
 
-        <View>
-          <Text style={estilos.title}>Configurações</Text>
-          <Text style={estilos.pageSubtitle}>Gerencie sua conta.</Text>
+        <View style={estilos.cadastroHeader}>
+          <Text style={estilos.cadastroTitulo}>Configurações</Text>
+
+          <Text style={estilos.cadastroSubtitulo}>
+            Gerencie seus dados e sua conta.
+          </Text>
         </View>
 
         <View style={estilos.section}>
           <Text style={estilos.sectionTitle}>Perfil</Text>
-
-          <Text style={estilos.pageSubtitle}>
-            Atualize suas informações pessoais.
-          </Text>
 
           <Pressable
             style={({ pressed }) => [
@@ -101,10 +101,6 @@ export default function ConfiguracoesPerfilDoadorScreen() {
 
         <View style={estilos.section}>
           <Text style={estilos.sectionTitle}>Segurança</Text>
-
-          <Text style={estilos.pageSubtitle}>
-            Acompanhe as denúncias que você registrou.
-          </Text>
 
           <Pressable
             style={({ pressed }) => [
@@ -138,10 +134,6 @@ export default function ConfiguracoesPerfilDoadorScreen() {
         <View style={estilos.section}>
           <Text style={estilos.sectionTitle}>Conta</Text>
 
-          <Text style={estilos.pageSubtitle}>
-            Ações relacionadas à sua conta.
-          </Text>
-
           <Pressable
             style={({ pressed }) => [
               estilos.settingsRow,
@@ -167,6 +159,6 @@ export default function ConfiguracoesPerfilDoadorScreen() {
           </Pressable>
         </View>
       </ScrollView>
-    </View>
+    </SafeAreaView>
   );
 }
