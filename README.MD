@@ -356,7 +356,7 @@ src/
 | Integrante | RM | Turma |
 | --- | --- |
 | Agatha Yie Won Yun | 561507 | 2TDSA |
-| Ana Claudia Fernandes Martins| 561190 | 2TDSR
+| Ana Claudia Fernandes Martins| 561190 | 2TDSR |
 | André Rosa Colombo | 563112 | 2TDSA |
 | Samantha Faruolo Galdi| 554794 | 2TDSA |
 | Vitor Fria Dalmagro | 566052 | 2TDSA |
