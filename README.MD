@@ -120,8 +120,6 @@ Cada solicitação contém informações como título, descrição, tipo de ajud
 
 O doador pode filtrar as solicitações abertas usando esses dados regionais. A localização é registrada na própria solicitação, sem depender de acesso aos dados privados de outro usuário pela API.
 
-As solicitações são armazenadas localmente no aplicativo, utilizando **AsyncStorage** e **Context API**.
-
 ---
 
 ## Doações e Acompanhamento
@@ -169,7 +167,7 @@ O Partilhaê utiliza **notificações locais**, implementadas com `expo-notifica
 
 ## Integração com a API
 
-O Partilhaê utiliza uma **API REST Java** para recursos de cadastro, autenticação e dados dos usuários. A comunicação HTTP é organizada na camada `services`, com auxílio do Axios.
+O Partilhaê utiliza uma **API REST Java** para recursos de cadastro, autenticação e dados dos usuários. 
 
 Pelo render ser gratuito, a autenticação ou cadastro de usuários demora cerca de 5 minutos, sugiro ligar o render antes de testar o app
 
@@ -212,8 +210,6 @@ src/
 
 ## Navegação
 
-A navegação é organizada com **React Navigation**, utilizando **Native Stack** e **Bottom Tabs**.
-
 ### Fluxo do Doador
 
 ```text
@@ -253,8 +249,6 @@ Beneficiário
 ---
 
 ## Estrutura do Projeto
-
-Os arquivos centrais das funcionalidades de solicitações, doações e notificações incluem:
 
 ```text
 src/
@@ -356,9 +350,9 @@ src/
 | Integrante | RM | Turma |
 | --- | --- |
 | Agatha Yie Won Yun | 561507 | 2TDSA |
-| Ana Claudia Fernandes Martins| 561190 | 2TDSR |
+| Ana Claudia Fernandes Martins | 561190 | 2TDSR |
 | André Rosa Colombo | 563112 | 2TDSA |
-| Samantha Faruolo Galdi| 554794 | 2TDSA |
+| Samantha Faruolo Galdi | 554794 | 2TDSA |
 | Vitor Fria Dalmagro | 566052 | 2TDSA |
 
 ---
